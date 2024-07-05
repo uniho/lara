@@ -1,5 +1,5 @@
-/bd/on.php
-/bd/config.php
+/src/bd/on.php
+/src/bd/config.php
 /memo.md
-/bd/views/test
-/bd/js/test
+/src/bd/views/test
+/src/bd/js/test
