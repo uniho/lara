@@ -61,5 +61,14 @@ class On
       debugbar()->debug('test web route!');
       return $request->path();
     });
+
+    \Route::get('/jsx/{name}', function ($name) {
+      \Log::debug($name);
+      abort_unless(\Compilers::jsx()->exists($name), 404, "JSX [{$name}] not found.");
+      $contents = \Compilers::jsx($name, [], ['force_compile' => $request->has('force_compile')]);
+      $response = Response::make($contents, 200);
+      return $response->header('Content-Type', 'application/javascript; charset=utf-8');
+    });
+
   }
 }
