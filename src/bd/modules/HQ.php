@@ -57,14 +57,6 @@ final class HQ
         return $response->header('Content-Type', 'text/css; charset=utf-8');
       }
 
-      if ($request->has('js_route')) {
-        $name = $request->query('js_route');
-        abort_unless(\Compilers::js()->exists($name), 404, "JS [{$name}] not found.");
-        $contents = \Compilers::js($name, [], ['force_compile' => $request->has('force_compile')]);
-        $response = Response::make($contents, 200);
-        return $response->header('Content-Type', 'application/javascript; charset=utf-8');
-      }
-
       if (basename(url()->current()) == 'debugbar.php') {
         if (self::allowDebugbar()) {
           if ($request->has('phpinfo')) {
