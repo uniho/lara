@@ -239,6 +239,70 @@ final class Compilers
 
     return $core->file($core->getFullName($name), $data, $options);
   }
+
+  //
+  public static function jsx($name = false, $data = [], $options = [])
+  {
+    $core = new class extends _CompilerCore {
+      
+      //
+      public function file($file, $data = [], $options = [])
+      {
+        $compiler = new class($this, $data, $options) extends _Compiler implements \Illuminate\View\Compilers\CompilerInterface
+        {
+          public function compile($path)
+          {
+            $this->ensureCompiledDirectoryExists(
+              $compiledPath = $this->getCompiledPath($path)
+            );
+
+            $params = '--sourcemap';
+            if (isset($this->options['minify']) && $this->options['minify']) {
+              $params .= ' --minify';
+            }
+            if (isset($this->options['tsconfig'])) {
+              $params .= " --tsconfig-raw='" . json_encode($this->options['tsconfig']) ."'";
+            }
+
+            exec("~/node_modules/.bin/esbuild $path $params --outfile=$compiledPath 2>&1", $error);
+            if (strpos(end($error), 'error') !== false) {
+              // エラー発生のため、元のファイルを書き込む
+              $contents = \File::get($path);
+              \File::put($compiledPath, $contents);
+              \Log::error('jsx:esbuild', $error);
+              return;
+            }
+
+            $error = [];
+            exec("~/.nvm/versions/node/v20.15.0/bin/node ~/node_modules/.bin/minify-template-literal $compiledPath --remap --outfile=$compiledPath 2>&1", $error);
+            if (end($error) != 'done!') {
+              \Log::error('jsx:minify-template-literal', $error);
+              return;
+            }
+          }
+          
+        };
+
+        $engine = new \Illuminate\View\Engines\CompilerEngine($compiler, app()['files']);
+        return $engine->get($file);
+      }
+
+      //
+      public function getFullName($name)
+      {
+        $p = strrpos($name, '.');
+        $body = substr($name, 0, $p);
+        $ext = substr($name, $p);
+        return \HQ::getenv('CCC::JS_PATH').'/'.strtr($body, '.', '/').$ext;
+      }
+    };
+
+    if (!$name) {
+      return $core;
+    }  
+
+    return $core->file($core->getFullName($name), $data, $options);
+  }
 }
 
 //

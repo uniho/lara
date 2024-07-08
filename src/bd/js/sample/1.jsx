@@ -15,7 +15,7 @@ export default props => {
         Welcome to World of React on Blade!
       </div>
       <Inner>
-        <Sx.button filled="1">
+        <Sx.button filled="1" onClick={e => {throw new Error(1)}}>
           Contained
         </Sx.button>
         <Div1>
