@@ -36,9 +36,9 @@ export const asButtonStyleOrg = props => {
   return [css`
     position: relative;
     background-image: none;
-    //background-size: 0;
-    //background-repeat: no-repeat;
-    //background-position: 50% 50%;
+    /* background-size: 0; */
+    /* background-repeat: no-repeat; */
+    /* background-position: 50% 50%; */
     line-height: 1;
     display: inline-flex;
     align-items: center;
@@ -51,8 +51,10 @@ export const asButtonStyleOrg = props => {
     transition: background-image .3s ease-out, box-shadow .3s ease-out;
     will-change: background-image, box-shadow;
 
-    // タッチデバイスなら hover アニメーションはしないようにする
-    // そうしないと、タッチ後に hover の状態で描画されたままてなってしまうため
+    /* 
+      タッチデバイスなら hover アニメーションはしないようにする
+      そうしないと、タッチ後に hover の状態で描画されたままてなってしまうため 
+    */
     @media (hover: hover) and (pointer: fine) {
       &:hover:not(:disabled):not(:active), &:focus-visible {
         ${props.mode === 'dark' ? 
@@ -132,9 +134,9 @@ export const asButtonStyle = props => {
   return [css`
     position: relative;
     background-image: none;
-    //background-size: 0;
-    //background-repeat: no-repeat;
-    //background-position: 50% 50%;
+    /* background-size: 0; */
+    /* background-repeat: no-repeat; */
+    /* background-position: 50% 50%; */
     line-height: 1;
     display: inline-flex;
     align-items: center;
@@ -149,8 +151,10 @@ export const asButtonStyle = props => {
     /* transition: background-color .3s ease-out, background-image .3s ease-out;
     will-change: background-color, background-image; */
 
-    // タッチデバイスなら hover アニメーションはしないようにする
-    // そうしないと、タッチ後に hover の状態で描画されたままてなってしまうため
+    /*
+      タッチデバイスなら hover アニメーションはしないようにする
+      そうしないと、タッチ後に hover の状態で描画されたままてなってしまうため 
+    */
     @media (hover: hover) and (pointer: fine) {
       &:hover:not(:disabled):not(:active), &:focus-visible {
         background-color: ${bgcolorHover};
