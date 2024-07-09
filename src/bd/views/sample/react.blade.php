@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{request()->root()}}/fd/css/normalize.css">
     <link rel="stylesheet" href="{{request()->root()}}/fd/css/preflight.css">
     <link rel="stylesheet" href="{{request()->root()}}/fd/css/style.css">
-    <link rel="stylesheet" href="{{request()->root()}}/css/sample/palette.blade">
+    <link rel="stylesheet" href="{{request()->root()}}/css/sample/palette">
   </head>
   <body>
     <div id="app"></div>

@@ -15,14 +15,7 @@ final class Compilers
         {
           public function compile($path)
           {
-            $ext = substr($path, strrpos($path, '.') + 1);
-            if ($ext == 'php') {
-              $bladeCompiler = app('blade.compiler');
-              $contents = $bladeCompiler->compileString($this->files->get($path));
-              logs()->debug(1, [$contents]);
-            } else {
-              $contents = $this->core->inline($this->files->get($path), $this->data, $this->options);
-            }
+            $contents = $this->core->inline($this->files->get($path), $this->data, $this->options);
 
             $this->ensureCompiledDirectoryExists(
               $compiledPath = $this->getCompiledPath($path)
@@ -65,8 +58,7 @@ final class Compilers
         $p = strrpos($name, '.');
         $body = strtr(substr($name, 0, $p), '/', '.');
         $ext = substr($name, $p);
-        if ($ext == '.blade') $ext .= '.php';
-        return \HQ::getenv('CCC::SCSS_PATH').'/'.strtr($body, '.', '/').$ext;
+        return \HQ::getenv('CCC::VIEWS_PATH').'/css/'.strtr($body, '.', '/').$ext;
       }
     };
 
@@ -192,7 +184,7 @@ final class Compilers
       //
       public function getFullName($name)
       {
-        return \HQ::getenv('CCC::MARKDOWNS_PATH').'/'.strtr($name, '.', '/').'.md';
+        return \HQ::getenv('CCC::VIEWS_PATH').'/markdowns/'.strtr($name, '.', '/').'.md';
       }
     };
 
@@ -260,7 +252,7 @@ final class Compilers
         $p = strrpos($name, '.');
         $body = strtr(substr($name, 0, $p), '/', '.');
         $ext = substr($name, $p);
-        return \HQ::getenv('CCC::JS_PATH').'/'.strtr($body, '.', '/').$ext;
+        return \HQ::getenv('CCC::VIEWS_PATH').'/js/'.strtr($body, '.', '/').$ext;
       }
     };
 
