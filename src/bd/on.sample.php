@@ -32,8 +32,6 @@ class On
     //   'message' => 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
     // ]);
 
-    // ここではもう request() が使えます。
-    \Log::debug(request()->query("test"));
   } 
   
   // Called from routes/console.php
@@ -43,8 +41,6 @@ class On
   //   https://laravel.com/docs/11.x/artisan#closure-commands 
   public static function onConsole()
   {
-    \Log::debug('onConsole!');
-
     // 例： inspire2 という Artisan Command を追加する
     \Artisan::command('inspire2', function () {
         $this->comment(\Inspiring::quote());
@@ -54,21 +50,37 @@ class On
   // Called from laravel/routes/web.php
   public static function onWeb($router)
   {
-    \Log::debug('onWeb!');
+    // css 使用例
+    \Route::get('css/{name}', function ($name) {
+      abort_unless(\Compilers::scss()->exists($name), 404, "CSS [{$name}] not found.");
+      $contents = \Compilers::scss($name, [], ['force_compile' => \HQ::getDebugMode() || request()->has('force_compile')]);
+      $response = \Response::make($contents, 200);
+      return $response->header('Content-Type', 'text/css; charset=utf-8');
+    })->where('name', '.*'); // これによりパスデリミタも取得できるようになる
 
-    // You can use $router->get() instead of \Router::get()
-    \Route::get('test', function (Request $request) {
-      debugbar()->debug('test web route!');
-      return $request->path();
-    });
+    // jsx 使用例 
+    \Route::get('jsx/{name}', function ($name) {
+      $ext = substr($name, strrpos($name, '.') + 1);
+      if ($ext == 'map') {
+        $name = app()['config']['view.compiled'] . '/' . basename($name);
+        abort_unless(is_file($name) && \HQ::getDebugMode(), 404, "MAP [{$name}] not found.");
+        $contents = \File::get($name);
+        $response = \Response::make($contents, 200);
+        return $response->header('Content-Type', 'application/json; charset=utf-8');
+      }
 
-    \Route::get('/jsx/{name}', function ($name) {
-      \Log::debug($name);
       abort_unless(\Compilers::jsx()->exists($name), 404, "JSX [{$name}] not found.");
-      $contents = \Compilers::jsx($name, [], ['force_compile' => $request->has('force_compile')]);
-      $response = Response::make($contents, 200);
+      $contents = \Compilers::jsx($name, [], [
+        'force_compile' => \HQ::getDebugMode() || request()->has('force_compile'), 
+        'minify' => 1,
+        /*'tsconfig' => $tsconfig,*/
+        'node_cli' => '~/.nvm/versions/node/v20.15.0/bin/node', 
+        'esbuild_cli' => '~/node_modules/.bin/esbuild', 
+        'minifyTemplateLiteral_cli' => '~/node_modules/.bin/minify-template-literal',
+      ]);
+      $response = \Response::make($contents, 200);
       return $response->header('Content-Type', 'application/javascript; charset=utf-8');
-    });
+    })->where('name', '.*'); // これによりパスデリミタも取得できるようになる
 
   }
 }

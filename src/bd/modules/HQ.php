@@ -49,14 +49,6 @@ final class HQ
 
     if ($request->method() == 'GET') {
 
-      if ($request->has('css_route')) {
-        $name = $request->query('css_route');
-        abort_unless(\Compilers::scss()->exists($name), 404, "CSS [{$name}] not found.");
-        $contents = \Compilers::scss($name, [], ['force_compile' => $request->has('force_compile')]);
-        $response = Response::make($contents, 200);
-        return $response->header('Content-Type', 'text/css; charset=utf-8');
-      }
-
       if (basename(url()->current()) == 'debugbar.php') {
         if (self::allowDebugbar()) {
           if ($request->has('phpinfo')) {

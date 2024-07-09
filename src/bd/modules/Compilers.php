@@ -15,7 +15,14 @@ final class Compilers
         {
           public function compile($path)
           {
-            $contents = $this->core->inline($this->files->get($path), $this->data, $this->options);
+            $ext = substr($path, strrpos($path, '.') + 1);
+            if ($ext == 'php') {
+              $bladeCompiler = app('blade.compiler');
+              $contents = $bladeCompiler->compileString($this->files->get($path));
+              logs()->debug(1, [$contents]);
+            } else {
+              $contents = $this->core->inline($this->files->get($path), $this->data, $this->options);
+            }
 
             $this->ensureCompiledDirectoryExists(
               $compiledPath = $this->getCompiledPath($path)
@@ -24,7 +31,7 @@ final class Compilers
             $this->files->put($compiledPath, $contents);
           }
         };
-
+  
         $engine = new \Illuminate\View\Engines\CompilerEngine($compiler, app()['files']);
         return $engine->get($file);
       }
@@ -55,7 +62,11 @@ final class Compilers
       //
       public function getFullName($name)
       {
-        return \HQ::getenv('CCC::SCSS_PATH').'/'.strtr($name, '.', '/').'.scss';
+        $p = strrpos($name, '.');
+        $body = strtr(substr($name, 0, $p), '/', '.');
+        $ext = substr($name, $p);
+        if ($ext == '.blade') $ext .= '.php';
+        return \HQ::getenv('CCC::SCSS_PATH').'/'.strtr($body, '.', '/').$ext;
       }
     };
 
@@ -216,7 +227,11 @@ final class Compilers
               $params .= " --tsconfig-raw='" . json_encode($this->options['tsconfig']) ."'";
             }
 
-            exec("~/node_modules/.bin/esbuild $path $params --outfile=$compiledPath 2>&1", $error);
+            $node_cli = isset($this->options['node_cli']) ? $this->options['node_cli'] : 'node';
+            $esbuild_cli = isset($this->options['esbuild_cli']) ? $this->options['esbuild_cli'] : 'esbuild';
+            $minifyTemplateLiteral_cli = isset($this->options['minifyTemplateLiteral_cli']) ? $this->options['minifyTemplateLiteral_cli'] : 'minify-template-literal';
+
+            exec("$esbuild_cli $path $params --outfile=$compiledPath 2>&1", $error);
             if (strpos(end($error), 'error') !== false) {
               // エラー発生のため、元のファイルを書き込む
               $contents = \File::get($path);
@@ -226,7 +241,7 @@ final class Compilers
             }
 
             $error = [];
-            exec("~/.nvm/versions/node/v20.15.0/bin/node ~/node_modules/.bin/minify-template-literal $compiledPath --remap --outfile=$compiledPath 2>&1", $error);
+            exec("$node_cli $minifyTemplateLiteral_cli $compiledPath --remap --outfile=$compiledPath 2>&1", $error);
             if (end($error) != 'done!') {
               \Log::error('jsx:minify-template-literal', $error);
               return;
@@ -243,7 +258,7 @@ final class Compilers
       public function getFullName($name)
       {
         $p = strrpos($name, '.');
-        $body = substr($name, 0, $p);
+        $body = strtr(substr($name, 0, $p), '/', '.');
         $ext = substr($name, $p);
         return \HQ::getenv('CCC::JS_PATH').'/'.strtr($body, '.', '/').$ext;
       }
