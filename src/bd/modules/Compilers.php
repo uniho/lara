@@ -15,13 +15,26 @@ final class Compilers
         {
           public function compile($path)
           {
-            $contents = $this->core->inline($this->files->get($path), $this->data, $this->options);
-
             $this->ensureCompiledDirectoryExists(
               $compiledPath = $this->getCompiledPath($path)
             );
 
-            $this->files->put($compiledPath, $contents);
+            $params = '';
+            if (isset($this->options['minify']) && $this->options['minify']) {
+              $params .= ' --minify';
+            }
+
+            $node_cli = \HQ::getenv('CCC::NODE_CLI');
+            $lightningcss_cli =  \HQ::getenv('CCC::NODE_PATH') . '/lightningcss_cli.js';
+
+            exec("$node_cli $lightningcss_cli $path $params --outfile=$compiledPath 2>&1", $error);
+            if (end($error) != 'done!') {
+              // エラー発生のため、元のファイルを書き込む
+              $contents = \File::get($path);
+              \File::put($compiledPath, $contents);
+              \Log::error('lightningcss', $error);
+              return;
+            }
           }
         };
   
@@ -30,35 +43,12 @@ final class Compilers
       }
 
       //
-      public function inline($src, $data = [], $options = [])
-      {
-        $compiler = new \ScssPhp\ScssPhp\Compiler();
-
-        $compiler->addImportPath(function($path) {
-          if (\ScssPhp\ScssPhp\Compiler::isCssImport($path)) {
-            return null;
-          }
-
-          $path = $this->getFullName($path);
-          if (!file_exists($path)) {
-            return null;
-          }
-
-          return $path;
-        });
-
-        $compiler->addVariables($data);
-
-        return $compiler->compileString($src)->getCss();
-      }
-
-      //
       public function getFullName($name)
       {
         $p = strrpos($name, '.');
         $body = strtr(substr($name, 0, $p), '/', '.');
         $ext = substr($name, $p);
-        return \HQ::getenv('CCC::VIEWS_PATH').'/css/'.strtr($body, '.', '/').$ext;
+        return \HQ::getenv('CCC::RSS_PATH').'/css/'.strtr($body, '.', '/').$ext;
       }
     };
 
@@ -184,7 +174,7 @@ final class Compilers
       //
       public function getFullName($name)
       {
-        return \HQ::getenv('CCC::VIEWS_PATH').'/markdowns/'.strtr($name, '.', '/').'.md';
+        return \HQ::getenv('CCC::RSS_PATH').'/markdowns/'.strtr($name, '.', '/').'.md';
       }
     };
 
@@ -252,7 +242,7 @@ final class Compilers
         $p = strrpos($name, '.');
         $body = strtr(substr($name, 0, $p), '/', '.');
         $ext = substr($name, $p);
-        return \HQ::getenv('CCC::VIEWS_PATH').'/js/'.strtr($body, '.', '/').$ext;
+        return \HQ::getenv('CCC::RSS_PATH').'/js/'.strtr($body, '.', '/').$ext;
       }
     };
 

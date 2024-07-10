@@ -18,7 +18,7 @@ final class CCC
   const STORAGE_LOCAL_PUBLIC_FILES_PATH = './storage';
 
   const VIEWS_PATH = __BASE_DIR__ . '/bd/views';
-  const MARKDOWNS_PATH = __BASE_DIR__ . '/bd/markdowns';
+  const RSS_PATH = __BASE_DIR__ . '/bd/rss';
   const NODE_PATH = __BASE_DIR__ . '/bd/node';
 
   const PHP_CLI = 'php';
