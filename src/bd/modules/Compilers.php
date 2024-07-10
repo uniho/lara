@@ -29,9 +29,9 @@ final class Compilers
 
             exec("$node_cli $lightningcss_cli $path $params --outfile=$compiledPath 2>&1", $error);
             if (end($error) != 'done!') {
-              // エラー発生のため、元のファイルを書き込む
-              $contents = \File::get($path);
-              \File::put($compiledPath, $contents);
+              // エラー発生のため、キャッシュファイルを削除
+              \File::delete($compiledPath);
+              \File::delete($compiledPath.'.map');
               \Log::error('lightningcss', $error);
               return;
             }
