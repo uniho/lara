@@ -20,7 +20,7 @@ try {
 
   const input = args.positionals[0];
   if (!input) {
-    console.error('Usage: <in file name> [--outfile=<out file name>]');
+    console.error('Usage: <in file name> [--outfile=<out file name>] [--minify]');
     process.exit(1);
   }
 
