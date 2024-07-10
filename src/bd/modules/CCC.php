@@ -4,7 +4,7 @@ define('__BASE_DIR__', dirname(dirname(__DIR__)));
 
 final class CCC
 {
-  const APP_NAME = 'BladeBreakIn';
+  const APP_NAME = 'lara';
 
   const BASE_DIR = __BASE_DIR__;
   const DIR_LARAVEL = __BASE_DIR__ . '/bd/laravel';
