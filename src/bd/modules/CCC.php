@@ -19,8 +19,10 @@ final class CCC
 
   const VIEWS_PATH = __BASE_DIR__ . '/bd/views';
   const MARKDOWNS_PATH = __BASE_DIR__ . '/bd/markdowns';
+  const NODE_PATH = __BASE_DIR__ . '/bd/node';
 
   const PHP_CLI = 'php';
+  const NODE_CLI = 'node';
 
   // パスワードリセットなどのチャレンジタイム(秒)
   const RESETPASS_CHALLENGE_TIME = 60 * 10;

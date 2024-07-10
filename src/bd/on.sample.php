@@ -80,10 +80,7 @@ class On
       $contents = \Compilers::jsx($name, [], [
         'force_compile' => \HQ::getDebugMode() || request()->has('force_compile'), 
         'minify' => 1,
-        /*'tsconfig' => $tsconfig,*/
-        'node_cli' => '~/.nvm/versions/node/v20.15.0/bin/node', 
-        'esbuild_cli' => '~/node_modules/.bin/esbuild', 
-        'minifyTemplateLiteral_cli' => '~/node_modules/.bin/minify-template-literal',
+        // 'tsconfig' => $tsconfig,
       ]);
       $response = \Response::make($contents, 200);
       return $response->header('Content-Type', 'application/javascript; charset=utf-8');

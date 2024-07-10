@@ -219,9 +219,9 @@ final class Compilers
               $params .= " --tsconfig-raw='" . json_encode($this->options['tsconfig']) ."'";
             }
 
-            $node_cli = isset($this->options['node_cli']) ? $this->options['node_cli'] : 'node';
-            $esbuild_cli = isset($this->options['esbuild_cli']) ? $this->options['esbuild_cli'] : 'esbuild';
-            $minifyTemplateLiteral_cli = isset($this->options['minifyTemplateLiteral_cli']) ? $this->options['minifyTemplateLiteral_cli'] : 'minify-template-literal';
+            $node_cli = \HQ::getenv('CCC::NODE_CLI');
+            $esbuild_cli = \HQ::getenv('CCC::NODE_PATH') . '/node_modules/.bin/esbuild';
+            $minifyTemplateLiteral_cli =  \HQ::getenv('CCC::NODE_PATH') . '/node_modules/.bin/minify-template-literal';
 
             exec("$esbuild_cli $path $params --outfile=$compiledPath 2>&1", $error);
             if (strpos(end($error), 'error') !== false) {
