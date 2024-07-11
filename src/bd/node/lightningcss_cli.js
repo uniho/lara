@@ -37,7 +37,9 @@ try {
 
   // Strip Single Line Comments
   // LightningCSS doesn't support Single Line Comments on v1.25.1
-  src = src.replace(/\/\/.*|("(\\.|[^"])*")/g, '$1');
+  src = src.replace(/(\/\*(?:(?!\*\/)[\s\S])*\*\/|\"(?:(?!(?<!\\)\").)*\"|\'(?:(?!(?<!\\)\').)*\')|\/\/.*/g, '$1');
+  console.log(src)
+  process.exit(0)
 
   // const palettes = {
   //   '--color1': '#888888',
