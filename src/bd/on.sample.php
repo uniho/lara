@@ -52,8 +52,20 @@ class On
   {
     // css 使用例
     \Route::get('css/{name}', function ($name) {
+      $ext = substr($name, strrpos($name, '.') + 1);
+      if ($ext == 'map') {
+        $name = app()['config']['view.compiled'] . '/' . basename($name);
+        abort_unless(is_file($name) && \HQ::getDebugMode(), 404, "MAP [{$name}] not found.");
+        $contents = \File::get($name);
+        $response = \Response::make($contents, 200);
+        return $response->header('Content-Type', 'application/json; charset=utf-8');
+      }
+
       abort_unless(\Compilers::scss()->exists($name), 404, "CSS [{$name}] not found.");
-      $contents = \Compilers::scss($name, [], ['force_compile' => \HQ::getDebugMode() || request()->has('force_compile')]);
+      $contents = \Compilers::scss($name, [], [
+        'force_compile' => \HQ::getDebugMode() || request()->has('force_compile'),
+        'minify' => 1,
+      ]);
       $response = \Response::make($contents, 200);
       return $response->header('Content-Type', 'text/css; charset=utf-8');
     })->where('name', '.*'); // この where により、$name がパスデリミタを受けられるようになる
