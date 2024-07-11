@@ -1,6 +1,7 @@
 
 import {parseArgs} from "node:util";
 import {writeFile, readFile} from 'node:fs/promises';
+import process from 'node:process';
 import {transform, Features} from 'lightningcss';
 
 try {
@@ -19,13 +20,24 @@ try {
   });
 
   const input = args.positionals[0];
-  if (!input) {
-    console.error('Usage: <in file name> [--outfile=<out file name>] [--minify]');
-    process.exit(1);
+  const output = args.values.outfile;
+
+  let src = '';
+  if (input) {
+    src = await readFile(input, 'utf8');
+  } else {  
+    if (process.platform == 'win32') {
+      process.stdin.setEncoding('utf8');
+      for await (const chunk of process.stdin) src += chunk;
+    } else {
+      src = await readFile("/dev/stdin", 'utf8');
+    }
+    // console.error('Usage: <in file name> [--outfile=<out file name>] [--minify]');
   }
 
-  const output = args.values.outfile;
-  const src = await readFile(input, 'utf8');
+  // Strip Single Line Comments
+  // LightningCSS doesn't support Single Line Comments on v1.25.1
+  src = src.replace(/\/\/.*|("(\\.|[^"])*")/g, '$1');
 
   // const palettes = {
   //   '--color1': '#888888',

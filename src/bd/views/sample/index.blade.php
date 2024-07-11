@@ -53,7 +53,7 @@
   </x-slot>  
 
   <x-slot:header>
-    <link rel="stylesheet" href="?css_route=sample.style">
+    <link rel="stylesheet" href="{{request()->root()}}/css/sample/style.css">
   </x-slot>  
 
   {{-- slot --}}
@@ -87,7 +87,7 @@
         <div>
           Markdown =>
           <div class="color-box">
-            {!! Compilers::markdown('sample.test', ['test' => 2]) !!}
+            {!! Compilers::markdown('sample/test', ['test' => 2]) !!}
           </div>
         </div>
       @else

@@ -1,0 +1,16 @@
+
+@margin 10rem;
+@color rgb(168, 203, 200);
+
+div.wrapper {
+  margin: @margin;
+
+  div {
+    color: @color;
+    margin-bottom: 2rem;
+
+    &.title {
+      color: white;
+    }
+  }
+}

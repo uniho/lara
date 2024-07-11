@@ -43,11 +43,26 @@ final class Compilers
       }
 
       //
+      public function inline($src, $data = [], $options = [])
+      {
+        $node_cli = \HQ::getenv('CCC::NODE_CLI');
+        $lightningcss_cli =  \HQ::getenv('CCC::NODE_PATH') . '/lightningcss_cli.js';
+
+        $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $lightningcss_cli");
+        $process->setInput($src)->run();
+        return $process->getOutput();
+      }
+
+      //
       public function getFullName($name)
       {
+        $body = $name;
+        $ext = '.css';
         $p = strrpos($name, '.');
-        $body = strtr(substr($name, 0, $p), '/', '.');
-        $ext = substr($name, $p);
+        if ($p !== false) {
+          $body = strtr(substr($name, 0, $p), '/', '.');
+          $ext = substr($name, $p);
+        }
         return \HQ::getenv('CCC::RSS_PATH').'/css/'.strtr($body, '.', '/').$ext;
       }
     };
@@ -167,14 +182,26 @@ final class Compilers
         } 
 
         $data = array_merge(json_decode($frontmatter, true), $data);
-        $m = new \Mustache();
-        return $m->render($body, $data, $options);
+
+        $node_cli = \HQ::getenv('CCC::NODE_CLI');
+        $handlebars_cli =  \HQ::getenv('CCC::NODE_PATH') . '/handlebars_cli.js';
+
+        $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $handlebars_cli");
+        $process->setInput("---\n".json_encode($data)."\n---\n".$body)->run();
+        return $process->getOutput();
       }
 
       //
       public function getFullName($name)
       {
-        return \HQ::getenv('CCC::RSS_PATH').'/markdowns/'.strtr($name, '.', '/').'.md';
+        $body = $name;
+        $ext = '.md';
+        $p = strrpos($name, '.');
+        if ($p !== false) {
+          $body = strtr(substr($name, 0, $p), '/', '.');
+          $ext = substr($name, $p);
+        }
+        return \HQ::getenv('CCC::RSS_PATH').'/markdowns/'.strtr($body, '.', '/').$ext;
       }
     };
 
@@ -239,9 +266,13 @@ final class Compilers
       //
       public function getFullName($name)
       {
+        $body = $name;
+        $ext = '.js';
         $p = strrpos($name, '.');
-        $body = strtr(substr($name, 0, $p), '/', '.');
-        $ext = substr($name, $p);
+        if ($p !== false) {
+          $body = strtr(substr($name, 0, $p), '/', '.');
+          $ext = substr($name, $p);
+        }
         return \HQ::getenv('CCC::RSS_PATH').'/js/'.strtr($body, '.', '/').$ext;
       }
     };
