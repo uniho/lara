@@ -52,15 +52,8 @@ class On
   {
     // css 使用例
     \Route::get('css/{name}', function ($name) {
-      $p = strrpos($name, '.');
-      if ($p === false) {
-        $name = 'css.' . strtr($name, '/', '.');
-        abort_unless(view()->exists($name), 404, "View [{$name}] not found.");
-        $contents = view($name)->render();
-      } else {
-        abort_unless(\Compilers::scss()->exists($name), 404, "CSS [{$name}] not found.");
-        $contents = \Compilers::scss($name, [], ['force_compile' => \HQ::getDebugMode() || request()->has('force_compile')]);
-      }
+      abort_unless(\Compilers::scss()->exists($name), 404, "CSS [{$name}] not found.");
+      $contents = \Compilers::scss($name, [], ['force_compile' => \HQ::getDebugMode() || request()->has('force_compile')]);
       $response = \Response::make($contents, 200);
       return $response->header('Content-Type', 'text/css; charset=utf-8');
     })->where('name', '.*'); // この where により、$name がパスデリミタを受けられるようになる
@@ -84,6 +77,14 @@ class On
       ]);
       $response = \Response::make($contents, 200);
       return $response->header('Content-Type', 'application/javascript; charset=utf-8');
+    })->where('name', '.*');
+
+    // Markdown 使用例
+    \Route::get('markdown/{name}', function ($name) {
+      abort_unless(\Compilers::markdown()->exists($name), 404, "Markdown [{$name}] not found.");
+      $contents = \Compilers::markdown($name, [], ['force_compile' => \HQ::getDebugMode() || request()->has('force_compile')]);
+      $response = \Response::make($contents, 200);
+      return $response->header('Content-Type', 'text/plain; charset=utf-8');
     })->where('name', '.*');
 
   }
