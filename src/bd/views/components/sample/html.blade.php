@@ -12,7 +12,7 @@
     if (Cache::store('file')->has($cahce_key)) {
       $style = Cache::store('file')->get($cahce_key);
     } else {
-      $style = Compilers::scss()->inline($style);
+      $style = Compilers::scss()->inline($style, options: ['minify' => 1]);
       $style = new Illuminate\View\ComponentSlot('<style>' . $style . '</style>');
       Cache::store('file')->put($cahce_key, $style, now()->addDays(14));
     }

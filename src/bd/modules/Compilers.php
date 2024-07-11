@@ -45,10 +45,15 @@ final class Compilers
       //
       public function inline($src, $data = [], $options = [])
       {
+        $params = '';
+        if (isset($options['minify']) && $options['minify']) {
+          $params .= ' --minify';
+        }
+
         $node_cli = \HQ::getenv('CCC::NODE_CLI');
         $lightningcss_cli =  \HQ::getenv('CCC::NODE_PATH') . '/lightningcss_cli.js';
 
-        $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $lightningcss_cli");
+        $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $lightningcss_cli $params");
         $process->setInput($src)->run();
         return $process->getOutput();
       }
