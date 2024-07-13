@@ -25,7 +25,7 @@ final class Compilers
             }
 
             $node_cli = \HQ::getenv('CCC::NODE_CLI');
-            $lightningcss_cli =  \HQ::getenv('CCC::NODE_PATH') . '/lightningcss_cli.js';
+            $lightningcss_cli =  \HQ::getenv('CCC::CLI_PATH') . '/node/lightningcss_cli.js';
 
             exec("$node_cli $lightningcss_cli $path $params --outfile=$compiledPath 2>&1", $error);
             if (end($error) != 'done!') {
@@ -51,7 +51,7 @@ final class Compilers
         }
 
         $node_cli = \HQ::getenv('CCC::NODE_CLI');
-        $lightningcss_cli =  \HQ::getenv('CCC::NODE_PATH') . '/lightningcss_cli.js';
+        $lightningcss_cli =  \HQ::getenv('CCC::CLI_PATH') . '/node/lightningcss_cli.js';
 
         $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $lightningcss_cli $params");
         $process->setInput($src)->run();
@@ -189,7 +189,7 @@ final class Compilers
         $data = array_merge(json_decode($frontmatter, true), $data);
 
         $node_cli = \HQ::getenv('CCC::NODE_CLI');
-        $handlebars_cli =  \HQ::getenv('CCC::NODE_PATH') . '/handlebars_cli.js';
+        $handlebars_cli =  \HQ::getenv('CCC::CLI_PATH') . '/node/handlebars_cli.js';
 
         $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $handlebars_cli");
         $process->setInput("---\n".json_encode($data)."\n---\n".$body)->run();
@@ -242,8 +242,8 @@ final class Compilers
             }
 
             $node_cli = \HQ::getenv('CCC::NODE_CLI');
-            $esbuild_cli = \HQ::getenv('CCC::NODE_PATH') . '/node_modules/.bin/esbuild';
-            $minifyTemplateLiteral_cli =  \HQ::getenv('CCC::NODE_PATH') . '/node_modules/.bin/minify-template-literal';
+            $esbuild_cli = \HQ::getenv('CCC::CLI_PATH') . '/node/node_modules/.bin/esbuild';
+            $minifyTemplateLiteral_cli =  \HQ::getenv('CCC::CLI_PATH') . '/node/node_modules/.bin/minify-template-literal';
 
             exec("$esbuild_cli $path $params --outfile=$compiledPath 2>&1", $error);
             if (strpos(end($error), 'error') !== false) {

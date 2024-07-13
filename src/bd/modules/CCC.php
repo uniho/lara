@@ -19,7 +19,7 @@ final class CCC
 
   const VIEWS_PATH = __BASE_DIR__ . '/bd/views';
   const RSS_PATH = __BASE_DIR__ . '/bd/rss';
-  const NODE_PATH = __BASE_DIR__ . '/bd/cli/node';
+  const CLI_PATH = __BASE_DIR__ . '/bd/cli';
 
   const PHP_CLI = 'php';
   const NODE_CLI = 'node';
