@@ -4,14 +4,7 @@ use Illuminate\Http\Request;
 
 //
 \Route::any('/adminer', function () {
-  $user = Auth::user();
-  if (
-    !\HQ::getDebugMode() ||
-    (!$user && !\HQ::checkUserCookie()) ||
-    ($user && $user->id != 0 && (!class_exists('\Models\UserEx') || !\Models\UserEx::find($user->id)->isAdmin()))
-  ) {
-    abort(403);
-  }
+  abort_unless(self::getDebugMode() && \HQ::isAdminUser(), 403);
 
   $connect = request()->query('connect') ?: config('database.default');
   if (config("database.connections.$connect.driver") == 'mysql') {

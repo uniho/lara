@@ -3,6 +3,8 @@
 final class HQ
 {
   private static $env = []; 
+  private static $APP_SLUG = 'lara';
+  private static $COOKIE_PATH = '/';
 
   public static function onStart()
   {
@@ -50,7 +52,7 @@ final class HQ
     if ($request->method() == 'GET') {
 
       if (basename(url()->current()) == 'debugbar.php') {
-        if (self::allowDebugbar()) {
+        if (self::getDebugMode() && self::isAdminUser()) {
           if ($request->has('phpinfo')) {
             phpinfo();
             exit();
@@ -198,40 +200,69 @@ final class HQ
     self::$env['debugbarShowAlways'] = true;
   }
 
-  public static function getDebugbarPageSecret()
-  {
-    return \CachedConfig::get('$$__DEBUGBAR_PAGE_SECRET');
+  public static function isAdminUser() {
+    $user = \Auth::user();
+    return 
+      (!$user && \HQ::getSuperUser()) ||
+      ($user && ($user->id == 0 || (class_exists('\Models\UserEx') && \Models\UserEx::find($user->id)->isAdmin())))
+    ;
   }
 
-  public static function setDebugbarPageSecret($secret)
+  public static function getSuperUser()
   {
-    if (!$secret) {
-      \CachedConfig::delete('$$__DEBUGBAR_PAGE_SECRET');
-      return;
+    $user = session('SUPER-USER-HQ');
+    if ($user) {
+      return $user;
     }
-    \CachedConfig::set('$$__DEBUGBAR_PAGE_SECRET', $secret);
+
+    // Remember Me
+    $recaller = cookie(self::getAppSlug().'_SUPER-USER-HQ');
+    if (!$recaller) {
+      return null;
+    }
+
+    $recaller_arr = explode('|', $recaller);
+    if (!isset($recaller_arr[0]) || !isset($recaller_arr[1]) || !isset($recaller_arr[2])) {
+      return null;
+    }
+
+    $token = cache('SUPER-USER-HQ_'.$recaller_arr[0]);
+    if ($token && $token === $recaller_arr[1]) {
+      self::updateSuperUser($recaller_arr[0], intval($recaller_arr[2]));
+      return $recaller_arr[0];
+    }
+
+    return null;
   }
 
-  public static function allowDebugbar() {
-    if (basename(url()->current()) == 'debugbar.php') {
-      $user = \Auth::user();
-      if ($user && class_exists('\Models\UserEx') && \Models\UserEx::find($user->id)->isAdmin()) {
-        return true;
-      }
+  public static function updateSuperUser($user, $expire = 60 * 60 * 24 * 1)
+  {
+    if (!$user) return false;
 
-      // Rate Limit
-      if (!\Unsta\FloodControl::isAllowed('browse debugbar.php', 20, 60)) {
-        return false;
-      }
-      \Unsta\FloodControl::register('browse debugbar.php', 60);
+    session(['SUPER-USER-HQ' => $user]);
+    session()->regenerate();
 
-      $secret = self::getDebugbarPageSecret();
-      if ($secret && request()->query('secret') === $secret) {
-        return true;
-      }
+    // Remember Me
+    $token = \Str::random(60);
+    cache(['SUPER-USER-HQ_'.$user => $token], intval($expire)/* sec */);
+    cookie()->queue(
+      cookie(self::getAppSlug().'_SUPER-USER-HQ', "$user|$token|$expire", intval($expire/60)/* min */)
+    );
 
-      return false;
-    }
+    return true;
+  }
+
+  public static function logoutSuperUser()
+  {
+    $user = session('SUPER-USER-HQ');
+    if (!$user) return null;
+    session()->forget('SUPER-USER-HQ');
+    session()->invalidate();
+    session()->regenerateToken();
+    cache()->forget('SUPER-USER-HQ_'.$user);
+    cookie()->queue(
+      cookie()->forget(self::getAppSlug().'_SUPER-USER-HQ')
+    );
   }
 
   public static function getConfigFile(): string
@@ -241,6 +272,22 @@ final class HQ
       return $file;
     } 
     return __DIR__.'/../config.sample.php';
+  }
+
+  public static function getAppSlug() {
+    return self::$APP_SLUG;
+  }
+
+  public static function setAppSlug($slug) {
+    self::$APP_SLUG = $slug;
+  }
+
+  public static function getCookiePath() {
+    return self::$COOKIE_PATH;
+  }
+
+  public static function setCookiePath($path) {
+    self::$COOKIE_PATH = $path;
   }
 
   private static function on_exists(): bool
