@@ -13,6 +13,13 @@ final class HQ
     }
   }
 
+  public static function onFinish()
+  {
+    if (self::on_exists() && method_exists(\HQ\On::class, 'onFinish')) {
+      \HQ\On::onFinish();
+    }
+  }
+
   public static function onBoot()
   {
     if (self::on_exists() && method_exists(\HQ\On::class, 'onBoot')) {

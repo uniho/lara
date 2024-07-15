@@ -20,6 +20,16 @@ class On
     \HQ::setDebugbarShowAlways(false); // <====== For security, the default value is false!
   } 
   
+  // Called from index.php
+  public static function onFinish()
+  {
+    // // Clear Batch Table
+    // if (!cache()->has('rate limit on queue:prune-batches')) {
+    //   cache(['rate limit on queue:prune-batches' => true], 60*60*24);
+    //   \Utils\AsyncCLI::runArtisan('queue:prune-batches');
+    // }
+  } 
+  
   // Called from App\Providers\AppServiceProvider::boot()
   public static function onBoot()
   {

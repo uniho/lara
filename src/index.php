@@ -57,3 +57,5 @@ if (!is_file($configFile) || filemtime($configFile) !== filemtime($configFileCus
 
 $response = $response->send();
 $kernel->terminate($request, $response);
+
+\HQ::onFinish();
