@@ -123,6 +123,7 @@ final class HQ
     } else {
       if (!self::getDebugMode()) return;
       @unlink(self::getenv('CCC::STORAGE_FILE_DEBUG'));
+      \File::deleteDirectory(app()['config']['view.compiled'], true);
     }
   }
 
