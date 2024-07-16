@@ -224,20 +224,31 @@ final class HQ
     }
 
     // Remember Me
-    $recaller = cookie(self::getAppSlug().'_SUPER-USER-HQ');
-    if (!$recaller) {
+    $cookie = cookie(self::getAppSlug().'_SUPER-USER-HQ');
+    if (!$cookie) {
       return null;
     }
 
-    $recaller_arr = explode('|', $recaller);
-    if (!isset($recaller_arr[0]) || !isset($recaller_arr[1]) || !isset($recaller_arr[2])) {
+    $cookie_arr = explode('|', $cookie);
+    if (!isset($cookie_arr[0]) || !isset($cookie_arr[1])) {
+      return null;
+    }
+    $user = $cookie_arr[0];
+    $secret = $cookie_arr[1];
+
+    $cache = cache('SUPER-USER-HQ_'.$user);
+    if (!$cache) {
+      return null;
+    }
+    
+    $cache_arr = explode('|', $cache);
+    if (!isset($cache_arr[0]) || !isset($cache_arr[1])) {
       return null;
     }
 
-    $token = cache('SUPER-USER-HQ_'.$recaller_arr[0]);
-    if ($token && $token === $recaller_arr[1]) {
-      self::updateSuperUser($recaller_arr[0], intval($recaller_arr[2]));
-      return $recaller_arr[0];
+    if ($cache_arr[0] === $secret) {
+      self::updateSuperUser($user, intval($cache_arr[1]));
+      return $user;
     }
 
     return null;
@@ -252,9 +263,9 @@ final class HQ
 
     // Remember Me
     $token = \Str::random(60);
-    cache(['SUPER-USER-HQ_'.$user => $token], intval($expire)/* sec */);
+    cache(['SUPER-USER-HQ_'.$user => "$token|$expire"], intval($expire)/* sec */);
     cookie()->queue(
-      cookie(self::getAppSlug().'_SUPER-USER-HQ', "$user|$token|$expire", intval($expire/60)/* min */)
+      cookie(self::getAppSlug().'_SUPER-USER-HQ', "$user|$token", intval($expire/60)/* min */)
     );
 
     return true;
