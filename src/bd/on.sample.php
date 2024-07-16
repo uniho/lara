@@ -38,12 +38,6 @@ class On
 
     // \HQ::setenv('superUsers', [['name' => '', 'pass' => '']]);
 
-    \HQ::setMaintenanceMode(0);
-    // \HQ::setMaintenanceMode(5, [
-    //   'secret' => 'your secret key',
-    //   'message' => 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
-    // ]);
-
   } 
   
   // Called from routes/console.php
@@ -62,6 +56,15 @@ class On
   // Called from laravel/routes/web.php
   public static function onWeb($router)
   {
+    \HQ::setMaintenanceMode(0);
+    // \HQ::setMaintenanceMode(5, [
+    //   'secret' => 'your secret key',
+    //   'template' => view('sample.message', [
+    //     'title' => 'Page Under Maintenance',
+    //     'message' => 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
+    //   ])->render(),
+    // ]);
+
     \Route::prefix('admin')->group(function() {
       // Admin login
       \Route::get('login', function (Request $request) {
