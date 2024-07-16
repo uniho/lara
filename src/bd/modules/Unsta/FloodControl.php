@@ -4,31 +4,35 @@ namespace Unsta;
 
 final class FloodControl
 {
-  const PREFIX = 'unsta-flood';
-  const CACHE_STORE = 'file';
+  private static $cache;
+
+  public static function initialize($cache)
+  {
+    self::$cache = $cache;
+  }
 
   public static function register($name, int $window = 3600, $identifier = NULL)
   {
     // We can't use REQUEST_TIME here, because that would not guarantee
     // uniqueness.
     $time = time();
-    $events = \Cache::store(self::CACHE_STORE)->get(self::getKey($name, $identifier));
+    $events = self::$cache->get(self::getKey($name, $identifier));
     if (!$events) $events = [];
     $events = array_filter($events, function ($entry) use ($time) {
       return $entry['expire'] > $time;
     });
     $events[] = ['expire' => $time + $window, 'time' => $time];
-    \Cache::store(self::CACHE_STORE)->put(self::getKey($name, $identifier), $events, $window);
+    self::$cache->put(self::getKey($name, $identifier), $events, $window);
   }
 
   public static function clear($name, $identifier = NULL)
   {
-    \Cache::store(self::CACHE_STORE)->forget(self::getKey($name, $identifier));
+    self::$cache->forget(self::getKey($name, $identifier));
   }
 
   public static function isAllowed($name, int $threshold, int $window = 3600, $identifier = NULL)
   {
-    $events = \Cache::store(self::CACHE_STORE)->get(self::getKey($name, $identifier));
+    $events = self::$cache->get(self::getKey($name, $identifier));
     if (!$events) {
       return $threshold > 0;
     }
@@ -46,6 +50,9 @@ final class FloodControl
 
   private static function getKey($name, $identifier)
   {
-    return self::PREFIX . "_" . $name . "_" . (isset($identifier) ? $identifier : $_SERVER["REMOTE_ADDR"]);
+    return $name . "_" . ($identifier ?: $_SERVER["REMOTE_ADDR"]);
   }
 }
+
+//
+FloodControl::initialize(new \Illuminate\Cache\FileStore(app()['files'], storage_path('_FloodControl_')));
