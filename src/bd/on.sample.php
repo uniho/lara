@@ -24,8 +24,8 @@ class On
   public static function onFinish()
   {
     // // Clear Batch Table
-    // if (!cache()->has('rate limit on queue:prune-batches')) {
-    //   cache(['rate limit on queue:prune-batches' => true], 60*60*24);
+    // if (!\HQ::cache()->has('rate_imit_on_prune-batches')) {
+    //   \HQ::cache()->put('rate_imit_on_prune-batches', true, 60*60*24);
     //   \Utils\AsyncCLI::runArtisan('queue:prune-batches');
     // }
   } 
@@ -75,16 +75,16 @@ class On
           abort(403);
         }
 
-        if ($current_user = \HQ::getSuperUser()) {
+        if (\HQ::getSuperUser()) {
           return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Already logged in.']);
         }
 
         // Rate limit for the Brute-force attack
-        $SUPER_USER_LOGIN_RATE_LIMIT_KEY = 'rate limit on super user login';
+        $SUPER_USER_LOGIN_RATE_LIMIT_KEY = 'rate_limit_super_user_login';
         $SUPER_USER_LOGIN_RATE_LIMIT_WAIT = 3;
-        if (cache($SUPER_USER_LOGIN_RATE_LIMIT_KEY)) {
+        if (\HQ::cache()->has($SUPER_USER_LOGIN_RATE_LIMIT_KEY)) {
           sleep($SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
-          cache()->forget($SUPER_USER_LOGIN_RATE_LIMIT_KEY);
+          \HQ::cache()->forget($SUPER_USER_LOGIN_RATE_LIMIT_KEY);
         }
 
         if ($request->query('secret') === $pass) {
@@ -92,7 +92,7 @@ class On
           return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!']);
         }
 
-        cache([$SUPER_USER_LOGIN_RATE_LIMIT_KEY => true], $SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
+        \HQ::cache()->put($SUPER_USER_LOGIN_RATE_LIMIT_KEY, true, $SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
         abort(403, "wrong secret");
       });
 

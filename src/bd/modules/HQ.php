@@ -5,6 +5,7 @@ final class HQ
   private static $env = []; 
   private static $APP_SLUG = 'lara';
   private static $COOKIE_PATH = '/';
+  private static $cache = false;
 
   public static function onStart()
   {
@@ -236,7 +237,7 @@ final class HQ
     $user = $cookie_arr[0];
     $secret = $cookie_arr[1];
 
-    $cache = cache('SUPER-USER-HQ_'.$user);
+    $cache = self::cache()->get('SUPER-USER-HQ_'.$user);
     if (!$cache) {
       return null;
     }
@@ -263,7 +264,7 @@ final class HQ
 
     // Remember Me
     $token = \Str::random(60);
-    cache(['SUPER-USER-HQ_'.$user => "$token|$expire"], intval($expire)/* sec */);
+    self::cache()->put('SUPER-USER-HQ_'.$user, "$token|$expire", intval($expire)/* sec */);
     cookie()->queue(
       cookie(self::getAppSlug().'_SUPER-USER-HQ', "$user|$token", intval($expire/60)/* min */)
     );
@@ -278,7 +279,7 @@ final class HQ
     session()->forget('SUPER-USER-HQ');
     session()->invalidate();
     session()->regenerateToken();
-    cache()->forget('SUPER-USER-HQ_'.$user);
+    self::cache()->forget('SUPER-USER-HQ_'.$user);
     cookie()->queue(
       cookie()->forget(self::getAppSlug().'_SUPER-USER-HQ')
     );
@@ -307,6 +308,13 @@ final class HQ
 
   public static function setCookiePath($path) {
     self::$COOKIE_PATH = $path;
+  }
+
+  public static function cache() {
+    if (!self::$cache) {
+      self::$cache = new \Unsta\SimpleFileStore(storage_path("_HQ_"));
+    }
+    return self::$cache;
   }
 
   private static function on_exists(): bool
