@@ -15,7 +15,7 @@
     } else {
       $style = Compilers::scss()->inline($style, options: ['minify' => 1]);
       $style = new Illuminate\View\ComponentSlot('<style>' . $style . '</style>');
-      Unsta\KVEFile::store($key, $style, 60*60*24*14, 'raw');
+      Unsta\KVEFile::store($key, $style, 60*60*24*14, 'serialize');
     }
   }
 ?>
