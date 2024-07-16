@@ -10,12 +10,12 @@
   if ($style) {
     $hash = sha1($style);
     $key = 'scss_inline_cache/'.substr($hash, 0, 2).'/'.substr($hash, 2, 2).'/'.$hash;
-    if (Unsta\KVEFile::exists($key)) {
-      $style = Unsta\KVEFile::fetch($key);
+    if (\HQ::cache()->has($key)) {
+      $style = \HQ::cache()->get($key);
     } else {
       $style = Compilers::scss()->inline($style, options: ['minify' => 1]);
       $style = new Illuminate\View\ComponentSlot('<style>' . $style . '</style>');
-      Unsta\KVEFile::store($key, $style, 60*60*24*14, 'serialize');
+      \HQ::cache()->put($key, $style, 60*60*24*14);
     }
   }
 ?>
