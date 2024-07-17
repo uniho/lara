@@ -55,4 +55,8 @@ final class FloodControl
 }
 
 //
-FloodControl::initialize(new \Illuminate\Cache\FileStore(app()['files'], storage_path('_FloodControl_')));
+FloodControl::initialize(
+  new \Illuminate\Cache\Repository(
+    new \Illuminate\Cache\FileStore(app()['files'], storage_path('_FloodControl_'))
+  )
+);
