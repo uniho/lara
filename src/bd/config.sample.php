@@ -18,6 +18,19 @@ return [
     'timezone' => 'UTC',
   ],
 
+  'logging' => [
+    'default' => 'daily',
+    'channels' => [
+      'daily' => [
+        'driver' => 'daily',
+        'path' => \HQ::getenv('CCC::KEEP_PATH').'/logs/laravel.log',
+        'level' => 'debug',
+        'days' => 90,
+        'replace_placeholders' => true,
+      ],
+    ],
+  ],
+
   'mail' => [
     'mailers' => [
       'smtp' => [

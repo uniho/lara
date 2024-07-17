@@ -317,7 +317,7 @@ final class HQ
     if ($options['keep'] ?? false) {
       if (!isset(self::$keep_caches[$type])) {
         self::$keep_caches[$type] = new \Illuminate\Cache\Repository(
-          new \Unsta\FileStore(app()['files'], self::getenv('CCC::BASE_DIR').'/bd/_keep_', $type)
+          new \Unsta\FileStore(app()['files'], self::getenv('CCC::KEEP_PATH'), $type)
         );
       }
       return self::$keep_caches[$type];

@@ -17,6 +17,7 @@ final class CCC
   const STORAGE_LOCAL_PRIVATE_FILES_PATH = self::DIR_LARAVEL . '/storage/app';
   const STORAGE_LOCAL_PUBLIC_FILES_PATH = './storage';
 
+  const KEEP_PATH = __BASE_DIR__ . '/bd/_keep_';
   const VIEWS_PATH = __BASE_DIR__ . '/bd/views';
   const RSS_PATH = __BASE_DIR__ . '/bd/rss';
   const CLI_PATH = __BASE_DIR__ . '/bd/cli';
