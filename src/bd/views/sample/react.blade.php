@@ -1,5 +1,6 @@
 @props([
   'page' => request()->query('page') ?? 1,
+  'root' => request()->root(),
 ])
 
 <!DOCTYPE html>
@@ -8,10 +9,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <title>React on Blade Sample</title>
-    <link rel="stylesheet" href="{{request()->root()}}/fd/css/normalize.css">
-    <link rel="stylesheet" href="{{request()->root()}}/fd/css/preflight.css">
-    <link rel="stylesheet" href="{{request()->root()}}/fd/css/style.css">
-    <link rel="stylesheet" href="{{request()->root()}}/css/sample/palette">
+    <link rel="stylesheet" href="{{$root}}/fd/css/normalize.css">
+    <link rel="stylesheet" href="{{$root}}/fd/css/preflight.css">
+    <link rel="stylesheet" href="{{$root}}/fd/css/style.css">
+    <link rel="stylesheet" href="{{$root}}/css/sample/palette">
   </head>
   <body>
     <div id="app"></div>
