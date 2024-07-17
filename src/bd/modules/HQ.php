@@ -5,7 +5,8 @@ final class HQ
   private static $env = []; 
   private static $APP_SLUG = 'lara';
   private static $COOKIE_PATH = '/';
-  private static $cache = false;
+  private static $caches = [];
+  private static $keep_caches = [];
 
   public static function onStart()
   {
@@ -310,11 +311,24 @@ final class HQ
     self::$COOKIE_PATH = $path;
   }
 
-  public static function cache() {
-    if (!self::$cache) {
-      self::$cache = new \Illuminate\Cache\Repository(new \Unsta\FileStore(app()['files'], storage_path("_HQ_")));
+  public static function cache($options = []) {
+    $type = $options['type'] ?? 'serialize';
+
+    if ($options['keep'] ?? false) {
+      if (!isset(self::$keep_caches[$type])) {
+        self::$keep_caches[$type] = new \Illuminate\Cache\Repository(
+          new \Unsta\FileStore(app()['files'], self::getenv('CCC::BASE_DIR').'/bd/_keep_', $type)
+        );
+      }
+      return self::$keep_caches[$type];
     }
-    return self::$cache;
+
+    if (!isset(self::$caches[$type])) {
+      self::$caches[$type] = new \Illuminate\Cache\Repository(
+        new \Unsta\FileStore(app()['files'], storage_path("_HQ_"), $type)
+      );
+    }
+    return self::$caches[$type];
   }
 
   private static function on_exists(): bool
