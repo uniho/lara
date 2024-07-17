@@ -8,9 +8,9 @@ use Illuminate\Filesystem\LockableFile;
 
 class FileStore extends \Illuminate\Cache\FileStore
 {
-  public function __construct($directory, private $storeType = 'serialize', $filePermission = null)
+  public function __construct($filesystem, $directory, private $storeType = 'serialize', $filePermission = null)
   {
-    parent::__construct(app()['files'], $directory, $filePermission);
+    parent::__construct($filesystem, $directory, $filePermission);
   }
 
   public function put($key, $value, $seconds)

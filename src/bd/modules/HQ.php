@@ -312,7 +312,7 @@ final class HQ
 
   public static function cache() {
     if (!self::$cache) {
-      self::$cache = new \Illuminate\Cache\Repository(new \Unsta\FileStore(storage_path("_HQ_")));
+      self::$cache = new \Illuminate\Cache\Repository(new \Unsta\FileStore(app()['files'], storage_path("_HQ_")));
     }
     return self::$cache;
   }
