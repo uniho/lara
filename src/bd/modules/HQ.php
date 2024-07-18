@@ -226,7 +226,7 @@ final class HQ
     }
 
     // Remember Me
-    $cookie = cookie(self::getAppSlug().'_SUPER-USER-HQ');
+    $cookie = \Cookie::get(self::getAppSlug().'_SUPER-USER-HQ');
     if (!$cookie) {
       return null;
     }
