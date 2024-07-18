@@ -55,6 +55,11 @@ final class Compilers
 
         $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $lightningcss_cli $params");
         $process->setInput($src)->run();
+        if (!$process->isSuccessful()) {
+          $error = $process->getErrorOutput();
+          \Log::error('lightningcss', [$error]);
+          return "/*\n\n$error\n*/";
+        }
         return $process->getOutput();
       }
 
