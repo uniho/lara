@@ -44,7 +44,7 @@
 ?>
 
 @props([
-  'uniq_class' => '_SC_' . uniqid(),
+  'css_id' => $css->getId(),
 ])
 
 <x-sample.html>
@@ -57,7 +57,7 @@
   </x-slot>  
 
   {{-- slot --}}
-  <div class="{{$uniq_class}} wrapper">
+  <div class="{{$css_id}} wrapper">
     <div class="title">
       {{ HQ::getenv('CCC::APP_NAME') }} 
     </div>  
@@ -111,12 +111,11 @@
   </div>
 
 {{-- Dynamic SCSS --}}
-@push('style')
+@css($css_id)
 // <style>
 
-// You can use SCSS style!!
+  // You can use SCSS style!!
 
-.{{ $uniq_class }} {
   .color-box {
     border: yellow 1px solid;
     padding: 1rem;
@@ -127,9 +126,8 @@
       width: 100%;
     }
   }
-}
 
 // </style>
-@endpush  
+@endcss  
 
 </x-sample.html>

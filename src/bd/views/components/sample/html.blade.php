@@ -5,22 +5,6 @@
   'root' => request()->root(),
 ])
 
-<?php
-  // Dynamic SCSS
-  $style = $__env->yieldPushContent('style');
-  if ($style) {
-    $hash = sha1($style);
-    $key = 'cache/scss_inline_cache/'.substr($hash, 0, 2).'/'.substr($hash, 2, 2).'/'.$hash;
-    if (\HQ::cache()->has($key)) {
-      $style = \HQ::cache()->get($key);
-    } else {
-      $style = Compilers::scss()->inline($style, options: ['minify' => 1]);
-      $style = new Illuminate\View\ComponentSlot('<style>' . $style . '</style>');
-      \HQ::cache()->put($key, $style, 60*60*24*14);
-    }
-  }
-?>
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -31,7 +15,7 @@
     <link rel="stylesheet" href="{{$root}}/fd/css/preflight.css">
     <link rel="stylesheet" href="{{$root}}/fd/css/style.css">
     {{ $header }}
-    {{ $style }}
+    @stackcss
   </head>
   <body>
     {{ $slot }}
