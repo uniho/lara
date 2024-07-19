@@ -8,6 +8,8 @@ use Illuminate\Filesystem\LockableFile;
 
 class FileStore extends \Illuminate\Cache\FileStore
 {
+  protected $sysDir = '__sys__';
+
   public function __construct($filesystem, $directory, private $storeType = 'serialize', $filePermission = null)
   {
     parent::__construct($filesystem, $directory, $filePermission);
@@ -135,6 +137,48 @@ class FileStore extends \Illuminate\Cache\FileStore
     } finally {
       $file->close();
     }
+  }
+
+  public function gc(int $period = 60*60*24, $forced = false, $cleanupDir = false)
+  {
+    $before = $this->get($this->sysDir.'/GC');
+    if (!$forced && $before && $this->currentTime() < $before + $period) return false;
+    $this->forever($this->sysDir.'/GC', $this->currentTime());
+
+    $files = \Symfony\Component\Finder\Finder::create()->files()->ignoreDotFiles(true)->in($this->directory);
+    foreach ($files as $file) {
+      $h = @fopen($file, 'r+');
+      if ($h === false) continue;
+      try {
+        if (!flock($h, LOCK_EX | LOCK_NB)) continue;
+        try {
+          $expire = intval(fread($h, 10));
+        } catch (Exception) {
+          continue;
+        }
+        if ($this->currentTime() < $expire) continue;
+        if (!ftruncate($h, 0)) continue;
+      } finally {
+        fclose($h);
+      }
+      @unlink($file);
+    }  
+
+    if (!$cleanupDir) return true;
+
+    $cleanupFunc = function($directory, $preserve = false) use(&$cleanupFunc) {
+      $dirs = \Symfony\Component\Finder\Finder::create()->in($directory)->directories()->depth(0);
+      foreach ($dirs as $dir) {
+        $cleanupFunc($dir);
+      }
+      if (!$preserve && $this->files->isEmptyDirectory($directory)) {
+        @rmdir($directory);
+      }
+    };
+    
+    $cleanupFunc($this->directory, true);
+
+    return true;
   }
 
 }
