@@ -38,6 +38,7 @@ class On
 
     // \HQ::setenv('superUsers', [['name' => '', 'pass' => '']]);
 
+    \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.15.0/bin/node');
   } 
   
   // Called from routes/console.php
