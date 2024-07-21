@@ -86,6 +86,9 @@ class AppServiceProvider extends ServiceProvider
     });
 
     //
+    \View::addLocation(\HQ::getenv('CCC::VIEWS_PATH'));
+
+    //
     \HQ::onBoot();
   }
 }
