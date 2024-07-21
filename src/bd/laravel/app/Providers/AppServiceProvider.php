@@ -74,7 +74,11 @@ class AppServiceProvider extends ServiceProvider
             $style = \HQ::cache()->get($key);
           } else {
             $style = Compilers::scss()->inline($style, options: ["minify" => 1]);
-            \HQ::cache()->put($key, $style, 60*60*24*14);
+            if (isset($style["error"])) {
+              $style = "/*\n$error\n*/";
+            } else {
+              \HQ::cache()->put($key, $style, 60*60*24*14);
+            }
           }
           echo "<style>$style</style>";
         }

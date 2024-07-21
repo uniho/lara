@@ -58,7 +58,7 @@ final class Compilers
         if (!$process->isSuccessful()) {
           $error = $process->getErrorOutput();
           \Log::error('lightningcss', [$error]);
-          return "/*\n\n$error\n*/";
+          return ['error' => $error];
         }
         return $process->getOutput();
       }
