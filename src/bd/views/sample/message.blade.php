@@ -14,9 +14,7 @@
       <div class="title">
         {{$title}}      
       </div>
-      <div class="message">
-        {{$message}}
-      </div>
+      <div class="message">{{$message}}</div>
     </div>
   </div>
 
@@ -39,6 +37,7 @@
     .message {
       margin: 2rem;
       max-width: 800px;
+      white-space: pre-wrap;
     }
   }
 
