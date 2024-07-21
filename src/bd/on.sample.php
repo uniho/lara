@@ -15,7 +15,9 @@ class On
   {
     // \HQ::setAppSlug('lara');
     // \HQ::setCookiePath('/');
+
     \HQ::setDebugMode(true);
+    \HQ::setViewCacheMode(!\HQ::getDebugMode());
     \HQ::setDebugShowSource(false); // <====== For security, the default value is false!
     \HQ::setDebugbarShowAlways(false); // <====== For security, the default value is false!
   } 

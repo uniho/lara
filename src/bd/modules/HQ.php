@@ -125,7 +125,23 @@ final class HQ
     } else {
       if (!self::getDebugMode()) return;
       @unlink(self::getenv('CCC::STORAGE_FILE_DEBUG'));
-      \File::deleteDirectory(app()['config']['view.compiled'], true);
+    }
+  }
+
+  public static function getViewCacheMode(): bool
+  {
+    return is_file(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'));
+  }
+
+  public static function setViewCacheMode(bool $mode)
+  {
+    if ($mode) {
+      if (self::getViewCacheMode()) return;
+      file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'), '1');
+      file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE_CLEAR'), '1');
+    } else {
+      if (!self::getViewCacheMode()) return;
+      @unlink(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'));
     }
   }
 

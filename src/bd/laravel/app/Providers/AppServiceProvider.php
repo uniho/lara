@@ -89,6 +89,12 @@ class AppServiceProvider extends ServiceProvider
     \View::addLocation(\HQ::getenv('CCC::VIEWS_PATH'));
 
     //
+    if (is_file(\HQ::getenv('CCC::STORAGE_FILE_VIEW_CACHE_CLEAR'))) {
+      @unlink(\HQ::getenv('CCC::STORAGE_FILE_VIEW_CACHE_CLEAR'));
+      \File::deleteDirectory(app()['config']['view.compiled'], true);
+    }
+
+    //
     \HQ::onBoot();
   }
 }

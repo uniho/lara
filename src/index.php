@@ -41,11 +41,14 @@ if (!is_file($configFile) || filemtime($configFile) !== filemtime($configFileCus
   \File::move($configFile, \File::dirname($configFile).'/config0.php');
   \File::put($configFile, "<?php return array_replace_recursive(require(__DIR__.'/config0.php'), require(__DIR__.'/config1.php'), [
     'app' => [
-      'debug' => is_file(\HQ::getenv('CCC::STORAGE_FILE_DEBUG')) || \HQ::getenv('debug'),
+      'debug' => \HQ::getDebugMode(),
       'key' => require(\HQ::getenv('CCC::STORAGE_FILE_CFG_APP')),
     ],
+    'view' => [
+      'cache' => \HQ::getViewCacheMode(),
+    ],
     'debugbar' => [
-      'inject' => \HQ::getDebugbarShowAlways() || \HQ::getenv('debug'),
+      'inject' => \HQ::getDebugbarShowAlways(),
     ],  
   ]);");
   \touch($configFile, filemtime($configFileCustom));          

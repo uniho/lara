@@ -13,8 +13,12 @@ final class CCC
 
   const FILE_CFG_APP = '/storage/framework/config-app.php';
   const FILE_DEBUG = '/storage/framework/debug.json';
+  const FILE_VIEW_CACHE = '/storage/framework/view-cache.json';
+  const FILE_VIEW_CACHE_CLEAR = '/storage/framework/view-cache-clear.json';
   const STORAGE_FILE_CFG_APP = self::DIR_LARAVEL . self::FILE_CFG_APP;
   const STORAGE_FILE_DEBUG = self::DIR_LARAVEL . self::FILE_DEBUG;
+  const STORAGE_FILE_VIEW_CACHE = self::DIR_LARAVEL . self::FILE_VIEW_CACHE;
+  const STORAGE_FILE_VIEW_CACHE_CLEAR = self::DIR_LARAVEL . self::FILE_VIEW_CACHE_CLEAR;
 
   const STORAGE_LOCAL_PRIVATE_FILES_PATH = self::DIR_LARAVEL . '/storage/app';
   const STORAGE_LOCAL_PUBLIC_FILES_PATH = __BASE_DIR__ . '/storage';
