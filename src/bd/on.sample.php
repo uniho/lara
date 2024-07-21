@@ -78,8 +78,14 @@ class On
           abort(403);
         }
 
+        $info = "\n\n".
+          (\HQ::getDebugMode() ? "DEBUG MODE - ON!\n" : "") .
+          (!\HQ::getViewCacheMode() ? "VIEW CACHE - OFF!\n" : "") .
+          (\HQ::getDebugShowSource() ? "DEBUG SHOW SOURCE - ON!\n" : "") .
+          (\HQ::getDebugbarShowAlways() ? "DEBUGBAR SHOW ALWAYS - ON!\n" : "");
+
         if (\HQ::getSuperUser()) {
-          return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Already logged in.']);
+          return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => "Already logged in.".$info]);
         }
 
         // Rate limit for the Brute-force attack
@@ -92,7 +98,7 @@ class On
 
         if ($request->query('secret') === $pass) {
           \HQ::updateSuperUser($user);
-          return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!']);
+          return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!'.$info]);
         }
 
         \HQ::cache()->put($SUPER_USER_LOGIN_RATE_LIMIT_KEY, true, $SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
