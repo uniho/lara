@@ -71,13 +71,13 @@ final class Procedures
   public static function isAdmin()
   {
     $user = \Auth::user();
-    return $user && class_exists('\Models\UserEx') && \Models\UserEx::find($user->id)->isAdmin();
+    return \HQ::getSuperUser() || ($user && class_exists('\Models\UserEx') && \Models\UserEx::find($user->id)->isAdmin());
   }
 
   //
   public static function hasRole($role)
   {
     $user = \Auth::user();
-    return $user && class_exists('\Models\UserEx') && \Models\UserEx::find($user->id)->hasRole($role);
+    return \HQ::getSuperUser() || ($user && class_exists('\Models\UserEx') && \Models\UserEx::find($user->id)->hasRole($role));
   }
 }
