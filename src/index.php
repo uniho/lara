@@ -47,6 +47,11 @@ if (!is_file($configFile) || filemtime($configFile) !== filemtime($configFileCus
     'view' => [
       'cache' => \HQ::getViewCacheMode(),
     ],
+    'session' => [
+      'driver' => 'file',
+      'cookie' => \HQ::getAppSlug().'_session',
+      'path' => \HQ::getCookiePath(),
+    ],
     'debugbar' => [
       'inject' => \HQ::getDebugbarShowAlways() || \HQ::getenv('debug'),
     ],  
