@@ -38,7 +38,7 @@ class On
     \HQ::setenv('CCC::APP_NAME', 'Test App!');
     \Log::debug(\HQ::getenv('CCC::APP_NAME') . ' boot!');
 
-    // \HQ::setenv('superUsers', [['name' => '', 'pass' => '']]);
+    // \HQ::setenv('superUserSecret', '');
 
     \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.15.0/bin/node');
   } 
@@ -72,10 +72,7 @@ class On
 
       // Admin login
       \Route::get('login', function (Request $request) {
-        $users = \HQ::getenv('superUsers');
-        $user = $users[0]['name'] ?? false;
-        $pass = $users[0]['pass'] ?? false;
-        if (!$user || !$pass) {
+        if (!\HQ::getenv('superUserSecret')) {
           abort(403);
         }
 
@@ -97,8 +94,8 @@ class On
         }
         \HQ::cache()->put($SUPER_USER_LOGIN_RATE_LIMIT_KEY, true, $SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
 
-        if ($request->query('secret') === $pass) {
-          \HQ::updateSuperUser($user);
+        if ($request->query('secret') === \HQ::getenv('superUserSecret')) {
+          \HQ::updateSuperUser();
           return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!<hr>'.$info]);
         }
 

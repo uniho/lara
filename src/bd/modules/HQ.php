@@ -272,7 +272,7 @@ final class HQ
     return null;
   }
 
-  public static function updateSuperUser($user, $expire = 60 * 60 * 24 * 1)
+  public static function updateSuperUser($user = 'super', $expire = 60 * 60 * 24 * 1)
   {
     if (!$user) return false;
 
