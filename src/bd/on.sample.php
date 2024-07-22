@@ -94,15 +94,14 @@ class On
         $SUPER_USER_LOGIN_RATE_LIMIT_WAIT = 3;
         if (\HQ::cache()->has($SUPER_USER_LOGIN_RATE_LIMIT_KEY)) {
           sleep($SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
-          \HQ::cache()->forget($SUPER_USER_LOGIN_RATE_LIMIT_KEY);
         }
+        \HQ::cache()->put($SUPER_USER_LOGIN_RATE_LIMIT_KEY, true, $SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
 
         if ($request->query('secret') === $pass) {
           \HQ::updateSuperUser($user);
           return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!<hr>'.$info]);
         }
 
-        \HQ::cache()->put($SUPER_USER_LOGIN_RATE_LIMIT_KEY, true, $SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
         abort(403, "wrong secret");
       });
 
