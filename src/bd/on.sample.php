@@ -69,6 +69,7 @@ class On
     // ]);
 
     \Route::prefix('admin')->group(function() {
+
       // Admin login
       \Route::get('login', function (Request $request) {
         $users = \HQ::getenv('superUsers');
@@ -78,14 +79,14 @@ class On
           abort(403);
         }
 
-        $info = "\n\n".
-          (\HQ::getDebugMode() ? "DEBUG MODE - ON!\n" : "") .
-          (!\HQ::getViewCacheMode() ? "VIEW CACHE - OFF!\n" : "") .
-          (\HQ::getDebugShowSource() ? "DEBUG SHOW SOURCE - ON!\n" : "") .
-          (\HQ::getDebugbarShowAlways() ? "DEBUGBAR SHOW ALWAYS - ON!\n" : "");
+        $info = 
+          (\HQ::getDebugMode() ? "<p style=\"color:orange;\">DEBUG MODE - ON!</p>" : "") .
+          (!\HQ::getViewCacheMode() ? "<p style=\"color:orange;\">VIEW CACHE - OFF!</p>" : "") .
+          (\HQ::getDebugShowSource() ? "<p style=\"color:red;\">DEBUG SHOW SOURCE - ON!</p>" : "") .
+          (\HQ::getDebugbarShowAlways() ? "<p style=\"color:red;\">DEBUGBAR SHOW ALWAYS - ON!</p>" : "");
 
         if (\HQ::getSuperUser()) {
-          return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => "Already logged in.".$info]);
+          return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => "Already logged in.<hr>".$info]);
         }
 
         // Rate limit for the Brute-force attack
@@ -98,7 +99,7 @@ class On
 
         if ($request->query('secret') === $pass) {
           \HQ::updateSuperUser($user);
-          return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!'.$info]);
+          return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!<hr>'.$info]);
         }
 
         \HQ::cache()->put($SUPER_USER_LOGIN_RATE_LIMIT_KEY, true, $SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
@@ -110,6 +111,7 @@ class On
         \HQ::logoutSuperUser();
         return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Thanks, bye!']);
       });
+
     });
 
     // css 使用例
