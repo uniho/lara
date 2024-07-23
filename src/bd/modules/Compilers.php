@@ -242,6 +242,9 @@ final class Compilers
             if (isset($this->options['minify']) && $this->options['minify']) {
               $params .= ' --minify';
             }
+            if (isset($this->options['target'])) {
+              $params .= ' --target='.$this->options['target'];
+            }
             if (isset($this->options['tsconfig'])) {
               $params .= " --tsconfig-raw='" . json_encode($this->options['tsconfig']) ."'";
             }
