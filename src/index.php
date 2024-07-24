@@ -53,6 +53,12 @@ if (!is_file($configFile) || filemtime($configFile) !== filemtime($configFileCus
       'path' => \HQ::getCookiePath(),
     ],
     'debugbar' => [
+      'storage' => [
+        'open' => true,
+      ],
+      'collectors' => [
+        'logs' => true,
+      ],
       'inject' => \HQ::getDebugbarShowAlways() || \HQ::getenv('debug'),
     ],  
   ]);");
