@@ -31,10 +31,9 @@ if (!is_file($configFile) || filemtime($configFile) !== filemtime($configFileCus
   
   require($configFileCustom); // for Error Check
 
-  if (!is_file($cfgFile = \HQ::getenv('CCC::STORAGE_FILE_CFG_APP'))) {
+  if (!is_file($fileAppKey = \HQ::getenv('CCC::FILE_APP_KEY'))) {
     $key = base64_encode(Illuminate\Support\Str::random(32));
-    $cfgBody = "<?php return 'base64:$key';";
-    @file_put_contents($cfgFile, $cfgBody);
+    @file_put_contents($fileAppKey, "base64:$key");
   }
 
   \Artisan::call('config:cache', []);
@@ -42,7 +41,7 @@ if (!is_file($configFile) || filemtime($configFile) !== filemtime($configFileCus
   \File::put($configFile, "<?php return array_replace_recursive(require(__DIR__.'/config0.php'), require(__DIR__.'/config1.php'), [
     'app' => [
       'debug' => \HQ::getDebugMode() || \HQ::getenv('debug'),
-      'key' => require(\HQ::getenv('CCC::STORAGE_FILE_CFG_APP')),
+      'key' => @file_get_contents(\HQ::getenv('CCC::FILE_APP_KEY')),
     ],
     'view' => [
       'cache' => \HQ::getViewCacheMode(),
