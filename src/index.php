@@ -47,7 +47,6 @@ if (!is_file($configFile) || filemtime($configFile) !== filemtime($configFileCus
       'cache' => \HQ::getViewCacheMode(),
     ],
     'session' => [
-      'driver' => 'file',
       'cookie' => \HQ::getAppSlug().'_session',
       'path' => \HQ::getCookiePath(),
     ],
