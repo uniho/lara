@@ -2,7 +2,7 @@
 
 final class CachedConfig
 {
-  protected static $KEY = 'CACHED_CONFIG'; 
+  protected static $KEY = '__CACHED_CONFIG'; 
 
   public static function __init($key = false)
   {
