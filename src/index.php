@@ -31,9 +31,10 @@ if (!is_file($configFile) || filemtime($configFile) !== filemtime($configFileCus
   
   require($configFileCustom); // for Error Check
 
-  if (!is_file($fileAppKey = \HQ::getenv('CCC::FILE_APP_KEY'))) {
+  if (!is_file(\HQ::getenv('CCC::FILE_APP_KEY'))) {
+    @mkdir(dirname(\HQ::getenv('CCC::FILE_APP_KEY')), 0777, true);
     $key = base64_encode(Illuminate\Support\Str::random(32));
-    @file_put_contents($fileAppKey, "base64:$key");
+    @file_put_contents(\HQ::getenv('CCC::FILE_APP_KEY'), "base64:$key");
   }
 
   \Artisan::call('config:cache', []);
