@@ -6,38 +6,38 @@
   https://material.io/blog/tone-based-surface-color-m3
 */
 
-@primary #00296B;
-@onPrimary #fff;
-@primaryContainer #578ee6;
-@onPrimaryContainer #fff;
-@secondary #5C5C95;
-@onSecondary #fff;
-@secondaryContainer #a9a9de;
-@onSecondaryContainer #fff;
-@surface #eeeeee;
-@onSurface #1B1B1F;
+@x-primary #00296B;
+@x-onPrimary #fff;
+@x-primaryContainer #578ee6;
+@x-onPrimaryContainer #fff;
+@x-secondary #5C5C95;
+@x-onSecondary #fff;
+@x-secondaryContainer #a9a9de;
+@x-onSecondaryContainer #fff;
+@x-surface #eeeeee;
+@x-onSurface #1B1B1F;
 
 :root {
 
-  --style-palette-primary: @primary;
-  --style-palette-on-primary: @onPrimary;
-  --style-palette-primary-container: @primaryContainer;
-  --style-palette-on-primary-container: @onPrimaryContainer;
-  --style-palette-secondary: @secondary;
-  --style-palette-on-secondary: @onSecondary;
-  --style-palette-secondary-container: @secondaryContainer;
-  --style-palette-on-secondary-container: @onSecondaryContainer;
-  --style-palette-surface: @surface;
-  --style-palette-on-surface: @onSurface;
+  --style-palette-primary: @x-primary;
+  --style-palette-on-primary: @x-onPrimary;
+  --style-palette-primary-container: @x-primaryContainer;
+  --style-palette-on-primary-container: @x-onPrimaryContainer;
+  --style-palette-secondary: @x-secondary;
+  --style-palette-on-secondary: @x-onSecondary;
+  --style-palette-secondary-container: @x-secondaryContainer;
+  --style-palette-on-secondary-container: @x-onSecondaryContainer;
+  --style-palette-surface: @x-surface;
+  --style-palette-on-surface: @x-onSurface;
 
-  --style-palette-surface-dim: lighten(@surface, -10);
-  --style-palette-surface-bright: lighten(@surface, 1);
+  --style-palette-surface-dim: lighten(@x-surface, -10);
+  --style-palette-surface-bright: lighten(@x-surface, 1);
   --style-palette-surface-container-lowest: #fff;
-  --style-palette-surface-container-low: lighten(@surface, -1); /* = darken(1) */
-  --style-palette-surface-container: lighten(@surface, -2);
-  --style-palette-surface-container-high: lighten(@surface, -4);
-  --style-palette-surface-container-highest: lighten(@surface, -8);
-  --style-palette-on-surface-variant: lighten(@onSurface, 40);
+  --style-palette-surface-container-low: lighten(@x-surface, -1); /* = darken(1) */
+  --style-palette-surface-container: lighten(@x-surface, -2);
+  --style-palette-surface-container-high: lighten(@x-surface, -4);
+  --style-palette-surface-container-highest: lighten(@x-surface, -8);
+  --style-palette-on-surface-variant: lighten(@x-onSurface, 40);
 
   --style-palette-outline: #757780;
   --style-palette-outline-variant: #C5C6D0;
@@ -50,38 +50,38 @@
 }
 
 
-@primary_dark #4fb3d1;
-@onPrimary_dark #1B1B1F;
-@primaryContainer_dark #84bbe8;
-@onPrimaryContainer_dark #1B1B1F;
-@secondary_dark #bd93f9;
-@onSecondary_dark #1B1B1F;
-@secondaryContainer_dark #ce93d8;
-@onSecondaryContainer_dark #1B1B1F;
-@surface_dark #282a36;
-@onSurface_dark #F8F8F2;
+@x-primary_dark #4fb3d1;
+@x-onPrimary_dark #1B1B1F;
+@x-primaryContainer_dark #84bbe8;
+@x-onPrimaryContainer_dark #1B1B1F;
+@x-secondary_dark #bd93f9;
+@x-onSecondary_dark #1B1B1F;
+@x-secondaryContainer_dark #ce93d8;
+@x-onSecondaryContainer_dark #1B1B1F;
+@x-surface_dark #282a36;
+@x-onSurface_dark #F8F8F2;
 
 :root[data-color-scheme="dark"] {
 
   color-scheme: dark;
 
-  --style-palette-primary: @primary_dark;
-  --style-palette-on-primary: @onPrimary_dark;
-  --style-palette-primary-container: @primaryContainer_dark;
-  --style-palette-on-primary-container: @onPrimaryContainer_dark;
-  --style-palette-secondary: @secondary_dark;
-  --style-palette-on-secondary: @onSecondary_dark;
-  --style-palette-secondary-container: @secondaryContainer_dark;
-  --style-palette-on-secondary-container: @onSecondaryContainer_dark;
-  --style-palette-surface: @surface_dark;
-  --style-palette-on-surface: @onSurface_dark;
+  --style-palette-primary: @x-primary_dark;
+  --style-palette-on-primary: @x-onPrimary_dark;
+  --style-palette-primary-container: @x-primaryContainer_dark;
+  --style-palette-on-primary-container: @x-onPrimaryContainer_dark;
+  --style-palette-secondary: @x-secondary_dark;
+  --style-palette-on-secondary: @x-onSecondary_dark;
+  --style-palette-secondary-container: @x-secondaryContainer_dark;
+  --style-palette-on-secondary-container: @x-onSecondaryContainer_dark;
+  --style-palette-surface: @x-surface_dark;
+  --style-palette-on-surface: @x-onSurface_dark;
 
-  --style-palette-surface-dim: lighten(@surface_dark, 10);
-  --style-palette-surface-bright: darken(@surface_dark, 1);
-  --style-palette-surface-container-lowest: darken(@surface_dark, 4);
-  --style-palette-surface-container-low: lighten(@surface_dark, 1);
-  --style-palette-surface-container: lighten(@surface_dark, 2);
-  --style-palette-surface-container-high: lighten(@surface_dark, 4);
-  --style-palette-surface-container-highest: lighten(@surface_dark, 8);
+  --style-palette-surface-dim: lighten(@x-surface_dark, 10);
+  --style-palette-surface-bright: darken(@x-surface_dark, 1);
+  --style-palette-surface-container-lowest: darken(@x-surface_dark, 4);
+  --style-palette-surface-container-low: lighten(@x-surface_dark, 1);
+  --style-palette-surface-container: lighten(@x-surface_dark, 2);
+  --style-palette-surface-container-high: lighten(@x-surface_dark, 4);
+  --style-palette-surface-container-highest: lighten(@x-surface_dark, 8);
   --style-palette-on-surface-variant: #bcc2cd;
 }
