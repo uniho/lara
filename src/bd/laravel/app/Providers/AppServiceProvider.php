@@ -56,11 +56,12 @@ class AppServiceProvider extends ServiceProvider
         if ($class) {
           $style = ".$class{\n$style\n}";
         }
-        $hash = $__env->hasSection("__style-hash") ?: "";
-        if (!$hash || strpos($hash, $css->view_info["path"].$css->view_info["modified"]) === false) {  
-          $__env->startSection("__style-hash", $hash . $css->view_info["path"].$css->view_info["modified"]);
-        }
         $__env->startPush("__style-css", $style);
+
+        $hash = $__env->yieldPushContent("__style-hash");
+        if (!$hash || strpos($hash, $css->view_info["path"].$css->view_info["modified"]) === false) {  
+          $__env->startPush("__style-hash", $css->view_info["path"].$css->view_info["modified"]);
+        }
       ?>';
     });
 
@@ -68,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
       return '<?php
         $style = $__env->yieldPushContent("__style-css");
         if ($style) {
-          $hash = sha1($__env->getSection("__style-hash") ?: $style);
+          $hash = sha1($__env->yieldPushContent("__style-hash") ?: $style);
           $key = "cache/scss_inline_cache/".substr($hash, 0, 2)."/".substr($hash, 2, 2)."/".$hash;
           if (\HQ::cache()->has($key)) {
             $style = \HQ::cache()->get($key);
