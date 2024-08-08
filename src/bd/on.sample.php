@@ -141,7 +141,8 @@ class On
       abort_unless(\Compilers::jsx()->exists($name), 404, "JSX [{$name}] not found.");
       $contents = \Compilers::jsx($name, [], [
         'force_compile' => \HQ::getDebugMode() || request()->has('force_compile'), 
-        'minify' => 1,
+        'minify-whitespace' => 1,
+        'minify-identifiers' => 1,
         // 'tsconfig' => $tsconfig,
       ]);
       return response($contents, 200)->header('Content-Type', 'application/javascript; charset=utf-8');

@@ -241,6 +241,16 @@ final class Compilers
             $params = '--sourcemap';
             if (isset($this->options['minify']) && $this->options['minify']) {
               $params .= ' --minify';
+            } else {
+              if (isset($this->options['minify-whitespace']) && $this->options['minify-whitespace']) {
+                $params .= ' --minify-whitespace';
+              }
+              if (isset($this->options['minify-identifiers']) && $this->options['minify-identifiers']) {
+                $params .= ' --minify-identifiers';
+              }
+              if (isset($this->options['minify-syntax']) && $this->options['minify-syntax']) {
+                $params .= ' --minify-syntax';
+              }
             }
             if (isset($this->options['target'])) {
               $params .= ' --target='.$this->options['target'];
