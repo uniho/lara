@@ -40,7 +40,7 @@ class On
 
     // \HQ::setenv('superUserSecret', '');
 
-    \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.15.0/bin/node');
+    \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.16.0/bin/node');
   } 
   
   // Called from routes/console.php
