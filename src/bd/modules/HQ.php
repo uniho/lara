@@ -302,6 +302,14 @@ final class HQ
     );
   }
 
+  public static function rateLimitForTheBruteForceAttack($key, $wait)
+  {
+    if (cache()->has($key)) {
+      sleep($wait);
+    }
+    cache()->put($key, true, $wait);
+  }
+
   public static function getConfigFile(): string
   {
     $file = __DIR__.'/../config.php';

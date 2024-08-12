@@ -86,13 +86,7 @@ class On
           return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => "Already logged in.<hr>".$info]);
         }
 
-        // Rate limit for the Brute-force attack
-        $SUPER_USER_LOGIN_RATE_LIMIT_KEY = 'rate_limit_super_user_login';
-        $SUPER_USER_LOGIN_RATE_LIMIT_WAIT = 3;
-        if (\HQ::cache()->has($SUPER_USER_LOGIN_RATE_LIMIT_KEY)) {
-          sleep($SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
-        }
-        \HQ::cache()->put($SUPER_USER_LOGIN_RATE_LIMIT_KEY, true, $SUPER_USER_LOGIN_RATE_LIMIT_WAIT);
+        \HQ::rateLimitForTheBruteForceAttack('rate_limit_super_user_login', 3);
 
         if ($request->query('secret') === \HQ::getenv('superUserSecret')) {
           \HQ::updateSuperUser();
