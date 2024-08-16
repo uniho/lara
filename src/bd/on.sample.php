@@ -26,8 +26,7 @@ class On
   public static function onFinish()
   {
     // // Clear Batch Table
-    // if (!\HQ::cache()->has('rate_imit_on_prune-batches')) {
-    //   \HQ::cache()->put('rate_imit_on_prune-batches', true, 60*60*24);
+    // if (cache()->add('rate_imit_on_prune-batches', true, 60*60*24)) {
     //   \Utils\AsyncCLI::runArtisan('queue:prune-batches');
     // }
   } 
