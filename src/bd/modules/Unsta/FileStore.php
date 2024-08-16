@@ -139,10 +139,10 @@ class FileStore extends \Illuminate\Cache\FileStore
     }
   }
 
-  public function gc(int $period = 60*60*24, $forced = false, $cleanupDir = false)
+  public function gc(int $period = 60*60*24, $cleanupDir = false)
   {
     $before = $this->get($this->sysDir.'/GC');
-    if (!$forced && $before && $this->currentTime() < $before + $period) return false;
+    if ($before && $this->currentTime() < $before + $period) return false;
     $this->forever($this->sysDir.'/GC', $this->currentTime());
 
     $files = \Symfony\Component\Finder\Finder::create()->files()->ignoreDotFiles(true)->in($this->directory);
