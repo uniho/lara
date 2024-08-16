@@ -7,5 +7,10 @@
 //     $this->comment(Inspiring::quote());
 // })->purpose('Display an inspiring quote')->hourly();
 
+//
+\Artisan::command('cache_gc', function () {
+  \HQ::cache()->gc(0);
+});
+
 \HQ::onConsole(); // ※
  

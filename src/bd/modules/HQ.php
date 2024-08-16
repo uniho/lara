@@ -355,6 +355,13 @@ final class HQ
     return self::$caches[$type];
   }
 
+  public static function cache_gc()
+  {
+    if (cache()->add('rate_limit_cache_gc', 1, 60*60*24)) {
+      \Utils\AsyncCLI::runArtisan("cache_gc");
+    }
+  }
+
   private static function on_exists(): bool
   {
     if (!class_exists('\HQ\On::class', false)) {
