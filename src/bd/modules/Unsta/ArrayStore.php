@@ -2,13 +2,9 @@
 
 namespace Unsta;
 
-use Exception;
-use Illuminate\Contracts\Filesystem\LockTimeoutException;
-use Illuminate\Filesystem\LockableFile;
-
 class ArrayStore extends \Illuminate\Cache\ArrayStore
 {
-  public function __construct(private $cache, private $key)
+  public function __construct(private $cache, private string $key)
   {
     parent::__construct();
   }
@@ -16,13 +12,13 @@ class ArrayStore extends \Illuminate\Cache\ArrayStore
   public function get($key)
   {
     $this->storage = $this->getStorage();
-    return parent::get($key);
+    return parent::get((string)$key);
   }
 
   public function put($key, $value, $seconds)
   {
     $this->storage = $this->getStorage();
-    parent::put($key, $value, $seconds);
+    parent::put((string)$key, $value, $seconds);
     $this->putStorage($this->storage);
     return true;
   }
@@ -30,7 +26,7 @@ class ArrayStore extends \Illuminate\Cache\ArrayStore
   public function increment($key, $value = 1)
   {
     $this->storage = $this->getStorage();
-    $r = parent::increment($key, $value);
+    $r = parent::increment((string)$key, $value);
     $this->putStorage($this->storage);
     return $r;
   }
@@ -38,7 +34,7 @@ class ArrayStore extends \Illuminate\Cache\ArrayStore
   public function forget($key)
   {
     $this->storage = $this->getStorage();
-    $r = parent::forget($key, $value);
+    $r = parent::forget((string)$key, $value);
     $this->putStorage($this->storage);
     return $r;
   }
