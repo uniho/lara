@@ -67,6 +67,31 @@ final class HQ
             phpinfo();
             exit();
           }
+          if ($request->has('about')) {
+            $node = \HQ::getenv('CCC::NODE_CLI');
+            $process = \Symfony\Component\Process\Process::fromShellCommandline("$node --version");
+            $process->run();
+            $msg = "NODE CLI: " . $process->getOutput();
+            if (!$process->isSuccessful()) {
+              $msg .= "\n\n" . $process->getErrorOutput();
+            }
+
+            $msg .= "\nPHP CLI:";
+            $php = \HQ::getenv('CCC::PHP_CLI');
+            $cmd = \HQ::getenv('CCC::CLI_PATH') . '/async/artisan.php about';
+            $process = \Symfony\Component\Process\Process::fromShellCommandline("$php $cmd");
+            $process->run();
+            $msg .= $process->getOutput();
+            if (!$process->isSuccessful()) {
+              $msg .= "\n\n" . $process->getErrorOutput();
+            }
+
+            debugbar()->disable();
+            return view('sample.message', [
+              'title' => 'ABOUT',
+              'message' => $msg,
+            ]);            
+          }
           return view('welcome');
         }
         debugbar()->disable();
@@ -379,9 +404,9 @@ final class HQ
     return self::$array_caches[$key];
   }
 
-  public static function cache_gc()
+  public static function cache_gc($force = false)
   {
-    if (cache()->add('rate_limit_cache_gc', 1, 60*60*24)) {
+    if ($force || cache()->add('rate_limit_cache_gc', 1, 60*60*24)) {
       \Utils\AsyncCLI::runArtisan("cache_gc");
     }
   }
