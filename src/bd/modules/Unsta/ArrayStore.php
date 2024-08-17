@@ -34,7 +34,7 @@ class ArrayStore extends \Illuminate\Cache\ArrayStore
   public function forget($key)
   {
     $this->storage = $this->getStorage();
-    $r = parent::forget((string)$key, $value);
+    $r = parent::forget((string)$key);
     $this->putStorage($this->storage);
     return $r;
   }
