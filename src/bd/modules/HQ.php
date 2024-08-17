@@ -256,7 +256,7 @@ final class HQ
     $user = $cookie_arr[1];
     $secret = $cookie_arr[2];
 
-    $cache = self::cache()->get("SUPER-USER-HQ_{$user}_{$uid}");
+    $cache = self::array_cache("SUPER-USER-HQ_{$user}")->get($uid);
     if (!$cache) {
       return null;
     }
@@ -282,10 +282,18 @@ final class HQ
     session()->regenerate();
 
     // Remember Me
-    $uid = \Str::uuid();
+    $cookie = \Cookie::get(self::getAppSlug().'_SUPER-USER-HQ');
+    if ($cookie) {
+      $cookie_arr = explode('|', $cookie);
+      if (isset($cookie_arr[0])) {
+        self::array_cache("SUPER-USER-HQ_{$user}")->forget($cookie_arr[0]);
+      }
+    }
+
+    $uid = (string)\Str::uuid();
     $token = \Str::random(60);
-    self::cache()->put("SUPER-USER-HQ_{$user}_{$uid}", "$token|$expire", intval($expire)/* sec */);
-    self::cache_gc();
+    self::array_cache("SUPER-USER-HQ_{$user}")->put($uid, "$token|$expire", intval($expire)/* sec */);
+    self::array_cache("SUPER-USER-HQ_{$user}")->gc();
     cookie()->queue(
       cookie(self::getAppSlug().'_SUPER-USER-HQ', "$uid|$user|$token", intval($expire/60)/* min */)
     );
@@ -300,14 +308,15 @@ final class HQ
     session()->regenerateToken();
 
     $cookie = \Cookie::get(self::getAppSlug().'_SUPER-USER-HQ');
+    if ($cookie) {
+      $cookie_arr = explode('|', $cookie);
+      if (isset($cookie_arr[1])) {
+        self::array_cache("SUPER-USER-HQ_{$cookie_arr[1]}")->flush();
+      }
+    }
     cookie()->queue(
       cookie()->forget(self::getAppSlug().'_SUPER-USER-HQ')
     );
-    if (!$cookie) return null;
-
-    $cookie_arr = explode('|', $cookie);
-    if (count($cookie_arr) != 3) return null;
-    self::cache()->forget("SUPER-USER-HQ_{$cookie_arr[1]}_{$cookie_arr[0]}");
   }
 
   public static function rateLimitForTheBruteForceAttack($key, $wait)
