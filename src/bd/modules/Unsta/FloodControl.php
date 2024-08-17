@@ -48,15 +48,20 @@ final class FloodControl
     return ($number < $threshold);
   }
 
+  public static function gc()
+  {
+    self::$cache->gc();
+  }
+
   private static function getKey($name, $identifier)
   {
-    return $name . "_" . ($identifier ?: $_SERVER["REMOTE_ADDR"]);
+    return $name . "_" . ($identifier ?: ($_SERVER["REMOTE_ADDR"] ?? '0.0.0.0'));
   }
 }
 
 //
 FloodControl::initialize(
   new \Illuminate\Cache\Repository(
-    new \Illuminate\Cache\FileStore(app()['files'], storage_path('_FloodControl_'))
+    new \Unsta\ArrayStore(cache(), '_-FloodControl-_')
   )
 );
