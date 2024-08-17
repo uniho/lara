@@ -23,7 +23,7 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
   {
     $this->storage = $this->getStorage();
     parent::put($key, $value, $seconds);
-    $this->cache->forever($this->key, $this->storage);
+    $this->putStorage($this->storage);
     return true;
   }
 
@@ -31,7 +31,7 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
   {
     $this->storage = $this->getStorage();
     $r = parent::increment($key, $value);
-    $this->cache->forever($this->key, $this->storage);
+    $this->putStorage($this->storage);
     return $r;
   }
 
@@ -39,14 +39,19 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
   {
     $this->storage = $this->getStorage();
     $r = parent::forget($key, $value);
-
-    if ($this->storage && count($this->storage)) {
-      $this->cache->forever($this->key, $this->storage);
-    } else {
-      $this->cache->forget($this->key);
-    }
-
+    $this->putStorage($this->storage);
     return $r;
+  }
+
+  public function preg_forget($reg)
+  {
+    $array = $this->getStorage();
+    $newArray = [];
+    foreach ($array as $key => $item) {
+      if (preg_match($reg, $key)) continue;
+      $newArray[] = $item;
+    }  
+    $this->putStorage($newArray);
   }
 
   public function flush()
@@ -57,19 +62,14 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
 
   public function gc()
   {
-    $array = $this->cache->get($this->key);
-    if (!$array) return;
+    $array = $this->getStorage();
     $newArray = [];
     foreach ($array as $item) {
       if ($this->currentTime() < $item['expiresAt']) {
         $newArray[] = $item;
       }
     }  
-    if (count($newArray)) {
-      $this->cache->forever($this->key, $newArray);
-    } else {
-      $this->cache->forget($this->key);
-    }
+    $this->putStorage($newArray);
   }
 
   public function getStorage()
@@ -77,4 +77,12 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
     return $this->cache->get($this->key) ?: [];
   }
 
+  public function putStorage($payload)
+  {
+    if (is_array($payload) && count($payload)) {
+      $this->cache->forever($this->key, $payload);
+    } else {
+      $this->cache->forget($this->key);
+    }
+  }
 }
