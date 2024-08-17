@@ -342,24 +342,22 @@ final class HQ
     self::$COOKIE_PATH = $path;
   }
 
-  public static function cache($options = []) {
-    $type = $options['type'] ?? 'serialize';
-
-    if ($options['keep'] ?? false) {
-      if (!isset(self::$keep_caches[$type])) {
-        self::$keep_caches[$type] = new \Illuminate\Cache\Repository(
-          new \Unsta\FileStore(app()['files'], self::getenv('CCC::KEEP_PATH'), $type)
-        );
-      }
-      return self::$keep_caches[$type];
-    }
-
+  public static function cache($type = 'serialize') {
     if (!isset(self::$caches[$type])) {
       self::$caches[$type] = new \Illuminate\Cache\Repository(
         new \Unsta\FileStore(app()['files'], storage_path("_HQ_"), $type)
       );
     }
     return self::$caches[$type];
+  }
+
+  public static function keep_cache($type = 'serialize') {
+    if (!isset(self::$keep_caches[$type])) {
+      self::$keep_caches[$type] = new \Illuminate\Cache\Repository(
+        new \Unsta\FileStore(app()['files'], self::getenv('CCC::KEEP_PATH'), $type)
+      );
+    }
+    return self::$keep_caches[$type];
   }
 
   public static function cache_gc()
