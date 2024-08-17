@@ -15,16 +15,13 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
 
   public function get($key)
   {
-    $array = $this->cache->get($this->key);
-    if (!$array) return null;
-    $this->storage = $array;
+    $this->storage = $this->getStorage();
     return parent::get($key);
   }
 
   public function put($key, $value, $seconds)
   {
-    $array = $this->cache->get($this->key);
-    $this->storage = $array ?: [];
+    $this->storage = $this->getStorage();
     parent::put($key, $value, $seconds);
     $this->cache->forever($this->key, $this->storage);
     return true;
@@ -32,8 +29,7 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
 
   public function increment($key, $value = 1)
   {
-    $array = $this->cache->get($this->key);
-    $this->storage = $array ?: [];
+    $this->storage = $this->getStorage();
     $r = parent::increment($key, $value);
     $this->cache->forever($this->key, $this->storage);
     return $r;
@@ -41,8 +37,7 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
 
   public function forget($key)
   {
-    $array = $this->cache->get($this->key);
-    $this->storage = $array ?: [];
+    $this->storage = $this->getStorage();
     $r = parent::forget($key, $value);
 
     if ($this->storage && count($this->storage)) {
@@ -75,6 +70,11 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
     } else {
       $this->cache->forget($this->key);
     }
+  }
+
+  public function getStorage()
+  {
+    return $this->cache->get($this->key) ?: [];
   }
 
 }
