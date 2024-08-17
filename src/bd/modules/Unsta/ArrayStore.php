@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Contracts\Filesystem\LockTimeoutException;
 use Illuminate\Filesystem\LockableFile;
 
-class CacheStore extends \Illuminate\Cache\ArrayStore
+class ArrayStore extends \Illuminate\Cache\ArrayStore
 {
   public function __construct(private $cache, private $key)
   {
@@ -47,11 +47,18 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
   {
     $array = $this->getStorage();
     $newArray = [];
+    $forgets = [];
     foreach ($array as $key => $item) {
-      if (preg_match($reg, $key)) continue;
-      $newArray[$key] = $item;
+      if ($reg && preg_match($reg, $key)) {
+        $forgets[] = $key;        
+        continue;
+      }
+      if (!$item['expiresAt'] || $this->currentTime() < $item['expiresAt']) {
+        $newArray[$key] = $item;
+      }
     }  
     $this->putStorage($newArray);
+    return $forgets;
   }
 
   public function flush()
@@ -62,14 +69,7 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
 
   public function gc()
   {
-    $array = $this->getStorage();
-    $newArray = [];
-    foreach ($array as $key => $item) {
-      if ($this->currentTime() < $item['expiresAt']) {
-        $newArray[$key] = $item;
-      }
-    }  
-    $this->putStorage($newArray);
+    $this->preg_forget(false);
   }
 
   public function getStorage()
