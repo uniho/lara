@@ -7,6 +7,7 @@ final class HQ
   private static $COOKIE_PATH = '/';
   private static $caches = [];
   private static $keep_caches = [];
+  private static $array_caches = [];
 
   public static function onStart()
   {
@@ -358,6 +359,15 @@ final class HQ
       );
     }
     return self::$keep_caches[$type];
+  }
+
+  public static function array_cache($key) {
+    if (!isset(self::$array_caches[$key])) {
+      self::$array_caches[$key] = new \Illuminate\Cache\Repository(
+        new \Unsta\ArrayStore(cache(), $key)
+      );
+    }
+    return self::$array_caches[$key];
   }
 
   public static function cache_gc()
