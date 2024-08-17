@@ -49,7 +49,7 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
     $newArray = [];
     foreach ($array as $key => $item) {
       if (preg_match($reg, $key)) continue;
-      $newArray[] = $item;
+      $newArray[$key] = $item;
     }  
     $this->putStorage($newArray);
   }
@@ -64,9 +64,9 @@ class CacheStore extends \Illuminate\Cache\ArrayStore
   {
     $array = $this->getStorage();
     $newArray = [];
-    foreach ($array as $item) {
+    foreach ($array as $key => $item) {
       if ($this->currentTime() < $item['expiresAt']) {
-        $newArray[] = $item;
+        $newArray[$key] = $item;
       }
     }  
     $this->putStorage($newArray);
