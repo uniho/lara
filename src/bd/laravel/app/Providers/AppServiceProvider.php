@@ -96,6 +96,10 @@ class AppServiceProvider extends ServiceProvider
     }
 
     //
+    config(['filesystems.disks.local.root' => \HQ::getenv('CCC::STORAGE_LOCAL_PRIVATE_FILES_PATH')]);
+    config(['filesystems.disks.public.root' => \HQ::getenv('CCC::STORAGE_LOCAL_PUBLIC_FILES_PATH')]);
+
+    //
     \HQ::onBoot();
   }
 }
