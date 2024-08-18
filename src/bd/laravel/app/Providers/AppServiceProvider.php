@@ -95,9 +95,28 @@ class AppServiceProvider extends ServiceProvider
       \File::deleteDirectory(app()['config']['view.compiled'], true);
     }
 
-    //
-    config(['filesystems.disks.local.root' => \HQ::getenv('CCC::STORAGE_LOCAL_PRIVATE_FILES_PATH')]);
-    config(['filesystems.disks.public.root' => \HQ::getenv('CCC::STORAGE_LOCAL_PUBLIC_FILES_PATH')]);
+    // set config values
+    config(\Arr::dot(require(\HQ::getConfigFile())));
+    date_default_timezone_set(config('app.timezone', 'UTC'));
+
+    if (!is_file(\HQ::getenv('CCC::FILE_APP_KEY'))) {
+      @mkdir(dirname(\HQ::getenv('CCC::FILE_APP_KEY')), 0777, true);
+      $key = base64_encode(\Illuminate\Support\Str::random(32));
+      @file_put_contents(\HQ::getenv('CCC::FILE_APP_KEY'), "base64:$key");
+    }
+    
+    config([
+      'app.key' => @file_get_contents(\HQ::getenv('CCC::FILE_APP_KEY')),
+      'app.debug' => \HQ::getDebugMode() || \HQ::getenv('debug'),
+      'filesystems.disks.local.root' => \HQ::getenv('CCC::STORAGE_LOCAL_PRIVATE_FILES_PATH'),
+      'filesystems.disks.public.root' => \HQ::getenv('CCC::STORAGE_LOCAL_PUBLIC_FILES_PATH'),
+      'view.cache' => \HQ::getViewCacheMode(),
+      'session.cookie' => \HQ::getAppSlug().'_session',
+      'session.path' => \HQ::getCookiePath(),
+      'debugbar.storage.open' => true,
+      'debugbar.collectors.log' => true,
+      'debugbar.inject' => \HQ::getDebugbarShowAlways() || \HQ::getenv('debug'),
+    ]);
 
     //
     \HQ::onBoot();

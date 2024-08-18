@@ -23,52 +23,7 @@ require_once 'bd/laravel/vendor/autoload.php';
 $app = require_once 'bd/laravel/bootstrap/app.php';
 $kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
 $request = \Illuminate\Http\Request::capture();
-$response = $kernel->handle($request);
-
-$configFile = app()->getCachedConfigPath();
-$configFileCustom = \HQ::getConfigFile();
-if (!is_file($configFile) || filemtime($configFile) !== filemtime($configFileCustom)) {
-  
-  require($configFileCustom); // for Error Check
-
-  if (!is_file(\HQ::getenv('CCC::FILE_APP_KEY'))) {
-    @mkdir(dirname(\HQ::getenv('CCC::FILE_APP_KEY')), 0777, true);
-    $key = base64_encode(Illuminate\Support\Str::random(32));
-    @file_put_contents(\HQ::getenv('CCC::FILE_APP_KEY'), "base64:$key");
-  }
-
-  \Artisan::call('config:cache', []);
-  \File::move($configFile, \File::dirname($configFile).'/config0.php');
-  \File::put($configFile, "<?php return array_replace_recursive(require(__DIR__.'/config0.php'), require(__DIR__.'/config1.php'), [
-    'app' => [
-      'debug' => \HQ::getDebugMode() || \HQ::getenv('debug'),
-      'key' => @file_get_contents(\HQ::getenv('CCC::FILE_APP_KEY')),
-    ],
-    'view' => [
-      'cache' => \HQ::getViewCacheMode(),
-    ],
-    'session' => [
-      'cookie' => \HQ::getAppSlug().'_session',
-      'path' => \HQ::getCookiePath(),
-    ],
-    'debugbar' => [
-      'storage' => [
-        'open' => true,
-      ],
-      'collectors' => [
-        'logs' => true,
-      ],
-      'inject' => \HQ::getDebugbarShowAlways() || \HQ::getenv('debug'),
-    ],  
-  ]);");
-  \touch($configFile, filemtime($configFileCustom));          
-  \File::copy($configFileCustom, \File::dirname($configFile).'/config1.php');
-
-  header("Location: {$request->fullUrl()}");
-  exit(0);
-}
-
-$response = $response->send();
+$response = $kernel->handle($request)->send();
 $kernel->terminate($request, $response);
 
 \HQ::onFinish();
