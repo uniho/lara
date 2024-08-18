@@ -68,40 +68,12 @@ class On
     //   ])->render(),
     // ]);
 
+    // admin
     \Route::prefix('admin')->group(function() {
+      include __DIR__."/web_routes/admin.php";
 
-      // Admin login
-      \Route::get('login', function (Request $request) {
-        if (!\HQ::getenv('superUserSecret')) {
-          abort(403);
-        }
-
-        $info = 
-          (\HQ::getDebugMode() ? "<p style=\"color:orange;\">DEBUG MODE - ON!</p>" : "") .
-          (!\HQ::getViewCacheMode() ? "<p style=\"color:orange;\">VIEW CACHE - OFF!</p>" : "") .
-          (\HQ::getDebugShowSource() ? "<p style=\"color:red;\">DEBUG SHOW SOURCE - ON!</p>" : "") .
-          (\HQ::getDebugbarShowAlways() ? "<p style=\"color:red;\">DEBUGBAR SHOW ALWAYS - ON!</p>" : "");
-
-        if (\HQ::getSuperUser()) {
-          return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => "Already logged in.<hr>".$info]);
-        }
-
-        \HQ::rateLimitForTheBruteForceAttack('rate_limit_super_user_login', 3);
-
-        if ($request->query('secret') === \HQ::getenv('superUserSecret')) {
-          \HQ::updateSuperUser();
-          return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!<hr>'.$info]);
-        }
-
-        abort(403, "wrong secret");
-      });
-
-      // Admin logout
-      \Route::get('logout', function (Request $request) {
-        \HQ::logoutSuperUser();
-        return view('sample.message', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Thanks, bye!']);
-      });
-
+      // Admin root
+      \Route::get('/', fn() => redirect('admin/check'));
     });
 
     // css 使用例

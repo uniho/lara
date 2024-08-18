@@ -63,35 +63,6 @@ final class HQ
 
       if (basename(url()->current()) == 'debugbar.php') {
         if (self::getDebugMode() && self::isAdminUser()) {
-          if ($request->has('phpinfo')) {
-            phpinfo();
-            exit();
-          }
-          if ($request->has('about')) {
-            $node = \HQ::getenv('CCC::NODE_CLI');
-            $process = \Symfony\Component\Process\Process::fromShellCommandline("$node --version");
-            $process->run();
-            $msg = "NODE CLI: " . $process->getOutput();
-            if (!$process->isSuccessful()) {
-              $msg .= "\n\n" . $process->getErrorOutput();
-            }
-
-            $msg .= "\nPHP CLI:";
-            $php = \HQ::getenv('CCC::PHP_CLI');
-            $cmd = \HQ::getenv('CCC::CLI_PATH') . '/async/artisan.php about';
-            $process = \Symfony\Component\Process\Process::fromShellCommandline("$php $cmd");
-            $process->run();
-            $msg .= $process->getOutput();
-            if (!$process->isSuccessful()) {
-              $msg .= "\n\n" . $process->getErrorOutput();
-            }
-
-            debugbar()->disable();
-            return view('sample.message', [
-              'title' => 'ABOUT',
-              'message' => $msg,
-            ]);            
-          }
           return view('welcome');
         }
         debugbar()->disable();
