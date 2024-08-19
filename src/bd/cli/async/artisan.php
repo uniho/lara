@@ -8,7 +8,7 @@ require __DIR__.'/../../modules/autoload.php';
 require __DIR__.'/../../laravel/vendor/autoload.php';
 
 // Bootstrap Laravel and handle the command...
-$status = (require_once __DIR__.'/../../laravel/bootstrap/app.php')
+$status = (require_once __DIR__.'/../../laravel-ext/bootstrap/app.php')
   ->handleCommand(new \Symfony\Component\Console\Input\ArgvInput);
 
 exit($status);

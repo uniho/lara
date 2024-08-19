@@ -4,7 +4,7 @@
 require_once __DIR__.'/../../modules/autoload.php';
 require_once __DIR__.'/../../laravel/vendor/autoload.php';
 
-$app = require_once __DIR__.'/../../laravel/bootstrap/app.php';
+$app = require_once __DIR__.'/../../laravel-ext/bootstrap/app.php';
 
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 
