@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 
 //
 \Route::any('/adminer', function () {
-  abort_unless(\HQ::getDebugMode() && \HQ::isAdminUser(), 403);
+  abort_unless(\HQ::isAdminUser(), 403);
 
   $connect = request()->query('connect') ?: config('database.default');
   if (config("database.connections.$connect.driver") == 'mysql') {
