@@ -13,6 +13,7 @@ class On
   // Called from index.php
   public static function onStart()
   {
+    \HQ::setenv('CCC::APP_NAME', 'Test App!');
     // \HQ::setAppSlug('lara');
     // \HQ::setCookiePath('/');
 
@@ -20,6 +21,11 @@ class On
     \HQ::setViewCacheMode(!\HQ::getDebugMode());
     \HQ::setDebugShowSource(false); // <====== For security, the default value is false!
     \HQ::setDebugbarShowAlways(false); // <====== For security, the default value is false!
+
+    // \HQ::setenv('superUserSecret', '');
+
+    // \HQ::setenv('CCC::PHP_CLI', '/usr/local/php82/bin/php');
+    // \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.16.0/bin/node');
   } 
   
   // Called from index.php
@@ -34,13 +40,7 @@ class On
   // Called from App\Providers\AppServiceProvider::boot()
   public static function onBoot()
   {
-    \HQ::setenv('CCC::APP_NAME', 'Test App!');
     \Log::debug(\HQ::getenv('CCC::APP_NAME') . ' boot!');
-
-    // \HQ::setenv('superUserSecret', '');
-
-    // \HQ::setenv('CCC::PHP_CLI', '/usr/local/php82/bin/php');
-    // \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.16.0/bin/node');
   } 
   
   // Called from routes/console.php
