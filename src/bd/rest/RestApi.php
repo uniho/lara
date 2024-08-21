@@ -4,7 +4,7 @@ namespace RestApi;
 
 final class Procedures 
 {
-  const PREG_QUERY = '{^/v(?P<_ver>[\d]+)/(?P<_role>[\w\d\-]+)/(?P<_cmd>[\w\d]+)/(?P<_arg>[\w\d\-]+)(?:/|&|$)}';
+  const PREG_QUERY = '{^/v(?P<_ver>[\d]+)/(?P<_role>[\w\d\-]+)/(?P<_cmd>[\w\d]+)/(?P<_arg>[^\/\?&]+)(?:/|&|$)}';
 
   //
   public static function handle($request)
