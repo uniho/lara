@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
   abort_unless(\HQ::isAdminUser(), 403);
 
   $connect = request()->query('connect') ?: config('database.default');
-  if (config("database.connections.$connect.driver") == 'mysql') {
+  $driver = config("database.connections.$connect.driver");
+  abort_unless($driver, 404, 'unknown connet');
+  if ($driver == 'mysql') {
     if (!isset($_GET['db'])) {
       $_POST['auth'] = [
         'driver'    => 'server',
