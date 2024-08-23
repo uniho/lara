@@ -53,14 +53,29 @@ final class Compilers
         $node_cli = \HQ::getenv('CCC::NODE_CLI');
         $lightningcss_cli =  \HQ::getenv('CCC::CLI_PATH') . '/node/lightningcss_cli.js';
 
-        $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $lightningcss_cli $params");
-        $process->setInput($src)->run();
-        if (!$process->isSuccessful()) {
-          $error = $process->getErrorOutput();
-          \Log::error('lightningcss', [$error]);
-          return ['error' => $error];
+        // $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $lightningcss_cli $params");
+        // $process->setInput($src)->run();
+        // if (!$process->isSuccessful()) {
+        //   $error = $process->getErrorOutput();
+        //   \Log::error('lightningcss', [$error]);
+        //   return ['error' => $error];
+        // }
+        // return $process->getOutput();
+
+        $temp_in = tempnam(sys_get_temp_dir(), 'TMP_');
+        $temp_out = tempnam(sys_get_temp_dir(), 'TMP_');
+        try {
+          file_put_contents($temp_in, $src);
+          exec("$node_cli $lightningcss_cli $temp_in $params --outfile=$temp_out 2>&1", $error);
+          if (end($error) != 'done!') {
+            return "/* Error on lightningcss:\n$error */";
+          }
+          $contents = file_get_contents($temp_out);
+          return $contents;
+        } finally {
+          @unlink($temp_in);
+          @unlink($temp_out);
         }
-        return $process->getOutput();
       }
 
       //
