@@ -29,11 +29,7 @@ class On
 
     // CSS breakpoints from bootstrap's default
     \HQ::setenv('STYLES::breakpoints', [
-      'sm' => 576,
-      'md' => 768,
-      'lg' => 992,
-      'xl' => 1200,
-      'xxl' => 1400,
+      'sm' => 576, 'md' => 768, 'lg' => 992, 'xl' => 1200, 'xxl' => 1400,
     ]);
   } 
   
