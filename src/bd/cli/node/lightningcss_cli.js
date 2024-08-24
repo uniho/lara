@@ -15,6 +15,10 @@ try {
         type: "boolean",
         default: false,
       },
+      sourcemap: {
+        type: "boolean",
+        default: false,
+      },
     },
     allowPositionals: true,
   });
@@ -74,7 +78,7 @@ try {
     code: Buffer.from(src),
     minify: args.values.minify,
     include: Features.Colors | Features.Nesting | Features.MediaQueries,
-    sourceMap: true,
+    sourceMap: args.values.sourcemap,
     visitor: {
       
       Rule: {
@@ -128,8 +132,12 @@ try {
     process.exit(0);
   }
 
-  await writeFile(output, code.toString() + '\n//# sourceMappingURL='+output+'.map', 'utf8');
-  await writeFile(output+'.map', map.toString(), 'utf8');
+  let codeString = code.toString();
+  if (args.values.sourcemap) {
+    await writeFile(output+'.map', map.toString(), 'utf8');
+    codeString +=  + '\n//# sourceMappingURL=' + output + '.map';
+  }
+  await writeFile(output, codeString, 'utf8');
 
   console.error('done!');
 

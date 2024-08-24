@@ -19,7 +19,7 @@ final class Compilers
               $compiledPath = $this->getCompiledPath($path)
             );
 
-            $params = '';
+            $params = '--sourcemap';
             if (isset($this->options['minify']) && $this->options['minify']) {
               $params .= ' --minify';
             }
