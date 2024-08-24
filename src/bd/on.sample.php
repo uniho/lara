@@ -26,6 +26,15 @@ class On
 
     // \HQ::setenv('CCC::PHP_CLI', '/usr/local/php82/bin/php');
     // \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.16.0/bin/node');
+
+    // CSS breakpoints from bootstrap's default
+    \HQ::setenv('STYLES::breakpoints', [
+      'sm' => 576,
+      'md' => 768,
+      'lg' => 992,
+      'xl' => 1200,
+      'xxl' => 1400,
+    ]);
   } 
   
   // Called from index.php
@@ -93,6 +102,59 @@ class On
       ]);
       return response($contents, 200)->header('Content-Type', 'text/css; charset=utf-8');
     })->where('name', '.*'); // この where により、$name がパスデリミタを受けられるようになる
+
+    // tailwind css 使用例
+    \Route::get('tailwindcss', function () {
+      try {
+        if ($contents = \HQ::cache()->get('cache/__tailwindcss__')) {
+          // from cache
+          return response($contents, 200)->header('Content-Type', 'text/css; charset=utf-8');
+        }
+
+        $response = \Http::get('https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.css');
+        $response->throw();
+        $body = $response->body();
+        
+        // 使いそうなものだけ抽出
+        $contents = '';
+        foreach ([
+          ['h-0', 'max-w-screen-2xl'], // height, width
+          ['m-0', '-ml-3\\\\.5'], // margin
+          ['p-0', 'pl-3\\\\.5'], // padding
+          ['visible', 'invisible'], // visibility
+          ['block', 'hidden'], // display
+          ['flex-1', 'flex-grow'], // flex
+          ['flex-row', 'justify-items-stretch'], // flex
+          ['order-1', 'order-none'], // flex
+          ['gap-0', 'gap-y-3\\\\.5'], // flex, grid
+          ['place-content-center', 'justify-items-stretch'], // flex, grid
+          ['self-auto', 'justify-self-stretch'], // flex, grid
+        ] as $item) {
+          $start = $item[0]; $end = $item[1];
+          if (!preg_match("/\s+(\.$start\s*{[\s\S]+?}[\s\S]+\.$end\s*{[\s\S]+?})\s+/", $body, $m)) {
+            throw new \Exception(".$start not found");
+          }
+          $contents .= $m[1];
+        }
+
+        // media screen の追加
+        preg_match_all("/\.([\w, -]+\s*{[\s\S]+?})/", $contents, $m);
+        foreach (\HQ::getenv('STYLES::breakpoints') as $key => $size) {
+          $contents .= "@media screen and (min-width : {$size}px) {\n"; // 'min-width' means mobile first.
+          foreach ($m[1] as $i) {
+            $contents .= ".$key\\:$i\n";
+          }
+          $contents .= "}\n";
+        }
+
+        $contents = \Compilers::scss()->inline($contents, [], ['minify' => 1]);
+        \HQ::cache('raw')->forever('cache/__tailwindcss__', $contents);
+
+        return response($contents, 200)->header('Content-Type', 'text/css; charset=utf-8');
+      } catch(\Exception $e) {
+        return response("/*\n\nERROR on /tailwindcss :\n{$e->getMessage()}\n\n*/", 200)->header('Content-Type', 'text/css; charset=utf-8');
+      }
+    });
 
     // jsx 使用例 
     \Route::get('jsx/{name}', function ($name) {
