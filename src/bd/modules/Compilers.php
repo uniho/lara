@@ -68,6 +68,7 @@ final class Compilers
           file_put_contents($temp_in, $src);
           exec("$node_cli $lightningcss_cli $temp_in $params --outfile=$temp_out 2>&1", $error);
           if (end($error) != 'done!') {
+            $error = implode("\n", $error);
             return "/* Error on lightningcss:\n$error */";
           }
           $contents = file_get_contents($temp_out);
