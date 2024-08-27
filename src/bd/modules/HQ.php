@@ -235,7 +235,10 @@ final class HQ
   {
     $user = session('SUPER-USER-HQ');
     if ($user) {
-      return $user;
+      $arr = explode('|', $user);
+      if (!isset($arr[0]) || !isset($arr[1])) return null;
+      self::updateSuperUser($arr[0], intval($arr[1]));
+      return $arr[0];
     }
 
     // Remember Me
@@ -274,7 +277,7 @@ final class HQ
   {
     if (!$user) return false;
 
-    session(['SUPER-USER-HQ' => $user]);
+    session(['SUPER-USER-HQ' => "$user|$expire"]);
     session()->regenerate();
 
     // Remember Me
