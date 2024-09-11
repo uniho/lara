@@ -42,7 +42,7 @@ use Illuminate\Http\Request;
 
 //
 \Route::match(['get', 'post'], '/', function (Request $request) {
-  if ($r = \HQ::webOrigin($request) !== false) return $r;
+  if (($r = \HQ::webOrigin($request)) !== false) return $r;
 
   if (view()->exists('index')) {
     return view('index');
