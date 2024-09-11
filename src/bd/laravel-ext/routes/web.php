@@ -42,7 +42,27 @@ use Illuminate\Http\Request;
 
 //
 \Route::match(['get', 'post'], '/', function (Request $request) {
-  return \HQ::webOrigin($request);
+  if ($r = \HQ::webOrigin($request) !== false) return $r;
+
+  if (view()->exists('index')) {
+    return view('index');
+  }
+
+  if (is_file('./fd/index.html')) {
+    $path = 'fd/';
+    if ($request->query()) {
+      $path .= '?'.Arr::query($request->query());
+    }
+    header("Location: $path");
+    exit();
+    return;
+  }
+
+  if (view()->exists('sample.index')) {
+    return view('sample.index');
+  }
+
+  abort(404);
 });
 
 //

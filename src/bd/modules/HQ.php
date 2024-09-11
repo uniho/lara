@@ -59,36 +59,15 @@ final class HQ
       return view($name); // $data dosen't need.
     }
 
-    if ($request->method() == 'GET') {
-
-      if (basename(url()->current()) == 'debugbar.php') {
-        if (self::getDebugMode() && self::isAdminUser()) {
-          return view('welcome');
-        }
-        debugbar()->disable();
-        return App::abort(403);
+    if ($request->method() == 'GET' && basename(url()->current()) == 'debugbar.php') {
+      if (self::getDebugMode() && self::isAdminUser()) {
+        return view('welcome');
       }
-
+      debugbar()->disable();
+      return abort(403);
     }
 
-    if (view()->exists('index')) {
-      return view('index');
-    }
-
-    if (is_file('./fd/index.html')) {
-      $path = 'fd/';
-      if ($request->query()) {
-        $path .= '?'.Arr::query($request->query());
-      }
-      header("Location: $path");
-      exit();
-    }
-
-    if (view()->exists('sample.index')) {
-      return view('sample.index');
-    }
-
-    return \App::abort(404);
+    return false;
   }
 
   public static function getenv($name)
