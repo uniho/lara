@@ -12,25 +12,36 @@
 @x-onPrimaryContainer #fff;
 @x-secondary #5C5C95;
 @x-onSecondary #fff;
-@x-secondaryContainer #a9a9de;
-@x-onSecondaryContainer #fff;
+@x-secondaryContainer #c5cae9;
+@x-onSecondaryContainer #1B1B1F;
 @x-surface #eeeeee;
 @x-onSurface #1B1B1F;
 
 :root {
 
   --style-palette-primary: @x-primary;
+  --style-palette-primary-channel: channel(@x-primary);
   --style-palette-on-primary: @x-onPrimary;
+  --style-palette-on-primary-channel: channel(@x-onPrimary);
   --style-palette-primary-container: @x-primaryContainer;
+  --style-palette-primary-container-channel: channel(@x-primaryContainer);
   --style-palette-on-primary-container: @x-onPrimaryContainer;
+  --style-palette-on-primary-container-channel: channel(@x-onPrimaryContainer);
   --style-palette-secondary: @x-secondary;
+  --style-palette-secondary-channel: channel(@x-secondary);
   --style-palette-on-secondary: @x-onSecondary;
+  --style-palette-on-secondary-channel: channel(@x-onSecondary);
   --style-palette-secondary-container: @x-secondaryContainer;
+  --style-palette-secondary-container-channel: channel(@x-secondaryContainer);
   --style-palette-on-secondary-container: @x-onSecondaryContainer;
+  --style-palette-on-secondary-container-channel: channel(@x-onSecondaryContainer);
   --style-palette-surface: @x-surface;
+  --style-palette-surface-channel: channel(@x-surface);
   --style-palette-on-surface: @x-onSurface;
+  --style-palette-on-surface-channel: channel(@x-onSurface);
 
   --style-palette-surface-dim: lighten(@x-surface, -10);
+  /* --style-palette-surface-dim-channel: channel(lighten(@x-surface, -10)); */
   --style-palette-surface-bright: lighten(@x-surface, 1);
   --style-palette-surface-container-lowest: #fff;
   --style-palette-surface-container-low: lighten(@x-surface, -1); /* = darken(1) */
@@ -56,8 +67,8 @@
 @x-onPrimaryContainer_dark #1B1B1F;
 @x-secondary_dark #bd93f9;
 @x-onSecondary_dark #1B1B1F;
-@x-secondaryContainer_dark #ce93d8;
-@x-onSecondaryContainer_dark #1B1B1F;
+@x-secondaryContainer_dark #7986cb;
+@x-onSecondaryContainer_dark #F8F8F2;
 @x-surface_dark #282a36;
 @x-onSurface_dark #F8F8F2;
 
@@ -66,15 +77,25 @@
   color-scheme: dark;
 
   --style-palette-primary: @x-primary_dark;
+  --style-palette-primary-channel: channel(@x-primary_dark);
   --style-palette-on-primary: @x-onPrimary_dark;
+  --style-palette-on-primary-channel: channel(@x-onPrimary_dark);
   --style-palette-primary-container: @x-primaryContainer_dark;
+  --style-palette-primary-container-channel: channel(@x-primaryContainer_dark);
   --style-palette-on-primary-container: @x-onPrimaryContainer_dark;
+  --style-palette-on-primary-container-channel: channel(@x-onPrimaryContainer_dark);
   --style-palette-secondary: @x-secondary_dark;
+  --style-palette-secondary-channel: channel(@x-secondary_dark);
   --style-palette-on-secondary: @x-onSecondary_dark;
+  --style-palette-on-secondary-channel: channel(@x-onSecondary_dark);
   --style-palette-secondary-container: @x-secondaryContainer_dark;
+  --style-palette-secondary-container-channel: channel(@x-secondaryContainer_dark);
   --style-palette-on-secondary-container: @x-onSecondaryContainer_dark;
+  --style-palette-on-secondary-container-channel: channel(@x-onSecondaryContainer_dark);
   --style-palette-surface: @x-surface_dark;
+  --style-palette-surface-channel: channel(@x-surface_dark);
   --style-palette-on-surface: @x-onSurface_dark;
+  --style-palette-on-surface-channel: channel(@x-onSurface_dark);
 
   --style-palette-surface-dim: lighten(@x-surface_dark, 10);
   --style-palette-surface-bright: darken(@x-surface_dark, 1);
@@ -84,4 +105,7 @@
   --style-palette-surface-container-high: lighten(@x-surface_dark, 4);
   --style-palette-surface-container-highest: lighten(@x-surface_dark, 8);
   --style-palette-on-surface-variant: #bcc2cd;
+
+  --style-palette-outline: #757780;
+  --style-palette-outline-variant: #C5C6D0;
 }
