@@ -3,6 +3,10 @@
 define('LARAVEL_START', microtime(true));
 
 // Check If The Application Is Under Maintenance
+if (!is_dir(__DIR__.'/bd/laravel/storage/framework')) {
+  header ('HTTP/1.0 503 Service Temporarily Unavailable');
+  exit();
+}
 if (is_file(__DIR__.'/bd/laravel/storage/framework/down')) {
   $query = [];
   parse_str($_SERVER['QUERY_STRING'], $query);
