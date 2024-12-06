@@ -1,6 +1,6 @@
-import React from "https://esm.sh/react@canary?dev";
-import ReactDOM from "https://esm.sh/react-dom@canary?dev";
-import ReactDOMClient from "https://esm.sh/react-dom@canary/client?dev";
+import React from "https://esm.sh/react@19?dev";
+import ReactDOM from "https://esm.sh/react-dom@19?dev";
+import ReactDOMClient from "https://esm.sh/react-dom@19/client?dev";
 // import ReactDOMServer from "https://esm.sh/react-dom@canary/server.browser?dev";
 import htm from "https://esm.sh/htm";
 import * as emotion from "https://esm.sh/@emotion/css@11";
