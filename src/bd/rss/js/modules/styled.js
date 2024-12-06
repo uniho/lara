@@ -6,11 +6,11 @@ export const cx = emotion.cx;
 
 export const Styled = (tag, style = {}, options = {}) => styled(tag, options)(style);
 
-export const styled = (tag, options) => (style, ...values) => React.forwardRef((props, ref) => {
+export const styled = (tag, options) => (style, ...values) => props => {
   const makeClassName = (style, ...values) =>
     typeof style == 'function' ? makeClassName(style(props)) : emotion.css(style, ...values);
  
-  const {sx, ...wosx} = props;
+  const {sx, className, 'class': _class, children, ...wosx} = props;
 
   Object.keys(wosx).forEach(key => {
     if (options && options.shouldForwardProp && !options.shouldForwardProp(key)) {
@@ -19,10 +19,9 @@ export const styled = (tag, options) => (style, ...values) => React.forwardRef((
   });
 
   const newProps = {
-    ref,
     ...wosx,
-    className: emotion.cx(props.className, makeClassName(style, ...values), makeClassName(sx)),
+    className: emotion.cx(makeClassName(style, ...values), makeClassName(sx), _class, className),
   };
 
-  return React.createElement(tag, newProps, props.children);
-});
+  return React.createElement(tag, newProps, children);
+};
