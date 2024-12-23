@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 
 //
+\HQ::onWeb($router);
+
+//
 \Route::any('/adminer', function () {
   abort_unless(\HQ::isAdminUser(), 403);
 
@@ -64,6 +67,3 @@ use Illuminate\Http\Request;
 
   abort(404);
 });
-
-//
-\HQ::onWeb($router);
