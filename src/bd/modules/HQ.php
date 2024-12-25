@@ -53,12 +53,6 @@ final class HQ
       return \RestApi\Procedures::handle($request);
     }
 
-    if ($request->has('view_route')) {
-      $name = $request->query('view_route');
-      abort_unless(view()->exists($name), 404, "View [{$name}] not found.");
-      return view($name); // $data dosen't need.
-    }
-
     if ($request->method() == 'GET' && basename(url()->current()) == 'debugbar.php') {
       if (self::getDebugMode() && self::isAdminUser()) {
         return view('welcome');
