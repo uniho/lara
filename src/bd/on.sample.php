@@ -178,5 +178,26 @@ class On
       return response($contents, 200)->header('Content-Type', 'text/plain; charset=utf-8');
     })->where('name', '.*');
 
+    // Blade 使用例 
+    \Route::get('blade/{name}', function ($name) {
+      $body = $name;
+      $ext = '';
+      $p = strrpos($name, '.');
+      $ext = false;
+      if ($p !== false) {
+        $body = strtr(substr($name, 0, $p), '/', '.');
+        $ext = substr($name, $p);
+      }
+      $body = strtr($body, '.', '/');
+      $fn = \HQ::getenv('CCC::RSS_PATH') . "/blade/$body$ext.blade.php";
+      abort_unless(is_file($fn), 404, "blade [{$name}] not found.");
+      $r = response(view()->file($fn)->render(), 200); // $data dosen't need.
+      return match($ext) {
+        '.js' => $r->header('Content-Type', 'application/javascript; charset=utf-8'),
+        '.css' => $r->header('Content-Type', 'text/css; charset=utf-8'),
+        default => $r
+      };
+    })->where('name', '.*');
+
   }
 }
