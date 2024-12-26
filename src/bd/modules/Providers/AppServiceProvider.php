@@ -81,7 +81,9 @@ class AppServiceProvider extends ServiceProvider
               \HQ::cache()->put($key, $style, 60*60*24*14);
             }
           }
-          echo "<style>$style</style>";
+          $props = '. ($expression ?: '[]') . ';  
+          echo (($props["no-style-tag"] ?? false) ? "" : "<style>") . $style .
+            (($props["no-style-tag"] ?? false) ? "" : "</style>");
         }
       ?>';
     });
