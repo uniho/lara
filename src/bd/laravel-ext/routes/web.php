@@ -10,7 +10,11 @@ use Illuminate\Http\Request;
   abort_unless(\HQ::isAdminUser(), 403);
 
   $connect = request()->query('connect') ?: config('database.default');
-  $driver = config("database.connections.$connect.driver");
+  if (substr($connect, 0, 1) == '/') {
+    $driver = 'sqlite';
+  } else {
+    $driver = config("database.connections.$connect.driver");
+  }
   abort_unless($driver, 404, 'unknown connet');
   if ($driver == 'mysql') {
     if (!isset($_GET['db'])) {
@@ -28,7 +32,7 @@ use Illuminate\Http\Request;
     if (!isset($_GET['db'])) {
       $_POST['auth'] = [
         'driver'    => 'sqlite',
-        'db'        => config("database.connections.$connect.database"),
+        'db'        => substr($connect, 0, 1) == '/' ? dirname(base_path())."/database$connect.sqlite" : config("database.connections.$connect.database"),
         // 'permanent' => 1,
       ];
     }

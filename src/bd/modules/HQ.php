@@ -64,7 +64,7 @@ final class HQ
     return false;
   }
 
-  public static function getenv($name)
+  public static function getenv($name, $default = null)
   {
     if (isset(self::$env[$name])) {
       return self::$env[$name];
@@ -73,8 +73,10 @@ final class HQ
     if (substr($name, 0, 5) === 'CCC::') {
       $refClass = new ReflectionClass(\CCC::class);
       $consts = $refClass->getConstants();
-      return $consts[substr($name, 5)] ?? null;
+      return $consts[substr($name, 5)] ?? $default;
     }
+
+    return $default;
   }
 
   public static function setenv($name, $val)
