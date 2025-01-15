@@ -307,7 +307,7 @@ try {
   let codeString = code.toString();
   if (args.values.sourcemap) {
     await writeFile(output+'.map', map.toString(), 'utf8');
-    codeString +=  + '\n//# sourceMappingURL=' + output + '.map';
+    codeString += '\n//# sourceMappingURL=' + output + '.map';
   }
   await writeFile(output, codeString, 'utf8');
 
