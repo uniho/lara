@@ -4,13 +4,11 @@
   
   @color #22b8cf;
   @color-lighten-5: #2ec5dd;
-  --color-color3: lighten(@color, 5);
 
   @media (100px <= width < 480px) {
     color1: @color;
     color2: lighten(@color, 5);
-    color3: @color3;
-    color4: lighten(#eeeeee -8);
+    color3: lighten(#eeeeee -8);
   }
 
   @media (480px <= width <= 768px) {
