@@ -37,17 +37,12 @@ class FileStore extends \Illuminate\Cache\FileStore
     try {
       $file = new LockableFile($path, 'r');
     } catch (Exception) {
-      return false;
+      return $this->emptyPayload();
     }
 
     try { 
       try {
         $file->getSharedLock(true);
-      } catch (LockTimeoutException) {
-        return false;
-      }
-
-      try {
         if (is_null($expire = $file->read(13))) {
           return $this->emptyPayload();
         }
