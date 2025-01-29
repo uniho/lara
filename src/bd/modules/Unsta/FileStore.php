@@ -42,7 +42,7 @@ class FileStore extends \Illuminate\Cache\FileStore
 
     try { 
       try {
-        $file->getExclusiveLock();
+        $file->getSharedLock(true);
       } catch (LockTimeoutException) {
         return false;
       }
@@ -96,7 +96,7 @@ class FileStore extends \Illuminate\Cache\FileStore
 
     try { 
       try {
-        $file->getExclusiveLock();
+        $file->getExclusiveLock(true);
       } catch (LockTimeoutException) {
         return false;
       }
