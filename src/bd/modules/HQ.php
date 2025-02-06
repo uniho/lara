@@ -212,7 +212,13 @@ final class HQ
     if ($user) {
       $arr = explode('|', $user);
       if (!isset($arr[0]) || !isset($arr[1])) return null;
-      self::updateSuperUser($arr[0], intval($arr[1]));
+      if (isset($arr[2]) && !self::array_cache("SUPER-USER-HQ_{$arr[0]}")->has($arr[2])) {
+        // 他の端末で全端末ログアウトした場合など
+        session()->forget('SUPER-USER-HQ');
+        session()->invalidate();
+        session()->regenerateToken();
+        return null;
+      }
       return $arr[0];
     }
 
@@ -252,19 +258,11 @@ final class HQ
   {
     if (!$user) return false;
 
-    session(['SUPER-USER-HQ' => "$user|$expire"]);
+    $uid = (string)\Str::uuid();
+    session(['SUPER-USER-HQ' => "$user|$expire|$uid"]);
     session()->regenerate();
 
     // Remember Me
-    $cookie = \Cookie::get(self::getAppSlug().'_SUPER-USER-HQ');
-    if ($cookie) {
-      $cookie_arr = explode('|', $cookie);
-      if (isset($cookie_arr[0])) {
-        self::array_cache("SUPER-USER-HQ_{$user}")->forget($cookie_arr[0]);
-      }
-    }
-
-    $uid = (string)\Str::uuid();
     $token = \Str::random(60);
     self::array_cache("SUPER-USER-HQ_{$user}")->put($uid, "$token|$expire", intval($expire)/* sec */);
     self::array_cache("SUPER-USER-HQ_{$user}")->gc();
@@ -285,6 +283,7 @@ final class HQ
     if ($cookie) {
       $cookie_arr = explode('|', $cookie);
       if (isset($cookie_arr[1])) {
+        // 全端末でログアウト
         self::array_cache("SUPER-USER-HQ_{$cookie_arr[1]}")->flush();
       }
     }
