@@ -337,7 +337,7 @@ final class HQ
   public static function keep_cache($type = 'serialize') {
     if (!isset(self::$keep_caches[$type])) {
       self::$keep_caches[$type] = new \Illuminate\Cache\Repository(
-        new \Unsta\FileStore(app()['files'], self::getenv('CCC::KEEP_PATH'), $type)
+        new \Unsta\FileStore(app()['files'], self::getenv('CCC::KEEP_PATH').'/cache', $type)
       );
     }
     return self::$keep_caches[$type];
