@@ -9,8 +9,8 @@
 
 //
 \Artisan::command('cache_gc', function () {
-  \HQ::cache()->gc(0);
-  \Unsta\FloodControl::gc();
+  \HQ::cache_gc_proc();
+  $this->info('cache_gc command finished.');
 });
 
 \HQ::onConsole(); // ※

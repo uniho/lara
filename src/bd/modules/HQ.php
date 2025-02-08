@@ -359,6 +359,20 @@ final class HQ
     }
   }
 
+  public static function cache_gc_proc()
+  {
+    foreach (self::$caches as $cache) {
+      $cache->gc(0);
+    }
+    foreach (self::$keep_caches as $cache) {
+      $cache->gc(0);
+    }
+    foreach (self::$array_caches as $cache) {
+      $cache->gc();
+    }
+    \Unsta\FloodControl::gc();
+  }
+
   private static function on_exists(): bool
   {
     if (!class_exists('\HQ\On::class', false)) {
