@@ -11,50 +11,75 @@ class ArrayStore extends \Illuminate\Cache\ArrayStore
 
   public function get($key)
   {
-    $this->storage = $this->getStorage();
-    return parent::get((string)$key);
+  	$lock = $this->block_w();
+  	try {
+      $this->storage = $this->getStorage();
+      return parent::get((string)$key);
+    } finally {
+      $lock->release();
+    }
   }
 
   public function put($key, $value, $seconds)
   {
-    $this->storage = $this->getStorage();
-    parent::put((string)$key, $value, $seconds);
-    $this->putStorage($this->storage);
-    return true;
+  	$lock = $this->block_w();
+  	try {
+      $this->storage = $this->getStorage();
+      parent::put((string)$key, $value, $seconds);
+      $this->putStorage($this->storage);
+      return true;
+    } finally {
+      $lock->release();
+    }
   }
 
   public function increment($key, $value = 1)
   {
-    $this->storage = $this->getStorage();
-    $r = parent::increment((string)$key, $value);
-    $this->putStorage($this->storage);
-    return $r;
+  	$lock = $this->block_w();
+  	try {
+      $this->storage = $this->getStorage();
+      $r = parent::increment((string)$key, $value);
+      $this->putStorage($this->storage);
+      return $r;
+    } finally {
+      $lock->release();
+    }
   }
 
   public function forget($key)
   {
-    $this->storage = $this->getStorage();
-    $r = parent::forget((string)$key);
-    $this->putStorage($this->storage);
-    return $r;
+  	$lock = $this->block_w();
+  	try {
+      $this->storage = $this->getStorage();
+      $r = parent::forget((string)$key);
+      $this->putStorage($this->storage);
+      return $r;
+    } finally {
+      $lock->release();
+    }
   }
 
   public function preg_forget($reg)
   {
-    $array = $this->getStorage();
-    $newArray = [];
-    $forgets = [];
-    foreach ($array as $key => $item) {
-      if ($reg && preg_match($reg, $key)) {
-        $forgets[] = $key;        
-        continue;
-      }
-      if (!$item['expiresAt'] || $this->currentTime() < $item['expiresAt']) {
-        $newArray[$key] = $item;
-      }
-    }  
-    $this->putStorage($newArray);
-    return $forgets;
+  	$lock = $this->block_w();
+  	try {
+      $array = $this->getStorage();
+      $newArray = [];
+      $forgets = [];
+      foreach ($array as $key => $item) {
+        if ($reg && preg_match($reg, $key)) {
+          $forgets[] = $key;        
+          continue;
+        }
+        if (!$item['expiresAt'] || $this->currentTime() < $item['expiresAt']) {
+          $newArray[$key] = $item;
+        }
+      }  
+      $this->putStorage($newArray);
+      return $forgets;
+    } finally {
+      $lock->release();
+    }
   }
 
   public function flush()
@@ -80,5 +105,12 @@ class ArrayStore extends \Illuminate\Cache\ArrayStore
     } else {
       $this->cache->forget($this->key);
     }
+  }
+  
+  private function block_w()
+  {
+    $lock = $this->cache->lock('$_array_store_write_'.$this->key, 10);
+    $lock->block(5);
+  	return $lock;
   }
 }
