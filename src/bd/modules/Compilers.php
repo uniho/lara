@@ -80,7 +80,7 @@ final class Compilers
       public function getFullName($name)
       {
         $body = $name;
-        $ext = '.css';
+        $ext = '.scss';
         $p = strrpos($name, '.');
         if ($p !== false) {
           $body = strtr(substr($name, 0, $p), '/', '.');
