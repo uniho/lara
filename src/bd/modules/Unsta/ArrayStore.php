@@ -14,7 +14,24 @@ class ArrayStore extends \Illuminate\Cache\ArrayStore
   	$lock = $this->block_w();
   	try {
       $this->storage = $this->getStorage();
-      return parent::get((string)$key);
+
+      // 以降は parent::get() と同じ処理（ただし this->forget() ではなく parent::forget() を呼ぶようにしている）
+      if (!isset($this->storage[$key])) {
+        return;
+      }
+
+      $item = $this->storage[$key];
+
+      $expiresAt = $item['expiresAt'] ?? 0;
+
+      if ($expiresAt !== 0 && (now()->getPreciseTimestamp(3) / 1000) >= $expiresAt) {
+        parent::forget((string)$key);
+        $this->putStorage($this->storage);
+        return;
+      }
+
+      return $this->serializesValues ? unserialize($item['value']) : $item['value'];
+
     } finally {
       $lock->release();
     }
