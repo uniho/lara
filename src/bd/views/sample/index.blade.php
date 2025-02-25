@@ -53,7 +53,7 @@
   </x-slot>  
 
   <x-slot:header>
-    <link rel="stylesheet" href="{{request()->root()}}/css/sample/style.css">
+    <link rel="stylesheet" href="{{request()->root()}}/css/sample/style">
   </x-slot>  
 
   {{-- slot --}}
