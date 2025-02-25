@@ -25,9 +25,6 @@ require_once 'bd/laravel/vendor/autoload.php';
 \HQ::onStart();
 
 $app = require_once 'bd/laravel-ext/bootstrap/app.php';
-$kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
-$request = \Illuminate\Http\Request::capture();
-$response = $kernel->handle($request)->send();
-$kernel->terminate($request, $response);
+$app->handleRequest(\Illuminate\Http\Request::capture());
 
 \HQ::onFinish();
