@@ -87,7 +87,18 @@
         <div>
           Markdown =>
           <div class="color-box">
-            {!! Compilers::markdown('sample/test', ['test' => 2]) !!}
+            {!!
+              Compilers::markdown('sample/test', ['test' => 2], [
+                'force_compile' => true,
+                'markdown' => [
+                  'config' => [
+                    'renderer' => [
+                      'soft_break' => "<br/>\n",
+                    ],
+                  ],
+                ],
+              ])
+            !!}
           </div>
         </div>
       @else

@@ -109,7 +109,7 @@ final class Compilers
         {
           public function compile($path)
           {
-            $contents = $this->core->inlineCommonMark($this->files->get($path));
+            $contents = $this->core->inlineCommonMark($this->files->get($path), $this->options['markdown'] ?? []);
         
             $this->ensureCompiledDirectoryExists(
               $compiledPath = $this->getCompiledPath($path)
@@ -120,20 +120,20 @@ final class Compilers
         };
 
         $engine = new \Illuminate\View\Engines\CompilerEngine($compiler, app()['files']);
-        return $this->inlineMustache($engine->get($file), $data, $options);
+        return $this->inlineMustache($engine->get($file), $data, $options['mustache'] ?? []);
       }
 
       //
       public function inline($src, $data = [], $options = [])
       {
-        $src = $this->inlineCommonMark($src);
-        return $this->inlineMustache($src, $data, $options);
+        $src = $this->inlineCommonMark($src, $options['markdown'] ?? []);
+        return $this->inlineMustache($src, $data, $options['mustache'] ?? []);
       }
 
       //
-      public function inlineCommonMark($src)
+      public function inlineCommonMark($src, $options = [])
       {
-        $config = [];
+        $config = $options['config'] ?? [];
         // $env = new \League\CommonMark\Environment\Environment($config);
         // $env->addExtension(new \League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension());
         // $env->addExtension(new \League\CommonMark\Extension\GithubFlavoredMarkdownExtension());

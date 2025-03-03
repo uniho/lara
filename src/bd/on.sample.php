@@ -173,7 +173,16 @@ class On
     // Markdown 使用例
     \Route::get('markdown/{name}', function ($name) {
       abort_unless(\Compilers::markdown()->exists($name), 404, "Markdown [{$name}] not found.");
-      $contents = \Compilers::markdown($name, [], ['force_compile' => \HQ::getDebugMode() || request()->has('force_compile')]);
+      $contents = \Compilers::markdown($name, [], [
+        'force_compile' => \HQ::getDebugMode() || request()->has('force_compile'),
+        'markdown' => [
+          'config' => [
+            'renderer' => [
+              'soft_break' => "<br/>\n", // soft break to hard break, like github comment
+            ],
+          ],
+        ],
+      ]);
       return response($contents, 200)->header('Content-Type', 'text/plain; charset=utf-8');
     })->where('name', '.*');
 
