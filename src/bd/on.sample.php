@@ -46,6 +46,15 @@ class On
   public static function onBoot()
   {
     \Log::debug(\HQ::getenv('CCC::APP_NAME') . ' boot!');
+
+    \HQ::setMaintenanceMode(0);
+    // \HQ::setMaintenanceMode(5, [
+    //   'secret' => 'your secret key',
+    //   'template' => view('sample.message', [
+    //     'title' => 'Page Under Maintenance',
+    //     'message' => 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
+    //   ])->render(),
+    // ]);
   } 
   
   // Called from routes/console.php
@@ -64,15 +73,6 @@ class On
   // Called from laravel/routes/web.php
   public static function onWeb($router)
   {
-    \HQ::setMaintenanceMode(0);
-    // \HQ::setMaintenanceMode(5, [
-    //   'secret' => 'your secret key',
-    //   'template' => view('sample.message', [
-    //     'title' => 'Page Under Maintenance',
-    //     'message' => 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
-    //   ])->render(),
-    // ]);
-
     // admin
     \Route::prefix('admin')->group(function() {
       include __DIR__."/web_routes/admin.php";
