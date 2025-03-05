@@ -47,10 +47,20 @@
 
   $msg .= "\nPHP CLI: ";
   $php = \HQ::getenv('CCC::PHP_CLI');
-  $cmd = \HQ::getenv('CCC::CLI_PATH') . '/async/artisan.php --version';
+  $cmd = ' -v';
   $process = \Symfony\Component\Process\Process::fromShellCommandline("$php $cmd");
   $process->run();
-  $msg .= $process->isSuccessful() ? trim($process->getOutput()) : 'ERROR!';
+  $phpIsOk = $process->isSuccessful();
+  $msg .= $phpIsOk ? trim(explode("\n", $process->getOutput())[0]) : 'ERROR!';
+
+  if ($phpIsOk) {
+    $msg .= "\nLaravel: ";
+    // $php = \HQ::getenv('CCC::PHP_CLI');
+    $cmd = \HQ::getenv('CCC::CLI_PATH') . '/async/artisan.php --version';
+    $process = \Symfony\Component\Process\Process::fromShellCommandline("$php $cmd");
+    $process->run();
+    $msg .= $process->isSuccessful() ? trim($process->getOutput()) : 'ERROR!';
+  }
 
   return view('sample.message', [
     'title' => 'CHECK',
