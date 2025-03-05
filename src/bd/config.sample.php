@@ -45,6 +45,7 @@ return [
   ],
 
   'mail' => [
+    'default' => 'smtp',
     'mailers' => [
       'smtp' => [
         'host' =>  'your smtp domain',
