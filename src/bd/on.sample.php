@@ -24,7 +24,7 @@ class On
 
     // \HQ::setenv('superUserSecret', '');
 
-    // \HQ::setenv('CCC::PHP_CLI', '/usr/local/php82/bin/php');
+    // \HQ::setenv('CCC::PHP_CLI', '/usr/bin/php');
     // \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.16.0/bin/node');
 
     // CSS breakpoints from bootstrap's default
