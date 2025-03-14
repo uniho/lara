@@ -43,9 +43,18 @@
   $node = \HQ::getenv('CCC::NODE_CLI');
   $process = \Symfony\Component\Process\Process::fromShellCommandline("$node --version");
   $process->run();
-  $msg = "NODE CLI: " . ($process->isSuccessful() ? trim($process->getOutput()) : 'ERROR!');
+  $nodeIsOk = $process->isSuccessful();
+  $msg = "NODE CLI: " . ($nodeIsOk ? trim($process->getOutput()) : 'ERROR!');
 
-  $msg .= "\nPHP CLI: ";
+  if ($nodeIsOk) {
+    $msg .= "\npackage.json: ";
+    $cmd = 'cat ' . \HQ::getenv('CCC::CLI_PATH') . '/node/package.json';
+    $process = \Symfony\Component\Process\Process::fromShellCommandline($cmd);
+    $process->run();
+    $msg .= $process->isSuccessful() ? trim($process->getOutput()) : 'ERROR!';
+  }
+
+  $msg .= "\n\nPHP CLI: ";
   $php = \HQ::getenv('CCC::PHP_CLI');
   $cmd = ' -v';
   $process = \Symfony\Component\Process\Process::fromShellCommandline("$php $cmd");
