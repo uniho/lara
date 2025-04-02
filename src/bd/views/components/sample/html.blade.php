@@ -2,7 +2,7 @@
 @props([
   'title' => 'NO TITLE',
   'header' => '',
-  'root' => request()->root(),
+  'root' => \JJJ::relativeRoot(),
 ])
 
 <!DOCTYPE html>

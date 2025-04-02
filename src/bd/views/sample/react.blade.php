@@ -1,6 +1,6 @@
 @props([
   'page' => request()->query('page') ?? 1,
-  'root' => request()->root(),
+  'root' => \JJJ::relativeRoot(),
 ])
 
 <!DOCTYPE html>

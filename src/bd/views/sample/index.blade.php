@@ -45,6 +45,7 @@
 
 @props([
   'css_id' => $css->getId(),
+  'root' => \JJJ::relativeRoot(),
 ])
 
 <x-sample.html>
@@ -53,7 +54,7 @@
   </x-slot>  
 
   <x-slot:header>
-    <link rel="stylesheet" href="{{request()->root()}}/css/sample/style">
+    <link rel="stylesheet" href="{{$root}}/css/sample/style">
   </x-slot>  
 
   {{-- slot --}}
