@@ -1,6 +1,6 @@
 @props([
-  'title' => 'ERROR',
-  'message' => 'NO MESSAGE',
+  'title' => false,
+  'message' => false,
   'css_id' => $css->getId(),
 ])
 
@@ -11,10 +11,12 @@
   
   <div class="{{$css_id}}">
     <div class="frame">
-      <div class="title">
-        {{$title}}      
-      </div>
+      @if($title)
+      <div class="title">{{$title}}</div>
+      @endif
+      @if($message)
       <div class="message">{{$message}}</div>
+      @endif
     </div>
   </div>
 
@@ -32,6 +34,8 @@
     .title {
       font-family: Roboto;
       font-size: 30px;
+      max-width: 800px;
+      white-space: pre-wrap;
     }
 
     .message {
