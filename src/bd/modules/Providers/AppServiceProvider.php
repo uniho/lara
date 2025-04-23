@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         public function getId()
         {
           $this->id_count++; 
-          return 't'.sha1($this->view_info["path"].$this->view_info["modified"].$this->id_count);
+          return 't'.hash('xxh64', $this->view_info["path"].$this->view_info["modified"].$this->id_count);
         }
       };
       view()->share('css', $css);
@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
       return '<?php
         $style = $__env->yieldPushContent("__style-css");
         if ($style) {
-          $hash = sha1($__env->yieldPushContent("__style-hash") ?: $style);
+          $hash = hash("xxh128", $__env->yieldPushContent("__style-hash") ?: $style);
           $key = "cache/scss_inline_cache/".substr($hash, 0, 2)."/".substr($hash, 2, 2)."/".$hash;
           if (\HQ::cache()->has($key)) {
             $style = \HQ::cache()->get($key);
