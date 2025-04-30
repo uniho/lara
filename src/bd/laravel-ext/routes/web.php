@@ -38,12 +38,10 @@ use Illuminate\Http\Request;
     }
     function adminer_object() {
       require 'bd/vendor/adminer/plugin-without-credentials.php';
-      require 'bd/vendor/adminer/plugin.php';
-      $plugins = [new PluginWithoutCredentials()];
-      return new AdminerPlugin($plugins);
+      return new Adminer\Plugins([new PluginWithoutCredentials()]);
     }
   }
-  require 'bd/vendor/adminer/adminer-4.8.1-en.php';
+  require 'bd/vendor/adminer/adminer-5.2.1-en.php';
   exit();
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 

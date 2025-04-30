@@ -1,6 +1,6 @@
 <?php
 
-class PluginWithoutCredentials
+class PluginWithoutCredentials extends Adminer\Plugin
 {
   function credentials()
   {
