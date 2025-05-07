@@ -41,7 +41,7 @@ use Illuminate\Http\Request;
       return new Adminer\Plugins([new PluginWithoutCredentials()]);
     }
   }
-  require 'bd/vendor/adminer/adminer-5.2.1-en.php';
+  require 'bd/vendor/adminer/adminer-5.3.0-en.php';
   exit();
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
