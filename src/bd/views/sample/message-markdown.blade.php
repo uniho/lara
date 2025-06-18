@@ -26,7 +26,7 @@
   </div>
 
 @css($css_id)
-// <style>
+<style>
 
   .frame {
     display: flex;
@@ -59,8 +59,8 @@
     transition: background-position .3s cubic-bezier(.64,.09,.08,1), color .3s cubic-bezier(.64,.09,.08,1);
     will-change: background-position, color;
 
-    // タッチデバイスなら hover アニメーションはしないようにする
-    // そうしないと、タッチ後に hover の状態で描画されたままてなってしまうため
+    /* タッチデバイスなら hover アニメーションはしないようにする
+    そうしないと、タッチ後に hover の状態で描画されたままてなってしまうため */
     @media (hover: hover) and (pointer: fine) {
       &:hover {
         color: @color;
@@ -69,7 +69,7 @@
     }
   }
 
-// </style>
+</style>
 @endcss
 
 </x-sample.html>  

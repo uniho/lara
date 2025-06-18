@@ -124,9 +124,9 @@
 
 {{-- Dynamic SCSS --}}
 @css($css_id)
-// <style>
+<style>
 
-  // You can use SCSS style!!
+  /* You can use SCSS style!! */
 
   .color-box {
     border: yellow 1px solid;
@@ -139,7 +139,7 @@
     }
   }
 
-// </style>
+</style>
 @endcss  
 
 </x-sample.html>

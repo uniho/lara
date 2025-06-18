@@ -39,9 +39,9 @@ try {
     // console.error('Usage: <in file name> [--outfile=<out file name>] [--minify]');
   }
 
-  // Strip Single Line Comments
-  // LightningCSS doesn't support Single Line Comments on v1.25.1
-  src = src.replace(/(\/\*(?:(?!\*\/)[\s\S])*\*\/|\"(?:(?!(?<!\\)\").)*\"|\'(?:(?!(?<!\\)\').)*\')|\/\/.*/g, '$1');
+  // // Strip Single Line Comments
+  // // LightningCSS doesn't support Single Line Comments on v1.25.1
+  // src = src.replace(/(\/\*(?:(?!\*\/)[\s\S])*\*\/|\"(?:(?!(?<!\\)\").)*\"|\'(?:(?!(?<!\\)\').)*\')|\/\/.*/g, '$1');
 
   const getValue = arg => {
     switch (arg.type) {

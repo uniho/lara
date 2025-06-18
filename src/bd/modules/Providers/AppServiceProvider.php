@@ -74,6 +74,7 @@ class AppServiceProvider extends ServiceProvider
           if (\HQ::cache()->has($key)) {
             $style = \HQ::cache()->get($key);
           } else {
+            $style = str_replace(["<style>", "</style>"], "", $style);
             $style = Compilers::scss()->inline($style, options: ["minify" => 1]);
             if (isset($style["error"])) {
               $style = "/*\n{$style["error"]}\n*/";
