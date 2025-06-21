@@ -8,8 +8,8 @@ final class CCC
 
   const BASE_DIR = __BASE_DIR__; // = request()->root()
   const DIR_FD = __BASE_DIR__ . '/fd';
-  const DIR_BD = __BASE_DIR__ . '/bd';
-  const DIR_LARAVEL = __BASE_DIR__ . '/bd/laravel';
+  const DIR_BD = __BASE_DIR__ . '/.bd';
+  const DIR_LARAVEL = __BASE_DIR__ . '/.bd/laravel';
 
   const FILE_DEBUG = '/storage/framework/debug.json';
   const FILE_VIEW_CACHE = '/storage/framework/view-cache.json';
@@ -21,10 +21,10 @@ final class CCC
   const STORAGE_LOCAL_PRIVATE_FILES_PATH = self::DIR_LARAVEL . '/storage/app';
   const STORAGE_LOCAL_PUBLIC_FILES_PATH = __BASE_DIR__ . '/storage';
 
-  const KEEP_PATH = __BASE_DIR__ . '/bd/_keep_';
-  const VIEWS_PATH = __BASE_DIR__ . '/bd/views';
-  const RSS_PATH = __BASE_DIR__ . '/bd/rss';
-  const CLI_PATH = __BASE_DIR__ . '/bd/cli';
+  const KEEP_PATH = __BASE_DIR__ . '/.bd/_keep_';
+  const VIEWS_PATH = __BASE_DIR__ . '/.bd/views';
+  const RSS_PATH = __BASE_DIR__ . '/.bd/rss';
+  const CLI_PATH = __BASE_DIR__ . '/.bd/cli';
 
   const PHP_CLI = 'php';
   const NODE_CLI = 'node';
