@@ -109,29 +109,13 @@ try {
   }
 
   const lighten = info => {
-    const color = getValue(info.arguments[0]);
-    const amount = getValue(info.arguments[2]).value;
-    // if (color.type == 'string') {
-    //   return (
-    //     { raw: `hsl(from ${color.value} h s calc(l + ${amount}%))` }
-    //   );
-    // } 
-    return (
-      { raw: `hsl(from rgb(${color.r} ${color.g} ${color.b}/${color.alpha}) h s calc(l + ${amount}%))` }
-    );
+    const rgb = rawLighten(info);
+    return ({raw: `rgb(${rgb.r} ${rgb.g} ${rgb.b}/${rgb.alpha})`});
   }
 
   const darken = info => {
-    const color = getValue(info.arguments[0]);
-    const amount = getValue(info.arguments[2]).value;
-    // if (color.type == 'string') {
-    //   return (
-    //     { raw: `hsl(from ${color.value} h s calc(l - ${amount}%))` }
-    //   );
-    // } 
-    return (
-      { raw: `hsl(from rgb(${color.r} ${color.g} ${color.b}/${color.alpha}) h s calc(l - ${amount}%))` }
-    );
+    const rgb = rawDarken(info);
+    return ({raw: `rgb(${rgb.r} ${rgb.g} ${rgb.b}/${rgb.alpha})`});
   }
 
   const rgb2hsl = color => {
