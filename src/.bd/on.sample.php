@@ -225,5 +225,12 @@ class On
       };
     })->where('name', '.*');
 
+    // // Root の例
+    // \Route::get('/{name?}', function($name = null) {
+    //   if (($r = \HQ::webOrigin(request())) !== false) return $r;
+    //   if ($name) abort(404);
+    //   return 'Root!';
+    // })->where('name', '.*');
+
   }
 }
