@@ -186,6 +186,24 @@ class On
       return response($contents, 200)->header('Content-Type', 'text/plain; charset=utf-8');
     })->where('name', '.*');
 
+    // mdx 使用例 
+    \Route::get('mdx/{name}', function ($name) {
+      $ext = substr($name, strrpos($name, '.') + 1);
+      if ($ext == 'map') {
+        $name = app()['config']['view.compiled'] . '/' . basename($name);
+        abort_unless(is_file($name) && \HQ::getDebugMode(), 404, "MAP [{$name}] not found.");
+        $contents = \File::get($name);
+        return response($contents, 200)->header('Content-Type', 'application/json; charset=utf-8');
+      }
+
+      abort_unless(\Compilers::mdx()->exists($name), 404, "MDX [{$name}] not found.");
+      $contents = \Compilers::mdx($name, [], [
+        'force_compile' => \HQ::getDebugMode() || request()->has('force_compile'), 
+        'args' => '--minify-whitespace --minify-identifiers --loader:.js=tsx',
+      ]);
+      return response($contents, 200)->header('Content-Type', 'application/javascript; charset=utf-8');
+    })->where('name', '.*');
+
     // Blade 使用例 
     \Route::get('blade/{name}', function ($name) {
       $body = $name;
