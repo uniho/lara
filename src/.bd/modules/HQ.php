@@ -51,6 +51,13 @@ final class HQ
     }
   }
 
+  public static function onExceptions($exceptions)
+  {
+    if (self::on_exists() && method_exists(\HQ\On::class, 'onExceptions')) {
+      \HQ\On::onExceptions($exceptions);
+    }
+  }
+
   public static function webOrigin($request)
   {
     if ($request->has('rest_route')) {
