@@ -12,7 +12,8 @@ return \Application::configure(basePath: dirname(dirname(__DIR__)).'/laravel')
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // ※
+        \HQ::onMiddleware($middleware);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // ※

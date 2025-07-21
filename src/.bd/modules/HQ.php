@@ -44,6 +44,13 @@ final class HQ
     }
   }
 
+  public static function onMiddleware($middleware)
+  {
+    if (self::on_exists() && method_exists(\HQ\On::class, 'onMiddleware')) {
+      \HQ\On::onMiddleware($middleware);
+    }
+  }
+
   public static function webOrigin($request)
   {
     if ($request->has('rest_route')) {
