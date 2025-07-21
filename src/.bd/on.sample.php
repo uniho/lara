@@ -42,6 +42,31 @@ class On
     // }
   } 
   
+  // Called from laravel-ext/bootstrap/app.php ->withMiddleware
+  // You cant use `debug()` yet.
+  public static function onMiddleware($middleware)
+  {
+    // dump($middleware);
+
+    // Trusted Hosts の設定
+    // デフォルトは指定なし。
+    // $middleware->trustHosts(at: [ ... ], subdomains: false); で許可するホスト名を指定。at: callback でもよい。
+    // なお、config.env.url を使用しないので subdomains: false が必須。
+    // $middleware->trustHosts(at: ['test.com'], subdomains: false);
+
+    // Trusted Proxies の設定
+    // デフォルトは指定なし。
+    // $middleware->trustProxies(at: [ ... ]); でIPアドレスを指定。
+    // $middleware->trustProxies(headers: ...); でProxynoのアドレスを取得するヘッダー名を指定。
+    // $middleware->trustProxies(at: ['230.123.2.211']);
+    // $middleware->trustProxies(headers: xxx);
+  } 
+  
+  // Called from laravel-ext/bootstrap/app.php ->withExceptions
+  public static function onExceptions($exceptions)
+  {
+  } 
+  
   // Called from App\Providers\AppServiceProvider::boot()
   public static function onBoot()
   {
