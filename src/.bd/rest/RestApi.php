@@ -23,12 +23,6 @@ final class Procedures
           }
         }
 
-        if (!in_array($request['_cmd'], ['login', 'logout', 'token']) && \HQ::getMaintenanceMode()) {
-          if (!self::isAdmin()) {
-            throw new \Exception('page under maintenance');
-          }
-        }
-
         $cmd = $request['_cmd'];
         $file = __DIR__."/cmds/v{$request['_ver']}/$role/$cmd.php";
         $class = "\\Rest\\v{$request['_ver']}\\$role\\$cmd";

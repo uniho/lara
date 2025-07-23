@@ -72,8 +72,8 @@ class On
   {
     \Log::debug(\HQ::getenv('CCC::APP_NAME') . ' boot!');
 
-    \HQ::setMaintenanceMode(0);
-    // \HQ::setMaintenanceMode(5, [
+    \HQ::setMaintenanceMode(false);
+    // \HQ::setMaintenanceMode([
     //   'secret' => 'your secret key',
     //   'template' => view('sample.message', [
     //     'title' => 'Page Under Maintenance',

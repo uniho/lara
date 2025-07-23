@@ -133,33 +133,12 @@ final class HQ
 
   public static function getMaintenanceMode()
   {
-    if (app()->isDownForMaintenance()) {
-      return 5;
-    }
-
-    if (!\CachedConfig::exists('$$__maintenance')) {
-      return 0;
-    } 
-
-    return \CachedConfig::get('$$__maintenance')['level'];
+    return !is_dir(\CCC::DIR_LARAVEL.'/storage/framework') || is_file(\CCC::DIR_LARAVEL.'/storage/framework/down');
   }
 
-  public static function getMaintenanceData()
+  public static function setMaintenanceMode($data)
   {
-    if (app()->isDownForMaintenance()) {
-      return app()->maintenanceMode()->data();
-    }
-
-    if (!\CachedConfig::exists('$$__maintenance')) {
-      return false;
-    } 
-
-    return \CachedConfig::get('$$__maintenance');
-  }
-
-  public static function setMaintenanceMode($level, $data = [])
-  {
-    if (is_int($level) && $level >= 5) {
+    if ($data['secret'] ?? false) {
       app()->maintenanceMode()->activate($data);
 
       // It doesn't matter, maybe.
@@ -174,13 +153,6 @@ final class HQ
     if (app()->isDownForMaintenance()) {
       app()->maintenanceMode()->deactivate();
       @unlink(storage_path('framework/maintenance.php')); // just to make sure
-    }
-
-    if ($level) {
-      $data['level'] = $level;
-      \CachedConfig::set('$$__maintenance', $data);
-    } else {
-      \CachedConfig::delete('$$__maintenance');
     }
   }
 
