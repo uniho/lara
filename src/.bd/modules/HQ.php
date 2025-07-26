@@ -311,6 +311,16 @@ final class HQ
     self::$COOKIE_PATH = $path;
   }
 
+  public static function getColorScheme()
+  {
+    return session('color-scheme-HQ') || 'light';
+  }  
+
+  public static function setColorScheme($scheme = 'light')
+  {
+    session(['color-scheme-HQ' => $scheme]);
+  }  
+
   public static function cache($type = 'serialize') {
     if (!isset(self::$caches[$type])) {
       self::$caches[$type] = new \Illuminate\Cache\Repository(
