@@ -250,6 +250,9 @@ class On
       };
     })->where('name', '.*');
 
+    //
+    require(__DIR__.'/web_routes/on_error.php');
+
     // // Root の例
     // \Route::get('/{name?}', function($name = null) {
     //   if (($r = \HQ::webOrigin(request())) !== false) return $r;
