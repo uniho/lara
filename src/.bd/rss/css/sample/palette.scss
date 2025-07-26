@@ -1,21 +1,42 @@
 
 /* 
-  M3 Example Midnight ~ https://rydmike.com/flexcolorscheme/themesplayground-latest/
- 
-  Surface Container について
-  https://material.io/blog/tone-based-surface-color-m3
+
+Brand blues ~ https://rydmike.com/flexcolorscheme/themesplayground-latest/
+
+
+# Surface Container について
+
+https://material.io/blog/tone-based-surface-color-m3
+
+
+# channel palette について
+
+iOS16(iPhone8) 以上では color-mix が使えるので不要。 
+
 */
 
-@x-primary #00296B;
+@x-primary #3B5998;
 @x-onPrimary #fff;
-@x-primaryContainer #578ee6;
-@x-onPrimaryContainer #fff;
-@x-secondary #5C5C95;
-@x-onSecondary #fff;
-@x-secondaryContainer #c5cae9;
-@x-onSecondaryContainer #1B1B1F;
-@x-surface #eeeeee;
-@x-onSurface #1B1B1F;
+@x-primaryContainer #A8CAE6;
+@x-onPrimaryContainer #000;
+
+@x-secondary #55ACEE;
+@x-onSecondary #000;
+@x-secondaryContainer #CBE5FF;
+@x-onSecondaryContainer #000;
+
+@x-tertiary #4285F4;
+@x-onTertiary #fff;
+@x-tertiaryContainer #D6E2FF;
+@x-onTertiaryContainer #000;
+
+@x-error #B00020;
+@x-onError #fff;
+@x-errorContainer #FCD9DF;
+@x-onErrorContainer #000;
+
+@x-surface #FCFCFC;
+@x-onSurface #111111;
 
 :root {
 
@@ -27,6 +48,7 @@
   --style-palette-primary-container-channel: channel(@x-primaryContainer);
   --style-palette-on-primary-container: @x-onPrimaryContainer;
   --style-palette-on-primary-container-channel: channel(@x-onPrimaryContainer);
+
   --style-palette-secondary: @x-secondary;
   --style-palette-secondary-channel: channel(@x-secondary);
   --style-palette-on-secondary: @x-onSecondary;
@@ -35,23 +57,55 @@
   --style-palette-secondary-container-channel: channel(@x-secondaryContainer);
   --style-palette-on-secondary-container: @x-onSecondaryContainer;
   --style-palette-on-secondary-container-channel: channel(@x-onSecondaryContainer);
+  
+  --style-palette-tertiary: @x-tertiary;
+  --style-palette-tertiary-channel: channel(@x-tertiary);
+  --style-palette-on-tertiary: @x-onTertiary;
+  --style-palette-on-tertiary-channel: channel(@x-onTertiary);
+  --style-palette-tertiary-container: @x-tertiaryContainer;
+  --style-palette-tertiary-container-channel: channel(@x-tertiaryContainer);
+  --style-palette-on-tertiary-container: @x-onTertiaryContainer;
+  --style-palette-on-tertiary-container-channel: channel(@x-onTertiaryContainer);
+  
+  --style-palette-error: @x-error;
+  --style-palette-on-error: @x-onError;
+  --style-palette-error-container: @x-errorContainer;
+  --style-palette-on-error-container: @x-onErrorContainer;
+  
   --style-palette-surface: @x-surface;
   --style-palette-surface-channel: channel(@x-surface);
   --style-palette-on-surface: @x-onSurface;
   --style-palette-on-surface-channel: channel(@x-onSurface);
 
-  --style-palette-surface-dim: lighten(@x-surface, -10);
-  /* --style-palette-surface-dim-channel: channel(lighten(@x-surface, -10)); */
-  --style-palette-surface-bright: lighten(@x-surface, 1);
-  --style-palette-surface-container-lowest: #fff;
-  --style-palette-surface-container-low: lighten(@x-surface, -1); /* = darken(1) */
-  --style-palette-surface-container: lighten(@x-surface, -2);
-  --style-palette-surface-container-high: lighten(@x-surface, -4);
-  --style-palette-surface-container-highest: lighten(@x-surface, -8);
-  --style-palette-on-surface-variant: lighten(@x-onSurface, 40);
+  --style-palette-surface-dim: #E0E0E0; /* dim <> bright */
+  --style-palette-surface-bright: @x-surface; /* = surface */
+  --style-palette-surface-container-lowest: #fff; /* always white */
+  --style-palette-surface-container-low: #F8F8F8;
+  --style-palette-surface-container: #F3F3F3;
+  --style-palette-surface-container-high: #EDEDED;
+  --style-palette-surface-container-highest: #E7E7E7;
+  --style-palette-on-surface-variant: #393939;
 
-  --style-palette-outline: #757780;
-  --style-palette-outline-variant: #C5C6D0;
+  --style-palette-outline: #919191;
+  --style-palette-outline-variant: #D1D1D1;
+
+  --style-palette-inverse-surface: #2A2A2A;
+  --style-palette-inverse-on-surface: #F1F1F1;
+  --style-palette-inverse-primary: #D3E1FF;
+
+  /* fixed は light, dark 共通 */
+  --style-palette-primary-fixed: #D1DAEC; 
+  --style-palette-primary-fixed-dim: #A9B7D7; /* dim <> bright */
+  --style-palette-on-primary-fixed: #162239;
+  --style-palette-on-primary-fixed-variant: #1B2947;
+  --style-palette-secondary-fixed: #B7D5EC;
+  --style-palette-secondary-fixed-dim: #90BFE3;
+  --style-palette-on-secondary-fixed: #02070C;
+  --style-palette-on-secondary-fixed-variant: #052238;
+  --style-palette-tertiary-fixed: #DCE6F6;
+  --style-palette-tertiary-fixed-dim: #B4C9EB;
+  --style-palette-on-tertiary-fixed: #083A8D;
+  --style-palette-on-tertiary-fixed-variant: #09419D;
 
   /*
     scrim は opacity 32%
@@ -61,16 +115,28 @@
 }
 
 
-@x-primary_dark #4fb3d1;
-@x-onPrimary_dark #1B1B1F;
-@x-primaryContainer_dark #84bbe8;
-@x-onPrimaryContainer_dark #1B1B1F;
-@x-secondary_dark #bd93f9;
-@x-onSecondary_dark #1B1B1F;
-@x-secondaryContainer_dark #7986cb;
-@x-onSecondaryContainer_dark #F8F8F2;
-@x-surface_dark #282a36;
-@x-onSurface_dark #F8F8F2;
+@x-primary_dark #8B9DC3;
+@x-onPrimary_dark #fff;
+@x-primaryContainer_dark #3B5998;
+@x-onPrimaryContainer_dark #fff;
+
+@x-secondary_dark #A0D1F5;
+@x-onSecondary_dark #000;
+@x-secondaryContainer_dark #004B75;
+@x-onSecondaryContainer_dark #fff;
+
+@x-tertiary_dark #88B2F8;
+@x-onTertiary_dark #000;
+@x-tertiaryContainer_dark #004397;
+@x-onTertiaryContainer_dark #fff;
+
+@x-error_dark #CF6679;
+@x-onError_dark #000;
+@x-errorContainer_dark #B1384E;
+@x-onErrorContainer_dark #fff;
+
+@x-surface_dark #23272F; /* from React Main Site. Default #080808 */
+@x-onSurface_dark #F1F1F1;
 
 :root[data-color-scheme="dark"] {
 
@@ -84,6 +150,7 @@
   --style-palette-primary-container-channel: channel(@x-primaryContainer_dark);
   --style-palette-on-primary-container: @x-onPrimaryContainer_dark;
   --style-palette-on-primary-container-channel: channel(@x-onPrimaryContainer_dark);
+
   --style-palette-secondary: @x-secondary_dark;
   --style-palette-secondary-channel: channel(@x-secondary_dark);
   --style-palette-on-secondary: @x-onSecondary_dark;
@@ -92,20 +159,39 @@
   --style-palette-secondary-container-channel: channel(@x-secondaryContainer_dark);
   --style-palette-on-secondary-container: @x-onSecondaryContainer_dark;
   --style-palette-on-secondary-container-channel: channel(@x-onSecondaryContainer_dark);
+
+  --style-palette-tertiary: @x-tertiary_dark;
+  --style-palette-tertiary-channel: channel(@x-tertiary_dark);
+  --style-palette-on-tertiary: @x-onTertiary_dark;
+  --style-palette-on-tertiary-channel: channel(@x-onTertiary_dark);
+  --style-palette-tertiary-container: @x-tertiaryContainer_dark;
+  --style-palette-tertiary-container-channel: channel(@x-tertiaryContainer_dark);
+  --style-palette-on-tertiary-container: @x-onTertiaryContainer_dark;
+  --style-palette-on-tertiary-container-channel: channel(@x-onTertiaryContainer_dark);
+  
+  --style-palette-error: @x-error_dark;
+  --style-palette-on-error: @x-onError_dark;
+  --style-palette-error-container: @x-errorContainer_dark;
+  --style-palette-on-error-container: @x-onErrorContainer_dark;
+  
   --style-palette-surface: @x-surface_dark;
   --style-palette-surface-channel: channel(@x-surface_dark);
   --style-palette-on-surface: @x-onSurface_dark;
   --style-palette-on-surface-channel: channel(@x-onSurface_dark);
 
-  --style-palette-surface-dim: lighten(@x-surface_dark, 10);
-  --style-palette-surface-bright: darken(@x-surface_dark, 1);
-  --style-palette-surface-container-lowest: darken(@x-surface_dark, 4);
-  --style-palette-surface-container-low: lighten(@x-surface_dark, 1);
-  --style-palette-surface-container: lighten(@x-surface_dark, 2);
-  --style-palette-surface-container-high: lighten(@x-surface_dark, 4);
-  --style-palette-surface-container-highest: lighten(@x-surface_dark, 8);
-  --style-palette-on-surface-variant: #bcc2cd;
+  --style-palette-surface-dim: @x-surface_dark; /* = surface */
+  --style-palette-surface-bright: #2C2C2C; /* dim <> bright */
+  --style-palette-surface-container-lowest: #010101;
+  --style-palette-surface-container-low: #0E0E0E;
+  --style-palette-surface-container: #151515;
+  --style-palette-surface-container-high: #1D1D1D;
+  --style-palette-surface-container-highest: #282828;
+  --style-palette-on-surface-variant: #CACACA;
 
-  --style-palette-outline: #757780;
-  --style-palette-outline-variant: #C5C6D0;
+  --style-palette-outline: #777777;
+  --style-palette-outline-variant: #414141;
+
+  --style-palette-inverse-surface: #E8E8E8;
+  --style-palette-inverse-on-surface: #2A2A2A;
+  --style-palette-inverse-primary: #424958;
 }
