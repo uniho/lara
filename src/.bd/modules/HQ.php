@@ -313,7 +313,7 @@ final class HQ
 
   public static function getColorScheme()
   {
-    return session('color-scheme-HQ') || 'light';
+    return session('color-scheme-HQ') ?? 'light';
   }  
 
   public static function setColorScheme($scheme = 'light')
