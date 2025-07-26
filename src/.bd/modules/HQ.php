@@ -318,7 +318,7 @@ final class HQ
 
   public static function setColorScheme($scheme = 'light')
   {
-    session(['color-scheme-HQ' => $scheme]);
+    session(['color-scheme-HQ' => substr($scheme, 0, 20)]);
   }  
 
   public static function cache($type = 'serialize') {
