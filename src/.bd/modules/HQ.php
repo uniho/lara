@@ -313,12 +313,14 @@ final class HQ
 
   public static function getColorScheme()
   {
-    return session('color-scheme-HQ') ?? 'light';
+    return \Cookie::get(self::getAppSlug().'_color-scheme-HQ') ?? 'light';
   }  
 
   public static function setColorScheme($scheme = 'light')
   {
-    session(['color-scheme-HQ' => substr($scheme, 0, 20)]);
+    cookie()->queue(
+      cookie(self::getAppSlug().'_color-scheme-HQ', substr($scheme, 0, 20), 60 * 24 * 365/* min */)
+    );
   }  
 
   public static function cache($type = 'serialize') {
