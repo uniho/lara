@@ -45,7 +45,7 @@
 
 @props([
   'css_id' => $css->getId(),
-  'root' => \JJJ::relativeRoot(),
+  'root' => url(''),
 ])
 
 <x-sample.html>
