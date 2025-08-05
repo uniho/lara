@@ -5,6 +5,7 @@ namespace RestApi;
 final class Procedures 
 {
   const PREG_QUERY = '{^/v(?P<_ver>[\d]+)/(?P<_role>[\w\d\-]+)/(?P<_cmd>[\w\d]+)/(?P<_arg>[^\/\?&]+)(?:/|&|$)}';
+  const ERRMSG_NOT_AUTHORIZED = 'You are not authorized to access this page.';
 
   //
   public static function handle($request)
@@ -17,9 +18,18 @@ final class Procedures
         $request->query->remove('rest_route');
 
         $role = $request['_role'];
-        if ($role != 'anon') {
+        if ($role === 'internal') {
+          $ips = request()->ips();
+          $ipAddr = $ips[array_key_last($ips)];
+          $allowed = \HQ::getenv('INTERNAL_REST_API_ALLOWED_IPS', []);
+          $headerKey = $request->header('X-Internal-Rest-Api-Key');
+          $secretKey = \HQ::getenv('INTERNAL_REST_API_KEY');
+          if (!$headerKey || $headerKey !== $secretKey || !in_array($ipAddr, $allowed)) {
+            throw new \Exception(self::ERRMSG_NOT_AUTHORIZED);
+          }
+        } else if ($role != 'anon') {
           if (!self::hasRole($role)) {
-            throw new \Exception('You are not authorized to access this page.');
+            throw new \Exception(self::ERRMSG_NOT_AUTHORIZED);
           }
         }
 

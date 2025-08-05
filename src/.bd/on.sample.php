@@ -24,6 +24,9 @@ class On
 
     // \HQ::setenv('superUserSecret', '');
 
+    // \HQ::setenv('INTERNAL_REST_API_ALLOWED_IPS', []);
+    // \HQ::setenv('INTERNAL_REST_API_KEY', 'YOUR SECRET KEY');
+
     // \HQ::setenv('CCC::PHP_CLI', '/usr/bin/php');
     // \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.16.0/bin/node');
 
@@ -74,7 +77,7 @@ class On
 
     \HQ::setMaintenanceMode(false);
     // \HQ::setMaintenanceMode([
-    //   'secret' => 'your secret key',
+    //   'secret' => 'YOUR SECRET KEY',
     //   'template' => view('sample.message', [
     //     'title' => 'Page Under Maintenance',
     //     'message' => 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
