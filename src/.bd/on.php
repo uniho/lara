@@ -13,22 +13,34 @@ class On
   // Called from index.php
   public static function onStart()
   {
+    include __DIR__.'/.secrets.php';
+
     \HQ::setenv('CCC::APP_NAME', 'Test App!');
-    // \HQ::setAppSlug('lara');
-    // \HQ::setCookiePath('/');
+
+    // \HQ::setTrustedHosts('lara.com');
+    \HQ::setAppSlug('lara');
+    \HQ::setCookiePath('/lara');
 
     \HQ::setDebugMode(true);
     \HQ::setViewCacheMode(!\HQ::getDebugMode());
     \HQ::setDebugShowSource(false); // <====== For security, the default value is false!
     \HQ::setDebugbarShowAlways(false); // <====== For security, the default value is false!
 
-    // \HQ::setenv('superUserSecret', '');
+    if (defined('superUserSecret')) {
+      \HQ::setenv('superUserSecret', superUserSecret);
+    }
 
-    // \HQ::setenv('INTERNAL_REST_API_ALLOWED_IPS', []);
-    // \HQ::setenv('INTERNAL_REST_API_KEY', 'YOUR SECRET KEY');
+    if (defined('maintenanceModeData')) {
+      \HQ::setenv('maintenanceModeData', maintenanceModeData);
+    }
 
-    // \HQ::setenv('CCC::PHP_CLI', '/usr/bin/php');
-    // \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.16.0/bin/node');
+    \HQ::setenv('INTERNAL_REST_API_ALLOWED_IPS', []);
+    if (defined('INTERNAL_REST_API_KEY')) {
+      \HQ::setenv('INTERNAL_REST_API_KEY', INTERNAL_REST_API_KEY);
+    }
+
+    \HQ::setenv('CCC::PHP_CLI', '/usr/bin/php');
+    \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.18.0/bin/node');
 
     // CSS breakpoints from bootstrap's default
     \HQ::setenv('STYLES::breakpoints', [
@@ -40,7 +52,8 @@ class On
   public static function onFinish()
   {
     // // Clear Batch Table
-    // if (cache()->add('rate_imit_on_prune-batches', true, 60*60*24)) {
+    // if (!\HQ::cache()->has('rate_imit_on_prune-batches')) {
+    //   \HQ::cache()->put('rate_imit_on_prune-batches', true, 60*60*24);
     //   \Utils\AsyncCLI::runArtisan('queue:prune-batches');
     // }
   } 
@@ -75,14 +88,17 @@ class On
   {
     \Log::debug(\HQ::getenv('CCC::APP_NAME') . ' boot!');
 
-    \HQ::setMaintenanceMode(false);
-    // \HQ::setMaintenanceMode([
-    //   'secret' => 'YOUR SECRET KEY',
-    //   'template' => view('sample.message', [
-    //     'title' => 'Page Under Maintenance',
-    //     'message' => 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
-    //   ])->render(),
-    // ]);
+    if (($data = \HQ::getenv('maintenanceModeData')) && ($data['secret'] ?? false)) {
+      \HQ::setMaintenanceMode([
+        'secret' => $data['secret'],
+        'template' => view('sample.message', [
+          'title' => $data['title'] ?: 'Page Under Maintenance',
+          'message' => $data['message'] ?: 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
+        ])->render(),
+      ]);
+    } else {
+      \HQ::setMaintenanceMode(false);
+    }
   } 
   
   // Called from routes/console.php
@@ -92,10 +108,6 @@ class On
   //   https://laravel.com/docs/11.x/artisan#closure-commands 
   public static function onConsole()
   {
-    // 例： inspire2 という Artisan Command を追加する
-    \Artisan::command('inspire2', function () {
-        $this->comment(\Inspiring::quote());
-    })->purpose('Display an inspiring quote v2');
   } 
 
   // Called from laravel/routes/web.php
@@ -206,7 +218,7 @@ class On
         'markdown' => [
           'config' => [
             'renderer' => [
-              'soft_break' => "<br/>\n", // soft break to hard break, like github comment
+              'soft_break' => "<br/>\n",
             ],
           ],
         ],
@@ -262,6 +274,6 @@ class On
     //   if ($name) abort(404);
     //   return 'Root!';
     // })->where('name', '.*');
-
-  }
+    
+  } // onWeb
 }
