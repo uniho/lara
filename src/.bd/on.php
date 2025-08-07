@@ -79,6 +79,16 @@ class On
   // Called from laravel-ext/bootstrap/app.php ->withExceptions
   public static function onExceptions($exceptions)
   {
+    $exceptions->render(function (\Exception $e) {
+      $title = 'ERROR';
+      if (method_exists($e, 'getStatusCode')) {
+        $title = $e->getStatusCode() . ' ERROR';
+      }
+      return response()->view('sample.message', [
+        'title' => $title,
+        'message' => $message = $e->getMessage() ?: 'Unknown Error',
+      ]);
+    });
   } 
   
   // Called from App\Providers\AppServiceProvider::boot()
