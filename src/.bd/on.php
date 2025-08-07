@@ -26,16 +26,12 @@ class On
     \HQ::setDebugShowSource(false); // <====== For security, the default value is false!
     \HQ::setDebugbarShowAlways(false); // <====== For security, the default value is false!
 
-    if (defined('superUserSecret')) {
-      \HQ::setenv('superUserSecret', superUserSecret);
-    }
-
-    if (defined('maintenanceModeData')) {
-      \HQ::setenv('maintenanceModeData', maintenanceModeData);
+    if (defined('SSS::superUserSecret')) {
+      \HQ::setenv('superUserSecret', \SSS::superUserSecret);
     }
 
     // \HQ::setenv('INTERNAL_REST_API_ALLOWED_IPS', []);
-    // \HQ::setenv('INTERNAL_REST_API_KEY', INTERNAL_REST_API_KEY);
+    // \HQ::setenv('INTERNAL_REST_API_KEY', \SSS::INTERNAL_REST_API_KEY);
 
     \HQ::setenv('CCC::PHP_CLI', '/usr/bin/php');
     \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.18.0/bin/node');
@@ -96,12 +92,12 @@ class On
   {
     \Log::debug(\HQ::getenv('CCC::APP_NAME') . ' boot!');
 
-    if (($data = \HQ::getenv('maintenanceModeData')) && ($data['secret'] ?? false)) {
+    if (defined('SSS::maintenanceModeData') && \SSS::maintenanceModeData['secret']) {
       \HQ::setMaintenanceMode([
-        'secret' => $data['secret'],
+        'secret' => \SSS::maintenanceModeData['secret'],
         'template' => view('sample.message', [
-          'title' => $data['title'] ?: 'Page Under Maintenance',
-          'message' => $data['message'] ?: 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
+          'title' => \SSS::maintenanceModeData['title'] ?: 'Page Under Maintenance',
+          'message' => \SSS::maintenanceModeData['message'] ?: 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
         ])->render(),
       ]);
     } else {

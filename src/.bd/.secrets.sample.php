@@ -1,12 +1,14 @@
 <?php
 
-// define('superUserSecret', '*** SET YOUR SECRET KEY ***');
+final class SSS
+{
+  // const superUserSecret = '*** SET YOUR SECRET KEY ***';
 
-// define('maintenanceModeData', [
-//   'secret' => '',
-//   'title' => '',
-//   'message' => '',
-// ]);
+  // const maintenanceModeData = [
+  //   'secret' => '',
+  //   'title' => '',
+  //   'message' => '',
+  // ];
 
-// define('INTERNAL_REST_API_KEY', 'SET YOUR SECRET KEY');
-
+  // const INTERNAL_REST_API_KEY = 'SET YOUR SECRET KEY';
+}
