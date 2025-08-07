@@ -34,10 +34,8 @@ class On
       \HQ::setenv('maintenanceModeData', maintenanceModeData);
     }
 
-    \HQ::setenv('INTERNAL_REST_API_ALLOWED_IPS', []);
-    if (defined('INTERNAL_REST_API_KEY')) {
-      \HQ::setenv('INTERNAL_REST_API_KEY', INTERNAL_REST_API_KEY);
-    }
+    // \HQ::setenv('INTERNAL_REST_API_ALLOWED_IPS', []);
+    // \HQ::setenv('INTERNAL_REST_API_KEY', INTERNAL_REST_API_KEY);
 
     \HQ::setenv('CCC::PHP_CLI', '/usr/bin/php');
     \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.18.0/bin/node');
