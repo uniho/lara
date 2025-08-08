@@ -85,9 +85,7 @@ final class HQ
     }
 
     if (substr($name, 0, 5) === 'CCC::') {
-      $refClass = new ReflectionClass(\CCC::class);
-      $consts = $refClass->getConstants();
-      return $consts[substr($name, 5)] ?? $default;
+      return defined($name) ? constant($name) : $default;
     }
 
     return $default;
