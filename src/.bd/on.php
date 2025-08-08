@@ -17,7 +17,6 @@ class On
 
     \HQ::setenv('CCC::APP_NAME', 'Test App!');
 
-    // \HQ::setTrustedHosts('lara.com');
     \HQ::setAppSlug('lara');
     \HQ::setCookiePath('/lara');
 
