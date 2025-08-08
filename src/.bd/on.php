@@ -18,7 +18,7 @@ class On
     \HQ::setenv('CCC::APP_NAME', 'Test App!');
 
     \HQ::setAppSlug('lara');
-    \HQ::setCookiePath('/lara');
+    // \HQ::setCookiePath('/lara'); // サブディレクトリに導入する場合に指定
 
     \HQ::setDebugMode(true);
     \HQ::setViewCacheMode(!\HQ::getDebugMode());
