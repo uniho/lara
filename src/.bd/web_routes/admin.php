@@ -17,6 +17,7 @@
   \HQ::rateLimitForTheBruteForceAttack('rate_limit_super_user_login', 3);
 
   if (request()->query('secret') === \HQ::getenv('superUserSecret')) {
+    \Auth::logout();
     \HQ::updateSuperUser();
     return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!<hr>'.$info]);
   }
