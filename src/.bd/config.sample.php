@@ -18,6 +18,8 @@ return [
     'timezone' => 'UTC',
   ],
 
+  'mail' => defined('SSS::email') ? (\SSS::email ?? null) : null,
+
   'logging' => [
     'default' => 'daily',
     'channels' => [
@@ -42,14 +44,6 @@ return [
         ],
       ],
     ],
-  ],
-
-  'mail' => [
-    'default' => 'smtp',
-    'mailers' => [
-      'smtp' => defined('SSS::email') ? (\SSS::email['smtp'] ?? []) : [],
-    ],
-    'from' => defined('SSS::email') ? (\SSS::email['from'] ?? []) : [],
   ],
 
 ];
