@@ -1,7 +1,8 @@
 <?php
 
 // Admin login
-\Route::get('login', function () {
+\Route::match(['get', 'post'], 'login', function () {
+
   abort_unless(\HQ::getenv('superUserSecret'), 403);
 
   $info = 
@@ -10,19 +11,40 @@
     (\HQ::getDebugShowSource() ? "<p style=\"color:red;\">DEBUG SHOW SOURCE - ON!</p>" : "") .
     (\HQ::getDebugbarShowAlways() ? "<p style=\"color:red;\">DEBUGBAR SHOW ALWAYS - ON!</p>" : "");
 
+  if (request()->isMethod('post')) {
+
+    $ips = request()->ips();
+    $ipAddr = $ips[array_key_last($ips)];
+    $key = 'super_user_login';
+
+    if (!\Unsta\FloodControl::isAllowed('flood_control_'.$key, 100, 60*60, $ipAddr)) {
+      // ERROR: 100回/60分、ログイン失敗した(IP毎)
+      abort(403, "rate limit");
+    }
+
+    \HQ::rateLimitForTheBruteForceAttack('rate_limit_'.$key, 3);
+
+    if (request()->post('secret') === \HQ::getenv('superUserSecret')) {
+      // ログイン成功
+      \Unsta\FloodControl::clear('flood_control_'.$key, $ipAddr);
+      \Auth::logout();
+      \HQ::updateSuperUser();
+      return view('sample.message-markdown',
+        ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!<hr>'.$info]);
+    }
+
+    // ログイン失敗
+    \Unsta\FloodControl::register('flood_control_'.$key, 60*60, $ipAddr);
+    
+    abort(403, "wrong secret");
+  }
+
   if (\HQ::getSuperUser()) {
-    return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => "Already logged in.<hr>".$info]);
+    return view('sample.message-markdown', 
+      ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => "Already logged in.<hr>".$info]);
   }
 
-  \HQ::rateLimitForTheBruteForceAttack('rate_limit_super_user_login', 3);
-
-  if (request()->query('secret') === \HQ::getenv('superUserSecret')) {
-    \Auth::logout();
-    \HQ::updateSuperUser();
-    return view('sample.message-markdown', ['title' => \HQ::getenv('CCC::APP_NAME'), 'message' => 'Hello!<hr>'.$info]);
-  }
-
-  abort(403, "wrong secret");
+  return view('sample.login', []);
 });
 
 // Admin logout
