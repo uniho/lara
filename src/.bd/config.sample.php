@@ -47,13 +47,9 @@ return [
   'mail' => [
     'default' => 'smtp',
     'mailers' => [
-      'smtp' => [
-        'host' =>  'your smtp domain',
-        'port' => 587,
-        'username' => 'your smtp user',
-        'password' => 'your smtp pass',
-      ],
+      'smtp' => defined('SSS::email') ? (\SSS::email['smtp'] ?? []) : [],
     ],
+    'from' => defined('SSS::email') ? (\SSS::email['from'] ?? []) : [],
   ],
 
 ];
