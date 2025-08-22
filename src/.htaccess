@@ -1,9 +1,17 @@
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
+        # Disable MultiViews to prevent content negotiation issues
+        # Disable directory listing to prevent exposing file structure
         Options -MultiViews -Indexes
     </IfModule>
 
     RewriteEngine On
+
+    # -------------------------------------------------
+    # Deny access to any hidden files or directories
+    # This will block URLs containing "/." anywhere in the path
+    # -------------------------------------------------
+    RewriteRule (^|/)\. - [F]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
