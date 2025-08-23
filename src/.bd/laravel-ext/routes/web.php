@@ -3,9 +3,6 @@
 use Illuminate\Http\Request;
 
 //
-\HQ::onWeb($router);
-
-//
 \Route::any('/adminer', function () {
   abort_unless(\HQ::isAdminUser(), 403);
 
@@ -44,6 +41,9 @@ use Illuminate\Http\Request;
   require '.bd/vendor/adminer/adminer-5.3.0-en.php';
   exit();
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
+//
+\HQ::onWeb($router);
 
 //
 \Route::match(['get', 'post'], '/', function (Request $request) {
