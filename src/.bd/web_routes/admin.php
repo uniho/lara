@@ -3,7 +3,7 @@
 // Admin login
 \Route::match(['get', 'post'], 'login', function () {
 
-  abort_unless(\HQ::getenv('superUserSecret'), 403);
+  abort_unless(defined('SSS::superUserSecret'), 403);
 
   $info = 
     (\HQ::getDebugMode() ? "<p style=\"color:orange;\">DEBUG MODE - ON!</p>" : "") .
@@ -24,7 +24,7 @@
 
     \HQ::rateLimitForTheBruteForceAttack('rate_limit_'.$key, 3);
 
-    if (request()->post('secret') === \HQ::getenv('superUserSecret')) {
+    if (request()->post('secret') === \SSS::superUserSecret) {
       // ログイン成功
       \Unsta\FloodControl::clear('flood_control_'.$key, $ipAddr);
       \Auth::logout();

@@ -25,10 +25,6 @@ class On
     \HQ::setDebugShowSource(false); // <====== For security, the default value is false!
     \HQ::setDebugbarShowAlways(false); // <====== For security, the default value is false!
 
-    if (defined('SSS::superUserSecret')) {
-      \HQ::setenv('superUserSecret', \SSS::superUserSecret);
-    }
-
     // \HQ::setenv('INTERNAL_REST_API_ALLOWED_IPS', []);
     // \HQ::setenv('INTERNAL_REST_API_KEY', \SSS::INTERNAL_REST_API_KEY);
 
