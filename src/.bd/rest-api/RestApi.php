@@ -4,7 +4,7 @@ namespace RestApi;
 
 final class Procedures 
 {
-  const PREG_QUERY = '{^/v(?P<_ver>[\d]+)/(?P<_role>[\w\d\-]+)/(?P<_cmd>[\w\d]+)/(?P<_arg>[^\/\?&]+)(?:/|&|$)}';
+  const PREG_QUERY = '{^/v(?P<_ver>[\d]+)/(?P<_role>[\w\d\-]+)/(?P<_cmd>[\w\d-]+)/(?P<_arg>[^\/\?&]+)(?:/|&|$)}';
   const ERRMSG_NOT_AUTHORIZED = 'You are not authorized to access this page.';
 
   //
@@ -33,8 +33,7 @@ final class Procedures
           }
         }
 
-        $cmd = $request['_cmd'];
-        $file = __DIR__."/cmds/v{$request['_ver']}/$role/$cmd.php";
+        $cmd = lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', $request['_cmd'])))); // camel case
         $class = "\\Rest\\v{$request['_ver']}\\$role\\$cmd";
 
         switch ($request->method()) {
@@ -42,11 +41,11 @@ final class Procedures
             if ($cmd == 'token') {
               return ['data' => $request->session()->token()];
             }
-            if (!is_file($file)) throw new \Exception('bad cmd');
+            if (!class_exists($class)) throw new \Exception('bad cmd');
             return $class::get($request);
 
           case 'POST':
-            if (!is_file($file)) throw new \Exception('bad cmd');
+            if (!class_exists($class)) throw new \Exception('bad cmd');
             return $class::post($request);
 
         }

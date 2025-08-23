@@ -61,8 +61,8 @@ final class HQ
   public static function webOrigin($request)
   {
     if ($request->has('rest_route')) {
-      require_once __DIR__.'/../rest/cmds/autoload.php';
-      require_once __DIR__.'/../rest/RestApi.php';
+      require_once __DIR__.'/../rest-api/cmds/autoload.php';
+      require_once __DIR__.'/../rest-api/RestApi.php';
       $request->headers->set('Accept', 'application/json');
       return \RestApi\Procedures::handle($request);
     }
