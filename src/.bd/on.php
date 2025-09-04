@@ -257,9 +257,17 @@ class On
       $fn = \HQ::getenv('CCC::RSS_PATH') . "/blade/$body$ext.blade.php";
       abort_unless(is_file($fn), 404, "blade [{$name}] not found.");
       $r = response(view()->file($fn)->render(), 200); // $data dosen't need.
+      if (request()->has('cache')) {
+        $i = request()->query('cache');
+        $i = filter_var($i, FILTER_VALIDATE_INT) ? (int)$i : 31536000;
+        if ($i > 60*60) {
+          $r->header('Cache-Control', "max-age=$i, public"); // default: 'no-cache, private'
+        }
+      }
       return match($ext) {
         '.js' => $r->header('Content-Type', 'application/javascript; charset=utf-8'),
         '.css' => $r->header('Content-Type', 'text/css; charset=utf-8'),
+        '.svg' => $r->header('Content-Type', 'image/svg+xml'),
         default => $r
       };
     })->where('name', '.*');
