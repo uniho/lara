@@ -13,6 +13,7 @@ class On
   // Called from index.php
   public static function onStart()
   {
+    include __DIR__.'/flags.php';
     include __DIR__.'/.secrets.php';
 
     \HQ::setenv('CCC::APP_NAME', 'Test App!');
