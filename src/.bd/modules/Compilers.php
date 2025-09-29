@@ -19,19 +19,29 @@ final class Compilers
               $compiledPath = $this->getCompiledPath($path)
             );
 
-            $params = '--sourcemap';
+            $params = '--sourcemap --targets "safari 14"';
             if (isset($this->options['minify']) && $this->options['minify']) {
               $params .= ' --minify';
             }
 
-            $node_cli = \HQ::getenv('CCC::NODE_CLI');
-            $lightningcss_cli =  \HQ::getenv('CCC::CLI_PATH') . '/node/lightningcss_cli.js';
-
-            exec("$node_cli $lightningcss_cli $path $params --outfile=$compiledPath 2>&1", $error);
-            if (end($error) != 'done!') {
-              @file_put_contents($compiledPath, $error);
+            $cli = \HQ::getenv('CCC::CLI_PATH') . '/node/node_modules/.bin/lightningcss';
+            exec("$cli $path $params --output-file $compiledPath 2>&1", $error);
+            if ($error) {
+              // エラー発生のため、元のファイルを書き込む
+              $contents = \File::get($path);
+              \File::put($compiledPath, $contents);
+              \Log::error('lightningcss', $error);
               return;
             }
+
+            // $node_cli = \HQ::getenv('CCC::NODE_CLI');
+            // $lightningcss_cli =  \HQ::getenv('CCC::CLI_PATH') . '/node/lightningcss_cli.js';
+
+            // exec("$node_cli $lightningcss_cli $path $params --outfile=$compiledPath 2>&1", $error);
+            // if (end($error) != 'done!') {
+            //   @file_put_contents($compiledPath, $error);
+            //   return;
+            // }
           }
         };
   

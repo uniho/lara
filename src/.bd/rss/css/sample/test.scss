@@ -1,17 +1,18 @@
-.foo { 
+:root {
   --color: #22b8cf;
   --color-lighten-5: #2ec5dd;
-  
-  @color #22b8cf;
-  @color-lighten-5: #2ec5dd;
+}
 
+.foo { 
   @media (100px <= width < 480px) {
-    color1: @color;
-    color2: lighten(@color, 5);
-    color3: lighten(#eeeeee -8);
+    color: var(--color);
   }
+}
 
-  @media (480px <= width <= 768px) {
-    color: hsl(from #22b8cf h s calc(l + 5%));
-  }
+.foo2 { 
+  color: color-mix(in oklab, var(--color), white 5%); /* lighten(@color, 5); */
+}
+
+.foo3 { 
+  color: color-mix(in oklab, #22b8cf, white 5%);
 }

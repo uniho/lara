@@ -41,31 +41,19 @@ iOS16(iPhone8) 以上では color-mix が使えるので不要。
 :root {
 
   --style-palette-primary: @x-primary;
-  --style-palette-primary-channel: channel(@x-primary);
   --style-palette-on-primary: @x-onPrimary;
-  --style-palette-on-primary-channel: channel(@x-onPrimary);
   --style-palette-primary-container: @x-primaryContainer;
-  --style-palette-primary-container-channel: channel(@x-primaryContainer);
   --style-palette-on-primary-container: @x-onPrimaryContainer;
-  --style-palette-on-primary-container-channel: channel(@x-onPrimaryContainer);
 
   --style-palette-secondary: @x-secondary;
-  --style-palette-secondary-channel: channel(@x-secondary);
   --style-palette-on-secondary: @x-onSecondary;
-  --style-palette-on-secondary-channel: channel(@x-onSecondary);
   --style-palette-secondary-container: @x-secondaryContainer;
-  --style-palette-secondary-container-channel: channel(@x-secondaryContainer);
   --style-palette-on-secondary-container: @x-onSecondaryContainer;
-  --style-palette-on-secondary-container-channel: channel(@x-onSecondaryContainer);
   
   --style-palette-tertiary: @x-tertiary;
-  --style-palette-tertiary-channel: channel(@x-tertiary);
   --style-palette-on-tertiary: @x-onTertiary;
-  --style-palette-on-tertiary-channel: channel(@x-onTertiary);
   --style-palette-tertiary-container: @x-tertiaryContainer;
-  --style-palette-tertiary-container-channel: channel(@x-tertiaryContainer);
   --style-palette-on-tertiary-container: @x-onTertiaryContainer;
-  --style-palette-on-tertiary-container-channel: channel(@x-onTertiaryContainer);
   
   --style-palette-error: @x-error;
   --style-palette-on-error: @x-onError;
@@ -73,9 +61,7 @@ iOS16(iPhone8) 以上では color-mix が使えるので不要。
   --style-palette-on-error-container: @x-onErrorContainer;
   
   --style-palette-surface: @x-surface;
-  --style-palette-surface-channel: channel(@x-surface);
   --style-palette-on-surface: @x-onSurface;
-  --style-palette-on-surface-channel: channel(@x-onSurface);
 
   --style-palette-surface-dim: #E0E0E0; /* dim <> bright */
   --style-palette-surface-bright: @x-surface; /* = surface */
@@ -143,31 +129,19 @@ iOS16(iPhone8) 以上では color-mix が使えるので不要。
   color-scheme: dark;
 
   --style-palette-primary: @x-primary_dark;
-  --style-palette-primary-channel: channel(@x-primary_dark);
   --style-palette-on-primary: @x-onPrimary_dark;
-  --style-palette-on-primary-channel: channel(@x-onPrimary_dark);
   --style-palette-primary-container: @x-primaryContainer_dark;
-  --style-palette-primary-container-channel: channel(@x-primaryContainer_dark);
   --style-palette-on-primary-container: @x-onPrimaryContainer_dark;
-  --style-palette-on-primary-container-channel: channel(@x-onPrimaryContainer_dark);
 
   --style-palette-secondary: @x-secondary_dark;
-  --style-palette-secondary-channel: channel(@x-secondary_dark);
   --style-palette-on-secondary: @x-onSecondary_dark;
-  --style-palette-on-secondary-channel: channel(@x-onSecondary_dark);
   --style-palette-secondary-container: @x-secondaryContainer_dark;
-  --style-palette-secondary-container-channel: channel(@x-secondaryContainer_dark);
   --style-palette-on-secondary-container: @x-onSecondaryContainer_dark;
-  --style-palette-on-secondary-container-channel: channel(@x-onSecondaryContainer_dark);
 
   --style-palette-tertiary: @x-tertiary_dark;
-  --style-palette-tertiary-channel: channel(@x-tertiary_dark);
   --style-palette-on-tertiary: @x-onTertiary_dark;
-  --style-palette-on-tertiary-channel: channel(@x-onTertiary_dark);
   --style-palette-tertiary-container: @x-tertiaryContainer_dark;
-  --style-palette-tertiary-container-channel: channel(@x-tertiaryContainer_dark);
   --style-palette-on-tertiary-container: @x-onTertiaryContainer_dark;
-  --style-palette-on-tertiary-container-channel: channel(@x-onTertiaryContainer_dark);
   
   --style-palette-error: @x-error_dark;
   --style-palette-on-error: @x-onError_dark;
@@ -175,9 +149,7 @@ iOS16(iPhone8) 以上では color-mix が使えるので不要。
   --style-palette-on-error-container: @x-onErrorContainer_dark;
   
   --style-palette-surface: @x-surface_dark;
-  --style-palette-surface-channel: channel(@x-surface_dark);
   --style-palette-on-surface: @x-onSurface_dark;
-  --style-palette-on-surface-channel: channel(@x-onSurface_dark);
 
   --style-palette-surface-dim: @x-surface_dark; /* = surface */
   --style-palette-surface-bright: #2C2C2C; /* dim <> bright */
