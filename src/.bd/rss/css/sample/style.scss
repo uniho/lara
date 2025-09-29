@@ -1,12 +1,9 @@
 
-@margin 10rem;
-@color rgb(168, 203, 200);
-
 div.wrapper {
-  margin: @margin;
+  margin: 10rem;
 
   div {
-    color: @color;
+    color: rgb(168, 203, 200);
     margin-bottom: 2rem;
 
     &.title {
