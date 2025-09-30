@@ -19,6 +19,7 @@ final class Compilers
               $compiledPath = $this->getCompiledPath($path)
             );
 
+            // CLI 1.30.1 ではsafari 14 を指定しないと nest が展開されない。また color-mix が使えない safari 15 用の静的変換が正しく行われないことがある 
             $params = '--sourcemap --targets "safari 14"';
             if (isset($this->options['minify']) && $this->options['minify']) {
               $params .= ' --minify';
@@ -31,17 +32,7 @@ final class Compilers
               $contents = \File::get($path);
               \File::put($compiledPath, $contents);
               \Log::error('lightningcss', $error);
-              return;
             }
-
-            // $node_cli = \HQ::getenv('CCC::NODE_CLI');
-            // $lightningcss_cli =  \HQ::getenv('CCC::CLI_PATH') . '/node/lightningcss_cli.js';
-
-            // exec("$node_cli $lightningcss_cli $path $params --outfile=$compiledPath 2>&1", $error);
-            // if (end($error) != 'done!') {
-            //   @file_put_contents($compiledPath, $error);
-            //   return;
-            // }
           }
         };
   
@@ -52,38 +43,37 @@ final class Compilers
       //
       public function inline($src, $data = [], $options = [])
       {
-        $params = '';
+        $params = '--targets "safari 14"'; // CLI 1.30.1 ではこれがないと nest が展開されない
         if (isset($options['minify']) && $options['minify']) {
           $params .= ' --minify';
         }
 
-        $node_cli = \HQ::getenv('CCC::NODE_CLI');
-        $lightningcss_cli =  \HQ::getenv('CCC::CLI_PATH') . '/node/lightningcss_cli.js';
+        $cli = \HQ::getenv('CCC::CLI_PATH') . '/node/node_modules/.bin/lightningcss';
 
-        // $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $lightningcss_cli $params");
-        // $process->setInput($src)->run();
-        // if (!$process->isSuccessful()) {
-        //   $error = $process->getErrorOutput();
-        //   \Log::error('lightningcss', [$error]);
-        //   return ['error' => $error];
-        // }
-        // return $process->getOutput();
-
-        $temp_in = tempnam(sys_get_temp_dir(), 'TMP_');
-        $temp_out = tempnam(sys_get_temp_dir(), 'TMP_');
-        try {
-          file_put_contents($temp_in, $src);
-          exec("$node_cli $lightningcss_cli $temp_in $params --outfile=$temp_out 2>&1", $error);
-          if (end($error) != 'done!') {
-            $error = implode("\n", $error);
-            return "/* Error on lightningcss:\n$error */";
-          }
-          $contents = file_get_contents($temp_out);
-          return $contents;
-        } finally {
-          @unlink($temp_in);
-          @unlink($temp_out);
+        $process = \Symfony\Component\Process\Process::fromShellCommandline("$cli $params");
+        $process->setInput($src)->run();
+        if (!$process->isSuccessful()) {
+          $error = $process->getErrorOutput();
+          \Log::error('lightningcss', [$error]);
+          return ['error' => $error];
         }
+        return $process->getOutput();
+
+        // $temp_in = tempnam(sys_get_temp_dir(), 'TMP_');
+        // $temp_out = tempnam(sys_get_temp_dir(), 'TMP_');
+        // try {
+        //   file_put_contents($temp_in, $src);
+        //   exec("$cli $temp_in $params --output-file $temp_out 2>&1", $error);
+        //   if ($error) {
+        //     $error = implode("\n", $error);
+        //     return "/* Error on lightningcss:\n$error */";
+        //   }
+        //   $contents = file_get_contents($temp_out);
+        //   return $contents;
+        // } finally {
+        //   @unlink($temp_in);
+        //   @unlink($temp_out);
+        // }
       }
 
       //
