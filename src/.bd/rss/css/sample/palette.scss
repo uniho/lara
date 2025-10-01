@@ -1,5 +1,4 @@
-
-/* 
+/*
 
 Brand blues ~ https://rydmike.com/flexcolorscheme/themesplayground-latest/
 
@@ -12,28 +11,28 @@ https://material.io/blog/tone-based-surface-color-m3
 
 :root {
 
-  --style-palette-primary: #3B5998;
-  --style-palette-on-primary: #fff;
-  --style-palette-primary-container: #A8CAE6;
-  --style-palette-on-primary-container: #000;
+  --style-palette-primary: #3B5998;
+  --style-palette-on-primary: #fff;
+  --style-palette-primary-container: #A8CAE6;
+  --style-palette-on-primary-container: #000;
 
-  --style-palette-secondary: #55ACEE;
-  --style-palette-on-secondary: #000;
-  --style-palette-secondary-container: #CBE5FF;
-  --style-palette-on-secondary-container: #000;
-  
-  --style-palette-tertiary: #4285F4;
-  --style-palette-on-tertiary: #fff;
-  --style-palette-tertiary-container: #D6E2FF;
-  --style-palette-on-tertiary-container: #000;
-  
-  --style-palette-error: #B00020;
-  --style-palette-on-error: #fff;
-  --style-palette-error-container: #FCD9DF;
-  --style-palette-on-error-container: #000;
-  
-  --style-palette-surface: #FCFCFC;
-  --style-palette-on-surface: #111111;
+  --style-palette-secondary: #55ACEE;
+  --style-palette-on-secondary: #000;
+  --style-palette-secondary-container: #CBE5FF;
+  --style-palette-on-secondary-container: #000;
+  
+  --style-palette-tertiary: #4285F4;
+  --style-palette-on-tertiary: #fff;
+  --style-palette-tertiary-container: #D6E2FF;
+  --style-palette-on-tertiary-container: #000;
+  
+  --style-palette-error: #B00020;
+  --style-palette-on-error: #fff;
+  --style-palette-error-container: #FCD9DF;
+  --style-palette-on-error-container: #000;
+  
+  --style-palette-surface: #FCFCFC;
+  --style-palette-on-surface: #111111;
 
   --style-palette-surface-dim: #E0E0E0; /* dim <> bright */
   --style-palette-surface-bright: #FCFCFC; /* = surface */
@@ -77,28 +76,28 @@ https://material.io/blog/tone-based-surface-color-m3
 
   color-scheme: dark;
 
-  --style-palette-primary: #8B9DC3;
-  --style-palette-on-primary: #fff;
-  --style-palette-primary-container: #3B5998;
-  --style-palette-on-primary-container: #fff;
+  --style-palette-primary: #8B9DC3;
+  --style-palette-on-primary: #fff;
+  --style-palette-primary-container: #3B5998;
+  --style-palette-on-primary-container: #fff;
 
-  --style-palette-secondary: #A0D1F5;
-  --style-palette-on-secondary: #000;
-  --style-palette-secondary-container: #004B75;
-  --style-palette-on-secondary-container: #fff;
+  --style-palette-secondary: #A0D1F5;
+  --style-palette-on-secondary: #000;
+  --style-palette-secondary-container: #004B75;
+  --style-palette-on-secondary-container: #fff;
 
-  --style-palette-tertiary: #88B2F8;
-  --style-palette-on-tertiary: #000;
-  --style-palette-tertiary-container: #004397;
-  --style-palette-on-tertiary-container: #fff;
-  
-  --style-palette-error: #CF6679;
-  --style-palette-on-error: #000;
-  --style-palette-error-container: #B1384E;
-  --style-palette-on-error-container: #fff;
-  
-  --style-palette-surface: #23272F; /* from React Main Site. Default #080808 */
-  --style-palette-on-surface: #F1F1F1;
+  --style-palette-tertiary: #88B2F8;
+  --style-palette-on-tertiary: #000;
+  --style-palette-tertiary-container: #004397;
+  --style-palette-on-tertiary-container: #fff;
+  
+  --style-palette-error: #CF6679;
+  --style-palette-on-error: #000;
+  --style-palette-error-container: #B1384E;
+  --style-palette-on-error-container: #fff;
+  
+  --style-palette-surface: #23272F; /* from React Main Site. Default #080808 */
+  --style-palette-on-surface: #F1F1F1;
 
   --style-palette-surface-dim: #23272F; /* = surface */
   --style-palette-surface-bright: #2C2C2C; /* dim <> bright */
