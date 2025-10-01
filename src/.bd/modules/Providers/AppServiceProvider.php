@@ -70,21 +70,42 @@ class AppServiceProvider extends ServiceProvider
         $style = $__env->yieldPushContent("__style-css");
         if ($style) {
           $hash = hash("xxh128", $__env->yieldPushContent("__style-hash") ?: $style);
-          $key = "cache/scss_inline_cache/".substr($hash, 0, 2)."/".substr($hash, 2, 2)."/".$hash;
-          if (\HQ::cache()->has($key)) {
-            $style = \HQ::cache()->get($key);
-          } else {
+
+          $props = '. ($expression ?: '[]') . ';
+          if (isset($props["inline"]) || isset($props["no-style-tag"])) { // no-style-tag は deprecated
+            // 文字列で出力
+            $key = "cache/scss_inline_cache/".substr($hash, 0, 2)."/".substr($hash, 2, 2)."/".$hash;
+            if (\HQ::cache()->has($key)) {
+              $style = \HQ::cache()->get($key);
+            } else {
+              $style = str_replace(["<style>", "</style>"], "", $style);
+              $style = Compilers::scss()->inline($style, options: ["minify" => 1]);
+              if (isset($style["error"])) {
+                $style = "/*\n{$style["error"]}\n*/";
+              } else {
+                \HQ::cache()->put($key, $style, 60*60*24*14);
+              }
+            }
+            echo $style;
+            return;
+          }
+
+          // css ファイルに出力
+          $dir = \CCC::DIR_FD . "/cache";
+          $fn = $dir . "/__stackcss_" . $hash . ".css";
+          if (!is_file($fn)) {
             $style = str_replace(["<style>", "</style>"], "", $style);
             $style = Compilers::scss()->inline($style, options: ["minify" => 1]);
             if (isset($style["error"])) {
               $style = "/*\n{$style["error"]}\n*/";
-            } else {
-              \HQ::cache()->put($key, $style, 60*60*24*14);
             }
+            if (!is_dir($dir)) {  
+              mkdir($dir, 0755, true);
+            }
+            file_put_contents($fn, $style);    
           }
-          $props = '. ($expression ?: '[]') . ';  
-          echo (($props["no-style-tag"] ?? false) ? "" : "<style>") . $style .
-            (($props["no-style-tag"] ?? false) ? "" : "</style>");
+          $fn = url("") . "/fd/cache/__stackcss_" . $hash . ".css";
+          echo "<link rel=\"stylesheet\" href=\"$fn\">";
         }
       ?>';
     });
