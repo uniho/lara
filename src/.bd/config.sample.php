@@ -33,6 +33,12 @@ return [
     ],
   ],
 
+  'log-viewer' => [
+    'include_files' => [
+      \HQ::getenv('CCC::KEEP_PATH').'/logs/*.log' => 'keep',
+    ],
+  ],
+
   'debugbar' => [
     'options' => [
       'logs' => [

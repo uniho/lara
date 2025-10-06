@@ -3,6 +3,13 @@
 use Illuminate\Http\Request;
 
 //
+\Route::get('/'.config('log-viewer.route_path').'/{view?}', function ($view = null) {
+  abort_unless(\HQ::isAdminUser(), 403, 'This action is unauthorized.');
+  \LogViewer::setViewLayout('log-viewer.index');
+  return (new \Opcodes\LogViewer\Http\Controllers\IndexController())->__invoke(request(), $view);
+})->where('view', '(.*)')->name('log-viewer.index');
+
+//
 \Route::any('/adminer', function () {
   abort_unless(\HQ::isAdminUser(), 403);
 
