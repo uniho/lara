@@ -67,14 +67,6 @@ final class HQ
       return \RestApi\Procedures::handle($request);
     }
 
-    if ($request->method() == 'GET' && basename(url()->current()) == 'debugbar.php') {
-      if (self::getDebugMode() && self::isAdminUser()) {
-        return view('welcome');
-      }
-      debugbar()->disable();
-      return abort(403);
-    }
-
     return false;
   }
 
@@ -152,34 +144,6 @@ final class HQ
       app()->maintenanceMode()->deactivate();
       @unlink(storage_path('framework/maintenance.php')); // just to make sure
     }
-  }
-
-  public static function getDebugShowSource()
-  {
-    return isset(self::$env['debugShowSource']);
-  }
-
-  public static function setDebugShowSource($mode)
-  {
-    if (!$mode) {
-      unset(self::$env['debugShowSource']);
-      return;
-    }
-    self::$env['debugShowSource'] = true;
-  }
-
-  public static function getDebugbarShowAlways()
-  {
-    return isset(self::$env['debugbarShowAlways']);
-  }
-
-  public static function setDebugbarShowAlways($mode)
-  {
-    if (!$mode) {
-      unset(self::$env['debugbarShowAlways']);
-      return;
-    }
-    self::$env['debugbarShowAlways'] = true;
   }
 
   public static function isAdminUser() {

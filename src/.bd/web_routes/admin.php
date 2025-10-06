@@ -7,9 +7,7 @@
 
   $info = 
     (\HQ::getDebugMode() ? "<p style=\"color:orange;\">DEBUG MODE - ON!</p>" : "") .
-    (!\HQ::getViewCacheMode() ? "<p style=\"color:orange;\">VIEW CACHE - OFF!</p>" : "") .
-    (\HQ::getDebugShowSource() ? "<p style=\"color:red;\">DEBUG SHOW SOURCE - ON!</p>" : "") .
-    (\HQ::getDebugbarShowAlways() ? "<p style=\"color:red;\">DEBUGBAR SHOW ALWAYS - ON!</p>" : "");
+    (!\HQ::getViewCacheMode() ? "<p style=\"color:orange;\">VIEW CACHE - OFF!</p>" : "");
 
   if (request()->isMethod('post')) {
 

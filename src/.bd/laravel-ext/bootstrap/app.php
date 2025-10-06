@@ -18,26 +18,4 @@ return \Application::configure(basePath: dirname(dirname(__DIR__)).'/laravel')
     ->withExceptions(function (Exceptions $exceptions) {
         // ※
         \HQ::onExceptions($exceptions);
-
-        // ※
-        $exceptions->render(function (Throwable $e, $request) {
-            // isHttpException() in framework/src/Illuminate/Foundation/Exceptions/Handler.php
-            if ($e instanceof HttpExceptionInterface) {
-                if (!\HQ::getDebugMode()) {
-                    // Show the normal error view
-                    return false;
-                }
-
-                // Do not show Debugbar's view
-                return new SymfonyResponse($e->getMessage(), $e->getStatusCode(), []);
-            }
-
-            if (\HQ::getDebugShowSource()) {
-                // Show Debugbar's view
-                return false;
-            }
-
-            // Do not show Debugbar's view
-            return new SymfonyResponse($e->getMessage(), 500, []);
-        });
     })->create();

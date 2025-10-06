@@ -39,17 +39,4 @@ return [
     ],
   ],
 
-  'debugbar' => [
-    'options' => [
-      'logs' => [
-        'file' => [
-          \HQ::getenv('CCC::KEEP_PATH').'/logs/laravel-' . date('Y-m-d') . '.log',
-          \HQ::getenv('CCC::KEEP_PATH').'/logs/laravel-' . date('Y-m-d', strtotime('-1 day')) . '.log',
-          \HQ::getenv('CCC::KEEP_PATH').'/logs/laravel-' . date('Y-m-d', strtotime('-2 day')) . '.log',
-          \HQ::getenv('CCC::KEEP_PATH').'/logs/laravel-' . date('Y-m-d', strtotime('-3 day')) . '.log',
-        ],
-      ],
-    ],
-  ],
-
 ];

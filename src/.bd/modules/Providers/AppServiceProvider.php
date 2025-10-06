@@ -137,7 +137,7 @@ class AppServiceProvider extends ServiceProvider
 
       config([
         'app.key' => @file_get_contents(\HQ::getenv('CCC::FILE_APP_KEY')),
-        'app.debug' => \HQ::getDebugMode() || \HQ::getenv('debug'),
+        'app.debug' => \HQ::getDebugMode(),
         'filesystems.disks.local.root' => \HQ::getenv('CCC::STORAGE_LOCAL_PRIVATE_FILES_PATH'),
         'filesystems.disks.public.root' => \HQ::getenv('CCC::STORAGE_LOCAL_PUBLIC_FILES_PATH'),
         'view.cache' => \HQ::getViewCacheMode(),
@@ -147,16 +147,13 @@ class AppServiceProvider extends ServiceProvider
         // ],
         'session.cookie' => \HQ::getAppSlug().'_session',
         'session.path' => \HQ::getCookiePath(),
-        'debugbar.storage.open' => true,
-        'debugbar.collectors.log' => true,
-        'debugbar.inject' => \HQ::getDebugbarShowAlways() || \HQ::getenv('debug'),
       ]);
   
       $config = var_export(config()->all(), true);
       \File::put($configFile, "<?php return array_replace_recursive(".$config.", require(__DIR__.'/config1.php'), [
         'app' => [
           'key' => @file_get_contents(\HQ::getenv('CCC::FILE_APP_KEY')),
-          'debug' => \HQ::getDebugMode() || \HQ::getenv('debug'),
+          'debug' => \HQ::getDebugMode(),
         ],
         'filesystems' => [
           'disks' => [
@@ -179,15 +176,6 @@ class AppServiceProvider extends ServiceProvider
           'cookie' => \HQ::getAppSlug().'_session',
           'path' => \HQ::getCookiePath(),
         ],
-        'debugbar' => [
-          'storage' => [
-            'open' => true,
-          ],
-          'collectors' => [
-            'logs' => true,
-          ],
-          'inject' => \HQ::getDebugbarShowAlways() || \HQ::getenv('debug'),
-        ],  
       ]);");
 
       \touch($configFile, filemtime($configFileCustom));          
