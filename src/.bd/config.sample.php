@@ -18,7 +18,7 @@ return [
         'timezone' => 'UTC',
     ],
 
-    'mail' => defined('SSS::email') ? (\SSS::email ?? null) : null,
+    'mail' => defined('SSS::email') && isset(\SSS::email['default']) ? \SSS::email : ['default' => 'log'],
 
     'logging' => [
         'default' => 'daily',
