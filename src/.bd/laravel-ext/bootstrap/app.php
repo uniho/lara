@@ -2,8 +2,6 @@
 
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return \Application::configure(basePath: dirname(dirname(__DIR__)).'/laravel')
     ->withRouting(
