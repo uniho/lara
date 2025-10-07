@@ -58,6 +58,15 @@ final class HQ
     }
   }
 
+  public static function onProviders()
+  {
+    $result = [];
+    if (self::on_exists() && method_exists(\HQ\On::class, 'onProviders')) {
+      $result = \HQ\On::onProviders();
+    }
+    return is_array($result) ? $result : [$result];
+  }
+
   public static function webOrigin($request)
   {
     if ($request->has('rest_route')) {

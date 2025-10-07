@@ -16,4 +16,6 @@ return \Application::configure(basePath: dirname(dirname(__DIR__)).'/laravel')
     ->withExceptions(function (Exceptions $exceptions) {
         // ※
         \HQ::onExceptions($exceptions);
-    })->create();
+    })
+    ->withProviders(\HQ::onProviders()) // ※
+    ->create();
