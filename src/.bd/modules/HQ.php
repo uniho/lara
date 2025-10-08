@@ -137,22 +137,46 @@ final class HQ
 
   public static function setMaintenanceMode($data)
   {
+    $lock_key = 'maintenance_mode_update_lock';
+
     if ($data['secret'] ?? false) {
-      app()->maintenanceMode()->activate($data);
+      if (app()->isDownForMaintenance()) { 
+          return; 
+      }
 
-      // It doesn't matter, maybe.
-      // file_put_contents(
-      //   storage_path('framework/maintenance.php'),
-      //   file_get_contents(__DIR__.'/../laravel/vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/maintenance-mode.stub')
-      // );
+      $lock = \Cache::lock($lock_key, 10);
+      if (!$lock->get()) {
+        return;
+      }
+      try {
+        app()->maintenanceMode()->activate($data);
 
+        // It doesn't matter, maybe.
+        // file_put_contents(
+        //   storage_path('framework/maintenance.php'),
+        //   file_get_contents(__DIR__.'/../laravel/vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/maintenance-mode.stub')
+        // );
+
+      } finally {
+        $lock->release(); 
+      }  
       return;
     }
 
-    if (app()->isDownForMaintenance()) {
+    if (!app()->isDownForMaintenance()) {
+      return;
+    }
+
+    $lock = \Cache::lock($lock_key, 10);
+    if (!$lock->get()) {
+      return;
+    }
+    try {
       app()->maintenanceMode()->deactivate();
       @unlink(storage_path('framework/maintenance.php')); // just to make sure
-    }
+    } finally {
+      $lock->release(); 
+    }  
   }
 
   public static function isAdminUser() {
