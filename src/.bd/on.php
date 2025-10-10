@@ -108,7 +108,7 @@ class On
   {
   } 
 
-  // Called from laravel/routes/web.php
+  // Called from routes/web.php
   public static function onWeb($router)
   {
     // admin
