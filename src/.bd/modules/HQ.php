@@ -104,12 +104,17 @@ final class HQ
 
   public static function setDebugMode(bool $mode)
   {
+    $lock_key = 'debug_mode_update_lock';
     if ($mode) {
       if (self::getDebugMode()) return;
-      file_put_contents(self::getenv('CCC::STORAGE_FILE_DEBUG'), '1');
+      \Cache::lock($lock_key, 10)->get(function() { 
+        file_put_contents(self::getenv('CCC::STORAGE_FILE_DEBUG'), '1');
+      });
     } else {
       if (!self::getDebugMode()) return;
-      @unlink(self::getenv('CCC::STORAGE_FILE_DEBUG'));
+      \Cache::lock($lock_key, 10)->get(function() {
+        @unlink(self::getenv('CCC::STORAGE_FILE_DEBUG'));
+      });
     }
   }
 
@@ -120,13 +125,18 @@ final class HQ
 
   public static function setViewCacheMode(bool $mode)
   {
+    $lock_key = 'view_cache_mode_update_lock';
     if ($mode) {
       if (self::getViewCacheMode()) return;
-      file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'), '1');
-      file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE_CLEAR'), '1');
+      \Cache::lock($lock_key, 10)->get(function() {
+        file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'), '1');
+        file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE_CLEAR'), '1');
+      });
     } else {
       if (!self::getViewCacheMode()) return;
-      @unlink(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'));
+      \Cache::lock($lock_key, 10)->get(function() { 
+        @unlink(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'));
+      });
     }
   }
 
@@ -144,11 +154,7 @@ final class HQ
           return; 
       }
 
-      $lock = \Cache::lock($lock_key, 10);
-      if (!$lock->get()) {
-        return;
-      }
-      try {
+      \Cache::lock($lock_key, 10)->get(function() {
         app()->maintenanceMode()->activate($data);
 
         // It doesn't matter, maybe.
@@ -157,9 +163,7 @@ final class HQ
         //   file_get_contents(__DIR__.'/../laravel/vendor/laravel/framework/src/Illuminate/Foundation/Console/stubs/maintenance-mode.stub')
         // );
 
-      } finally {
-        $lock->release(); 
-      }  
+      });  
       return;
     }
 
@@ -167,16 +171,10 @@ final class HQ
       return;
     }
 
-    $lock = \Cache::lock($lock_key, 10);
-    if (!$lock->get()) {
-      return;
-    }
-    try {
+    \Cache::lock($lock_key, 10)->get(function() {
       app()->maintenanceMode()->deactivate();
       @unlink(storage_path('framework/maintenance.php')); // just to make sure
-    } finally {
-      $lock->release(); 
-    }  
+    });  
   }
 
   public static function isAdminUser() {
