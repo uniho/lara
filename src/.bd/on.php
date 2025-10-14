@@ -84,18 +84,22 @@ class On
   // Called from App\Providers\AppServiceProvider::boot()
   public static function onBoot()
   {
-    \Log::debug(\HQ::getenv('CCC::APP_NAME') . ' boot!');
+    if (\HQ::getDebugMode()) {
 
-    if (defined('SSS::maintenanceModeData') && \SSS::maintenanceModeData['secret']) {
-      \HQ::setMaintenanceMode([
-        'secret' => \SSS::maintenanceModeData['secret'],
-        'template' => view('sample.message', [
-          'title' => \SSS::maintenanceModeData['title'] ?: 'Page Under Maintenance',
-          'message' => \SSS::maintenanceModeData['message'] ?: 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
-        ])->render(),
-      ]);
-    } else {
-      \HQ::setMaintenanceMode(false);
+      \Log::debug(\HQ::getenv('CCC::APP_NAME') . ' boot!');
+
+      if (defined('SSS::maintenanceModeData') && \SSS::maintenanceModeData['secret']) {
+        \HQ::setMaintenanceMode([
+          'secret' => \SSS::maintenanceModeData['secret'],
+          'template' => view('sample.message', [
+            'title' => \SSS::maintenanceModeData['title'] ?: 'Page Under Maintenance',
+            'message' => \SSS::maintenanceModeData['message'] ?: 'Sorry for the inconvenience but we’re performing some maintenance at the moment.',
+          ])->render(),
+        ]);
+      } else {
+        \HQ::setMaintenanceMode(false);
+      }
+      
     }
   } 
   
