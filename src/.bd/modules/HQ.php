@@ -104,17 +104,12 @@ final class HQ
 
   public static function setDebugMode(bool $mode)
   {
-    $lock_key = 'debug_mode_update_lock';
     if ($mode) {
       if (self::getDebugMode()) return;
-      \Cache::lock($lock_key, 10)->get(function() { 
-        file_put_contents(self::getenv('CCC::STORAGE_FILE_DEBUG'), '1');
-      });
+      file_put_contents(self::getenv('CCC::STORAGE_FILE_DEBUG'), '1');
     } else {
       if (!self::getDebugMode()) return;
-      \Cache::lock($lock_key, 10)->get(function() {
-        @unlink(self::getenv('CCC::STORAGE_FILE_DEBUG'));
-      });
+      @unlink(self::getenv('CCC::STORAGE_FILE_DEBUG'));
     }
   }
 
@@ -125,18 +120,13 @@ final class HQ
 
   public static function setViewCacheMode(bool $mode)
   {
-    $lock_key = 'view_cache_mode_update_lock';
     if ($mode) {
       if (self::getViewCacheMode()) return;
-      \Cache::lock($lock_key, 10)->get(function() {
-        file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'), '1');
-        file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE_CLEAR'), '1');
-      });
+      file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'), '1');
+      file_put_contents(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE_CLEAR'), '1');
     } else {
       if (!self::getViewCacheMode()) return;
-      \Cache::lock($lock_key, 10)->get(function() { 
-        @unlink(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'));
-      });
+      @unlink(self::getenv('CCC::STORAGE_FILE_VIEW_CACHE'));
     }
   }
 
