@@ -38,12 +38,12 @@ final class Procedures
                     if (
                       // sub のチェック  
                       (isset(\SSS::JWT_SECRET_FOR_INTERNAL_REST_API[$i]['sub']) &&
-                      \SSS::JWT_SECRET_FOR_INTERNAL_REST_API[$i]['sub'] && $claims['sub'] &&
+                      \SSS::JWT_SECRET_FOR_INTERNAL_REST_API[$i]['sub'] &&
                       \SSS::JWT_SECRET_FOR_INTERNAL_REST_API[$i]['sub'] !== $claims['sub'])
                         ||
                       // jti のチェック  
                       (isset(\SSS::JWT_SECRET_FOR_INTERNAL_REST_API[$i]['jti']) &&
-                      \SSS::JWT_SECRET_FOR_INTERNAL_REST_API[$i]['jti'] && $claims['jti'] &&
+                      \SSS::JWT_SECRET_FOR_INTERNAL_REST_API[$i]['jti'] &&
                       \SSS::JWT_SECRET_FOR_INTERNAL_REST_API[$i]['jti'] !== $claims['jti'])
                         ||
                       // 有効期限が10分を超えるものは許可しない
