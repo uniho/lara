@@ -2,6 +2,8 @@
 
 final class HQ
 {
+  const ERRMSG_NOT_AUTHORIZED = 'You are not authorized to access this page.';
+
   private static $env = []; 
   private static $APP_SLUG = 'lara';
   private static $COOKIE_PATH = '/';
@@ -362,5 +364,68 @@ final class HQ
       include_once($file);
     }
     return true;
+  }
+
+  public static function jwtCreate($secret, $expire = 60, $claims = [])
+  {
+    $key = \Lcobucci\JWT\Signer\Key\InMemory::plainText($secret);
+    $config = \Lcobucci\JWT\Configuration::forSymmetricSigner(new \Lcobucci\JWT\Signer\Hmac\Sha256(), $key);
+    $now = new \Carbon\CarbonImmutable();
+    $kigen = match(true) {
+      is_string($expire) =>
+        $now->modify($expire), // '+100 seconds', '+7 day' など
+      (is_int($expire) || is_numeric($expire)) && (int)$expire > 0 =>
+        $now->addSeconds((int)$expire),
+      default =>
+        throw new \Exception('bad jwt expire'),
+    };
+
+    $builder = $config->builder()
+      // ->issuedBy('https://your-issuer.example.com')        // iss
+      // ->permittedFor('https://your-audience.example.com') // aud
+      ->issuedAt($now)                                    // iat
+      ->canOnlyBeUsedAfter($now)                          // nbf
+      ->expiresAt($kigen) // exp
+      // ->withClaim('uid', 123) // ユーザーIDなど
+    ;
+
+    if (!isset($claims['jti'])) {
+      $claims['jti'] = bin2hex(random_bytes(8));
+    }
+
+    foreach ($claims as $key => $value) {
+      $builder = match($key) {
+        'sub' => $builder->relatedTo($value), // Configures the subject of the token (sub claim)
+        'jti' => $builder->identifiedBy($value),
+        default => $builder->withClaim($key, $value)
+      };
+    }
+
+    return $builder->getToken($config->signer(), $config->signingKey())->toString();
+  }
+
+  //
+  public static function jwtValidate($secret, $jwt)
+  {
+    $key = \Lcobucci\JWT\Signer\Key\InMemory::plainText($secret);
+    $config = \Lcobucci\JWT\Configuration::forSymmetricSigner(new \Lcobucci\JWT\Signer\Hmac\Sha256(), $key);
+
+    $token = $config->parser()->parse($jwt);
+
+    $signed = $config->validator()->validate(
+      $token,
+      new \Lcobucci\JWT\Validation\Constraint\SignedWith($config->signer(), $config->verificationKey())
+    );
+
+    // 有効期限を手動チェック
+    $exp = $token->claims()->get('exp')->getTimestamp();
+    $nbf = $token->claims()->get('nbf')->getTimestamp();
+    $nowTs = (new \DateTimeImmutable())->getTimestamp();
+
+    if ($signed && $nowTs >= $nbf && $nowTs <= $exp) {
+      return $token->claims()->all();
+    };
+    
+    throw new \Exception('bad jwt token');
   }
 }
