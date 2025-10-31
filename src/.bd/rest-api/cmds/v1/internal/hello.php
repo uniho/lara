@@ -6,7 +6,7 @@ class hello {
 
     //
     public static function get($request) {
-        return ['data' => $request['_claims']];
+        return ['data' => 'Hello!'];
     }
 
     //
