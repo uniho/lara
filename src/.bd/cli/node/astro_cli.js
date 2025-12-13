@@ -9,10 +9,11 @@ import fs from "node:fs";
 const props = process.argv[2];
 const page = process.argv[3];
 const astroRootPath = process.argv[4];
+const node = process.argv[5] || 'node';
 
 if (astroRootPath) process.chdir(astroRootPath);
 
-execSync("npm run build", {
+execSync(`${node} ./node_modules/.bin/astro build`, {
   stdio: ["ignore", "ignore", "inherit"], // stdout 無視、stderr のみ表示
   env: {
     ...process.env,
