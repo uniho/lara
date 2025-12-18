@@ -311,7 +311,7 @@ class On
                 abort(404, "/$body.html: Not Found.");
             }
 
-            $html = self::renderBladeSlots($process->getOutput());
+            $html = self::renderHtmlSlot($process->getOutput());
             $r = response($html, 200); //response()->file($fn);
             // if (request()->has('cache')) {
             //   $i = request()->query('cache');
@@ -361,7 +361,7 @@ class On
      *   }
      * 
      */
-    private static function renderBladeSlots(string $html, $slot_func = null): string
+    private static function renderHtmlSlot(string $html, $slot_func = null): string
     {
         $dom = new \DOMDocument('1.0', 'UTF-8');
         libxml_use_internal_errors(true);
