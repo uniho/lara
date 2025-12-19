@@ -56,10 +56,6 @@ use Illuminate\Http\Request;
 \Route::match(['get', 'post'], '/', function (Request $request) {
   if (($r = \HQ::webOrigin($request)) !== false) return $r;
 
-  if (view()->exists('index')) {
-    return view('index');
-  }
-
   if (is_file('./fd/index.html')) {
     $path = 'fd/';
     if ($request->query()) {
@@ -68,10 +64,6 @@ use Illuminate\Http\Request;
     header("Location: $path");
     exit();
     return;
-  }
-
-  if (view()->exists('sample.index')) {
-    return view('sample.index');
   }
 
   abort(404);

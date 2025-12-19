@@ -123,24 +123,6 @@ class On
             \Route::get('/', fn() => redirect('admin/check'));
         });
 
-        // CSS 使用例
-        \Route::get('css/{name}', function ($name) {
-            $ext = substr($name, strrpos($name, '.') + 1);
-            if ($ext == 'map') {
-                $name = app()['config']['view.compiled'] . '/' . basename($name);
-                abort_unless(is_file($name) && \HQ::getDebugMode(), 404, "MAP [{$name}] not found.");
-                $contents = \File::get($name);
-                return response($contents, 200)->header('Content-Type', 'application/json; charset=utf-8');
-            }
-
-            abort_unless(\Compilers::scss()->exists($name), 404, "CSS [{$name}] not found.");
-            $contents = \Compilers::scss($name, [], [
-                'force_compile' => \HQ::getDebugMode() || request()->has('force_compile'),
-                'minify' => 1,
-            ]);
-            return response($contents, 200)->header('Content-Type', 'text/css; charset=utf-8');
-        })->where('name', '.*'); // この where により、$name がパスデリミタを受けられるようになる
-
         // Markdown 使用例
         \Route::get('markdown/{name}', function ($name) {
             abort_unless(\Compilers::markdown()->exists($name), 404, "Markdown [{$name}] not found.");
@@ -237,12 +219,32 @@ class On
         //
         require(__DIR__.'/web_routes/on_error.php');
 
-        // // Root の例
-        // \Route::get('/{name?}', function($name = null) {
-        //   if (($r = \HQ::webOrigin(request())) !== false) return $r;
-        //   if ($name) abort(404);
-        //   return 'Root!';
-        // })->where('name', '.*');
+        // Root の例
+        \Route::any('/{name?}', function($name = null) {
+
+            if (($r = \HQ::webOrigin(request())) !== false) return $r;
+        
+            if (str_contains($name, '..')) abort(403); // for directory traversal !超重要！
+
+            $public_root = \HQ::getenv('CCC::BASE_DIR') . "/.public-root";
+            $file = "$public_root/$name"; 
+
+            if (file_exists($file) && is_dir($file)) {
+                $file .= "/index.html";
+            }
+            if (!file_exists($file)) abort(404); 
+
+            if (pathinfo($file, PATHINFO_EXTENSION) !== 'html') {
+                // 静的ファイルはそのまま返す
+                return response()->file($file);
+            }
+
+            $html = \File::get($file);
+            
+            // cache etc...
+
+            return self::renderHtmlSlot($html);
+        })->where('name', '.*');
         
     } // onWeb
 
@@ -285,7 +287,7 @@ class On
 
         $xpath = new \DOMXPath($dom);
 
-        // id が slot-blade: で始まる要素を取得
+        // id が slot-ssr: で始まる要素を取得
         // $nodes = $xpath->query('//*[@id[starts-with(., "slot-ssr:")]]');
         // $nodes = $xpath->query('//*[@id and starts-with(@id, "slot-ssr:")]');
         $nodes = iterator_to_array($xpath->query(
@@ -345,10 +347,29 @@ class On
             if (is_string($content)) {
                 // HTML → DOM ノード化
                 $fragment = $dom->createDocumentFragment();
-                $isHTML = @$fragment->appendXML(
-                    mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8')
-                );
-                if (!$isHTML) {
+
+                // $isHTML = @$fragment->appendXML(
+                //     mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8')
+                // );
+                // // $isHTML = @$fragment->appendXML($content);
+                // if (!$isHTML) {
+                //     $fragment = $dom->createTextNode($content);
+                // }
+
+                // 一時的な DOMDocument を使って HTML としてパース
+                $tmp = new \DOMDocument();
+                // 日本語文字化け対策と HTML5 形式のパース
+                $htmlToLoad = '<?xml encoding="utf-8" ?>' . $content;
+                @$tmp->loadHTML($htmlToLoad, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+                // インポートして Fragment に追加
+                foreach ($tmp->childNodes as $child) {
+                    $imported = $dom->importNode($child, true);
+                    $fragment->appendChild($imported);
+                }
+
+                // もしパースに失敗して空になった場合のフォールバック
+                if (!$fragment->hasChildNodes() && !empty($content)) {
                     $fragment = $dom->createTextNode($content);
                 }
 
