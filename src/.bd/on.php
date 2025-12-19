@@ -168,54 +168,6 @@ class On
             };
         })->where('name', '.*'); // Blade
 
-        // Astro 使用例 
-        \Route::get('astro/{name?}', function ($name = null) {
-
-            if (str_contains($name, '..')) abort(403); // 超重要！
-
-            $body = $name;
-            $p = strrpos($name, '.');
-            $ext = false;
-            if ($p !== false) {
-                $body = substr($name, 0, $p);
-                $ext = substr($name, $p);
-            }
-            // $body = strtr($body, '.', '/');
-
-            $astro_project_path = \HQ::getenv('CCC::RSS_PATH') . "/astro01";
-
-            if ($ext && $ext !== '.html') {
-                // 静的ファイルはそのまま返す
-                return response()->file($astro_project_path . '/dist/' . $body . $ext);
-            }
-
-            $body = $body ?? 'index';
-            $params = "{} /$body $astro_project_path";
-
-            $node_cli = \HQ::getenv('CCC::NODE_CLI');
-            $astro_cli = \HQ::getenv('CCC::CLI_PATH') . '/node/astro_cli.js';
-            $process = \Symfony\Component\Process\Process::fromShellCommandline("$node_cli $astro_cli $params $node_cli");
-            // $process->setInput($src)->run();
-            $process->run();
-            if (!$process->isSuccessful()) {
-                // $error = $process->getErrorOutput();
-                // \Log::error('lightningcss', [$error]);
-                // return ['error' => $error];
-                abort(404, "/$body.html: Not Found.");
-            }
-
-            $html = self::renderHtmlSlot($process->getOutput());
-            $r = response($html, 200); //response()->file($fn);
-            // if (request()->has('cache')) {
-            //   $i = request()->query('cache');
-            //   $i = filter_var($i, FILTER_VALIDATE_INT) ? (int)$i : 31536000;
-            //   if ($i > 60*60) {
-            //     $r->header('Cache-Control', "max-age=$i, public"); // default: 'no-cache, private'
-            //   }
-            // }
-            return $r;
-        })->where('name', '.*'); // Astro
-
         //
         require(__DIR__.'/web_routes/on_error.php');
 
