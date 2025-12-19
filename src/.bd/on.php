@@ -211,8 +211,6 @@ class On
         $xpath = new \DOMXPath($dom);
 
         // id が slot-ssr: で始まる要素を取得
-        // $nodes = $xpath->query('//*[@id[starts-with(., "slot-ssr:")]]');
-        // $nodes = $xpath->query('//*[@id and starts-with(@id, "slot-ssr:")]');
         $nodes = iterator_to_array($xpath->query(
             '//*[@id and starts-with(@id, "slot-ssr:")]'
         ));
@@ -249,11 +247,6 @@ class On
                     try {
                         $props = json_decode($node->getAttribute('data-props'), true, 512, JSON_THROW_ON_ERROR);
                     } catch (\Throwable $e) {
-                        // // ログだけ出す
-                        // logger()->warning('Invalid slot props', [
-                        //     'id' => $id,
-                        //     'error' => $e->getMessage(),
-                        // ]);
                     }
                 }
 
@@ -271,29 +264,24 @@ class On
                 // HTML → DOM ノード化
                 $fragment = $dom->createDocumentFragment();
 
-                // $isHTML = @$fragment->appendXML(
-                //     mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8')
-                // );
-                // // $isHTML = @$fragment->appendXML($content);
-                // if (!$isHTML) {
-                //     $fragment = $dom->createTextNode($content);
-                // }
+                $isHTML = @$fragment->appendXML(
+                    mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8')
+                );
+                if (!$isHTML) {
+                    // <input> <br> のような /> で終わらないなど、曖昧なものも受け入れるための処理
+                    $tmp = new \DOMDocument();
+                    $htmlToLoad = '<?xml encoding="utf-8" ?>' . $content;
+                    @$tmp->loadHTML($htmlToLoad, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-                // 一時的な DOMDocument を使って HTML としてパース
-                $tmp = new \DOMDocument();
-                // 日本語文字化け対策と HTML5 形式のパース
-                $htmlToLoad = '<?xml encoding="utf-8" ?>' . $content;
-                @$tmp->loadHTML($htmlToLoad, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                    foreach ($tmp->childNodes as $child) {
+                        $imported = $dom->importNode($child, true);
+                        $fragment->appendChild($imported);
+                    }
 
-                // インポートして Fragment に追加
-                foreach ($tmp->childNodes as $child) {
-                    $imported = $dom->importNode($child, true);
-                    $fragment->appendChild($imported);
-                }
-
-                // もしパースに失敗して空になった場合のフォールバック
-                if (!$fragment->hasChildNodes() && !empty($content)) {
-                    $fragment = $dom->createTextNode($content);
+                    // 失敗した場合はテキストとして挿入
+                    if (!$fragment->hasChildNodes() && !empty($content)) {
+                        $fragment = $dom->createTextNode($content);
+                    }
                 }
 
                 $mode = $result['mode'] ?? 'replace';
