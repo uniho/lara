@@ -139,35 +139,6 @@ class On
             return response($contents, 200)->header('Content-Type', 'text/plain; charset=utf-8');
         })->where('name', '.*'); // Markdown
 
-        // Blade 使用例 
-        \Route::get('blade/{name}', function ($name) {
-            $body = $name;
-            $ext = '';
-            $p = strrpos($name, '.');
-            $ext = false;
-            if ($p !== false) {
-                $body = strtr(substr($name, 0, $p), '/', '.');
-                $ext = substr($name, $p);
-            }
-            $body = strtr($body, '.', '/');
-            $fn = \HQ::getenv('CCC::RSS_PATH') . "/blade/$body$ext.blade.php";
-            abort_unless(is_file($fn), 404, "blade [{$name}] not found.");
-            $r = response(view()->file($fn)->render(), 200); // $data dosen't need.
-            if (request()->has('cache')) {
-                $i = request()->query('cache');
-                $i = filter_var($i, FILTER_VALIDATE_INT) ? (int)$i : 31536000;
-                if ($i > 60*60) {
-                    $r->header('Cache-Control', "max-age=$i, public"); // default: 'no-cache, private'
-                }
-            }
-            return match($ext) {
-                '.js' => $r->header('Content-Type', 'application/javascript; charset=utf-8'),
-                '.css' => $r->header('Content-Type', 'text/css; charset=utf-8'),
-                '.svg' => $r->header('Content-Type', 'image/svg+xml'),
-                default => $r
-            };
-        })->where('name', '.*'); // Blade
-
         //
         require(__DIR__.'/web_routes/on_error.php');
 
