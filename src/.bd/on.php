@@ -289,7 +289,7 @@ class On
             }
             // $body = strtr($body, '.', '/');
 
-            $astro_project_path = "/home/yanoco/domains/yanoco.jp/public_html/lara/.bd/rss/astro01";
+            $astro_project_path = \HQ::getenv('CCC::RSS_PATH') . "/astro01";
 
             if ($ext && $ext !== '.html') {
                 // 静的ファイルはそのまま返す
