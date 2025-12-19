@@ -148,6 +148,7 @@ class On
             if (($r = \HQ::webOrigin(request())) !== false) return $r;
         
             if (str_contains($name, '..')) abort(403); // for directory traversal !超重要！
+            if (preg_match('#(^|/)\.#', $name)) abort(403); // 念のため . で始まるリソースは除外。
 
             $public_root = \HQ::getenv('CCC::BASE_DIR') . "/.public-root";
             $file = "$public_root/$name"; 
