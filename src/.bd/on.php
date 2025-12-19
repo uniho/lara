@@ -141,24 +141,6 @@ class On
             return response($contents, 200)->header('Content-Type', 'text/css; charset=utf-8');
         })->where('name', '.*'); // この where により、$name がパスデリミタを受けられるようになる
 
-        // JSX 使用例 
-        \Route::get('jsx/{name}', function ($name) {
-            $ext = substr($name, strrpos($name, '.') + 1);
-            if ($ext == 'map') {
-                $name = app()['config']['view.compiled'] . '/' . basename($name);
-                abort_unless(is_file($name) && \HQ::getDebugMode(), 404, "MAP [{$name}] not found.");
-                $contents = \File::get($name);
-                return response($contents, 200)->header('Content-Type', 'application/json; charset=utf-8');
-            }
-
-            abort_unless(\Compilers::jsx()->exists($name), 404, "JSX [{$name}] not found.");
-            $contents = \Compilers::jsx($name, [], [
-                'force_compile' => \HQ::getDebugMode() || request()->has('force_compile'), 
-                'args' => '--minify-whitespace --minify-identifiers --loader:.js=tsx',
-            ]);
-            return response($contents, 200)->header('Content-Type', 'application/javascript; charset=utf-8');
-        })->where('name', '.*'); // JSX
-
         // Markdown 使用例
         \Route::get('markdown/{name}', function ($name) {
             abort_unless(\Compilers::markdown()->exists($name), 404, "Markdown [{$name}] not found.");
