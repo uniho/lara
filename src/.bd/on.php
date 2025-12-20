@@ -153,9 +153,14 @@ class On
             }
             if (!file_exists($file)) abort(404); 
 
-            if (pathinfo($file, PATHINFO_EXTENSION) !== 'html') {
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            if ($ext !== 'html') {
                 // 静的ファイルはそのまま返す
-                return response()->file($file);
+                $mimeTypes = new \Symfony\Component\Mime\MimeTypes();
+                $contentType = $mimeTypes->getMimeTypes($ext)[0] ?? 'application/octet-stream';
+                return new \Symfony\Component\HttpFoundation\BinaryFileResponse($file, 200, [
+                    'Content-Type' => $contentType,
+                ]);
             }
 
             $html = \File::get($file);
