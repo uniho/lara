@@ -29,11 +29,6 @@ class On
 
         \HQ::setenv('CCC::PHP_CLI', '/usr/bin/php');
         \HQ::setenv('CCC::NODE_CLI', '~/.nvm/versions/node/v20.18.0/bin/node');
-
-        // CSS breakpoints from bootstrap's default
-        \HQ::setenv('STYLES::breakpoints', [
-        'sm' => 576, 'md' => 768, 'lg' => 992, 'xl' => 1200, '2xl' => 1400,
-        ]);
     } 
   
     // Called from index.php
