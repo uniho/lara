@@ -155,11 +155,10 @@ class On
             $file = "{$info['dirname']}/.{$info['basename']}"; // ファイル名に . を付与
             if (!file_exists($file)) abort(404); 
 
-            $ext = pathinfo($file, PATHINFO_EXTENSION);
             if ($info['extension'] !== 'html') {
                 // 静的ファイルはそのまま返す
                 $mimeTypes = new \Symfony\Component\Mime\MimeTypes();
-                $contentType = $mimeTypes->getMimeTypes($ext)[0] ?? 'application/octet-stream';
+                $contentType = $mimeTypes->getMimeTypes($info['extension'])[0] ?? 'application/octet-stream';
                 return new \Symfony\Component\HttpFoundation\BinaryFileResponse($file, 200, [
                     'Content-Type' => $contentType,
                 ]);
