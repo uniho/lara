@@ -241,7 +241,9 @@ class On
 
             if ($result === true) {
                 // from Blade
-                if (!view()->exists($keyName)) continue;
+                $viewFile = strtr($keyName, '.', '/');
+                $viewFile = \HQ::getenv('CCC::VIEWS_PATH') . "/slot-ssr/$viewFile.blade.php";
+                if (!is_file($viewFile)) continue;
 
                 // props
                 $props = [];
@@ -258,7 +260,7 @@ class On
                     $fallback .= $dom->saveHTML($child);
                 }
 
-                $result =  view($keyName, $props + ['fallback' => $fallback])->render();
+                $result = view()->file($viewFile, $props + ['fallback' => $fallback])->render();
             }
 
             $content = is_string($result) ? $result : ($result['content'] ?? false);
