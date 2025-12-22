@@ -145,16 +145,18 @@ class On
             if (preg_match('#(^|/)\.#', $name)) abort(403); // . で始まるリソースは除外。
             // if (str_contains($name, '..')) abort(403); // for directory traversal !超重要！ だが⇧に内包されるので不要
 
-            $public_root = \HQ::getenv('CCC::BASE_DIR') . "/.public-root";
+            $public_root = \HQ::getenv('CCC::BASE_DIR');
             $file = "$public_root/$name"; 
 
             if (file_exists($file) && is_dir($file)) {
                 $file .= "/index.html";
             }
+            $info = pathinfo($file);
+            $file = "{$info['dirname']}/.{$info['basename']}"; // ファイル名に . を付与
             if (!file_exists($file)) abort(404); 
 
             $ext = pathinfo($file, PATHINFO_EXTENSION);
-            if ($ext !== 'html') {
+            if ($info['extension'] !== 'html') {
                 // 静的ファイルはそのまま返す
                 $mimeTypes = new \Symfony\Component\Mime\MimeTypes();
                 $contentType = $mimeTypes->getMimeTypes($ext)[0] ?? 'application/octet-stream';
