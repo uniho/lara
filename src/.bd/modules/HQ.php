@@ -6,7 +6,7 @@ final class HQ
 
   private static $env = []; 
   private static $APP_SLUG = 'lara';
-  private static $COOKIE_PATH = '/';
+  private static $COOKIE_PATH = false;
   private static $caches = [];
   private static $keep_caches = [];
   private static $array_caches = [];
@@ -289,7 +289,7 @@ final class HQ
   }
 
   public static function getCookiePath() {
-    return self::$COOKIE_PATH;
+    return self::$COOKIE_PATH || \Symfony\Component\HttpFoundation\Request::createFromGlobals()->getBasePath() || '/';
   }
 
   public static function setCookiePath($path) {

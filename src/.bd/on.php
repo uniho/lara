@@ -19,7 +19,9 @@ class On
         \HQ::setenv('CCC::APP_NAME', 'Test App!');
 
         \HQ::setAppSlug('lara');
-        \HQ::setCookiePath('/lara'); // サブディレクトリに導入する場合に指定。ルートの場合は '/'
+
+        // サブディレクトリに導入する場合に指定。ルートの場合は '/'。デフォルトは自動設定。
+        // \HQ::setCookiePath('/lara');
 
         \HQ::setDebugMode(true);
         \HQ::setViewCacheMode(!\HQ::getDebugMode());
