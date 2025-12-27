@@ -296,18 +296,6 @@ final class HQ
     self::$COOKIE_PATH = $path;
   }
 
-  public static function getColorScheme()
-  {
-    return \Cookie::get(self::getAppSlug().'_color-scheme-HQ') ?? 'light';
-  }  
-
-  public static function setColorScheme($scheme = 'light')
-  {
-    cookie()->queue(
-      cookie(self::getAppSlug().'_color-scheme-HQ', substr($scheme, 0, 20), 60 * 24 * 365/* min */)
-    );
-  }  
-
   public static function cache($type = 'serialize') {
     if (!isset(self::$caches[$type])) {
       self::$caches[$type] = new \Illuminate\Cache\Repository(
